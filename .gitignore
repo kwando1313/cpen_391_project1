@@ -1,0 +1,4 @@
+ncremental_db/
+output_files/
+db/
+*.bak
