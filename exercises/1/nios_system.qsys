@@ -24,7 +24,7 @@
    {
       datum baseAddress
       {
-         value = "8224";
+         value = "8240";
          type = "String";
       }
    }
@@ -32,21 +32,24 @@
    {
       datum baseAddress
       {
-         value = "8240";
+         value = "8248";
          type = "String";
       }
    }
-   element bit_flipper_0.avalon_slave_0
+   element buttons.avalon_parallel_port_slave
    {
-      datum _lockedAddress
-      {
-         value = "0";
-         type = "boolean";
-      }
       datum baseAddress
       {
-         value = "8256";
+         value = "8192";
          type = "String";
+      }
+   }
+   element buttons
+   {
+      datum _sortIndex
+      {
+         value = "9";
+         type = "int";
       }
    }
    element character_lcd_0
@@ -105,11 +108,19 @@
          type = "int";
       }
    }
-   element LEDs_g.s1
+   element onchip_memory2_0.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+   }
+   element switches.s1
    {
       datum baseAddress
       {
-         value = "8192";
+         value = "8224";
          type = "String";
       }
    }
@@ -121,15 +132,7 @@
          type = "String";
       }
    }
-   element onchip_memory2_0.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-   }
-   element switches.s1
+   element LEDs_g.s1
    {
       datum baseAddress
       {
@@ -156,9 +159,9 @@
 }
 ]]></parameter>
  <parameter name="clockCrossingAdapter" value="HANDSHAKE" />
- <parameter name="device" value="Unknown" />
+ <parameter name="device" value="EP2C35F672C6" />
  <parameter name="deviceFamily" value="Cyclone II" />
- <parameter name="deviceSpeedGrade" value="Unknown" />
+ <parameter name="deviceSpeedGrade" value="6" />
  <parameter name="fabricMode" value="QSYS" />
  <parameter name="generateLegacySim" value="false" />
  <parameter name="generationId" value="0" />
@@ -168,7 +171,7 @@
  <parameter name="projectName">project1Exercises.qpf</parameter>
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="1" />
- <parameter name="timeStamp" value="1452219327657" />
+ <parameter name="timeStamp" value="1452220672708" />
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
@@ -188,6 +191,11 @@
  <interface
    name="lcd_data"
    internal="character_lcd_0.external_interface"
+   type="conduit"
+   dir="end" />
+ <interface
+   name="buttons"
+   internal="buttons.external_interface"
    type="conduit"
    dir="end" />
  <module kind="clock_source" version="13.0" enabled="1" name="clk_0">
@@ -302,7 +310,7 @@
   <parameter name="tightlyCoupledInstructionMaster2AddrWidth" value="1" />
   <parameter name="tightlyCoupledInstructionMaster3AddrWidth" value="1" />
   <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x1000' /><slave name='nios2_qsys_0.jtag_debug_module' start='0x1800' end='0x2000' /><slave name='sdram.s1' start='0x1000000' end='0x1800000' /></address-map>]]></parameter>
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x1000' /><slave name='nios2_qsys_0.jtag_debug_module' start='0x1800' end='0x2000' /><slave name='LEDs_g.s1' start='0x2000' end='0x2010' /><slave name='switches.s1' start='0x2010' end='0x2020' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x2020' end='0x2028' /><slave name='character_lcd_0.avalon_lcd_slave' start='0x2030' end='0x2032' /><slave name='sdram.s1' start='0x1000000' end='0x1800000' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x1000' /><slave name='nios2_qsys_0.jtag_debug_module' start='0x1800' end='0x2000' /><slave name='buttons.avalon_parallel_port_slave' start='0x2000' end='0x2010' /><slave name='LEDs_g.s1' start='0x2010' end='0x2020' /><slave name='switches.s1' start='0x2020' end='0x2030' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x2030' end='0x2038' /><slave name='character_lcd_0.avalon_lcd_slave' start='0x2038' end='0x203A' /><slave name='sdram.s1' start='0x1000000' end='0x1800000' /></address-map>]]></parameter>
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="deviceFamilyName" value="Cyclone II" />
   <parameter name="internalIrqMaskSystemInfo" value="32" />
@@ -445,6 +453,26 @@
   <parameter name="AUTO_CLOCK_RESET_CLOCK_RATE" value="50000000" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone II" />
  </module>
+ <module
+   kind="altera_up_avalon_parallel_port"
+   version="13.0"
+   enabled="1"
+   name="buttons">
+  <parameter name="board" value="DE2" />
+  <parameter name="custom_port" value="false" />
+  <parameter name="preset" value="Pushbuttons" />
+  <parameter name="leds" value="Green" />
+  <parameter name="sevensegs" value="3 to 0" />
+  <parameter name="gpio" value="GPIO 0 (JP1)" />
+  <parameter name="custom_DW" value="32" />
+  <parameter name="custom_direction" value="Input only" />
+  <parameter name="capture" value="false" />
+  <parameter name="edge" value="Rising" />
+  <parameter name="irq" value="false" />
+  <parameter name="irq_type" value="Edge" />
+  <parameter name="AUTO_CLOCK_RESET_CLOCK_RATE" value="50000000" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone II" />
+ </module>
  <connection
    kind="avalon"
    version="13.0"
@@ -527,7 +555,7 @@
    start="nios2_qsys_0.data_master"
    end="switches.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x2010" />
+  <parameter name="baseAddress" value="0x2020" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -536,7 +564,7 @@
    start="nios2_qsys_0.data_master"
    end="LEDs_g.s1">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x2000" />
+  <parameter name="baseAddress" value="0x2010" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -555,7 +583,7 @@
    start="nios2_qsys_0.data_master"
    end="jtag_uart_0.avalon_jtag_slave">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x2020" />
+  <parameter name="baseAddress" value="0x2030" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -643,7 +671,26 @@
    start="nios2_qsys_0.data_master"
    end="character_lcd_0.avalon_lcd_slave">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x2030" />
+  <parameter name="baseAddress" value="0x2038" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="clock"
+   version="13.0"
+   start="clocks.sys_clk"
+   end="buttons.clock_reset" />
+ <connection
+   kind="reset"
+   version="13.0"
+   start="clk_0.clk_reset"
+   end="buttons.clock_reset_reset" />
+ <connection
+   kind="avalon"
+   version="13.0"
+   start="nios2_qsys_0.data_master"
+   end="buttons.avalon_parallel_port_slave">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x2000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
