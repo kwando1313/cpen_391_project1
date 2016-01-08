@@ -6,3 +6,4 @@ db/
 *.sof
 *.pof
 *.summary
+.qsys_edit/
