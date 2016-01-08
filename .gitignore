@@ -2,11 +2,13 @@ incremental_db/
 output_files/
 db/
 *.bak
-*.rpt
 *.sof
 *.pof
+*.rpt
 *.summary
 .qsys_edit/
 *.smsg
 *.done
 .metadata/
+*.o
+*.d

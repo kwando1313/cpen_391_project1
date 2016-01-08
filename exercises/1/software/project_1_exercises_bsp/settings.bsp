@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>7-Jan-2016 8:17:05 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1452226625546</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>8-Jan-2016 1:24:51 AM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1452245091093</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>C:\Users\Alex\Desktop\UBC\cpen391\exercises\cpen_391_project1\exercises\1\software\project_1_exercises_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\nios_system.sopcinfo</SopcDesignFile>
@@ -26,7 +26,7 @@
                 <SettingName>hal.timestamp_timer</SettingName>
                 <Identifier>ALT_TIMESTAMP_CLK</Identifier>
                 <Type>UnquotedString</Type>
-                <Value>none</Value>
+                <Value>timestamp_timer</Value>
                 <DefaultValue>none</DefaultValue>
                 <DestinationFile>system_h_define</DestinationFile>
                 <Description>Slave descriptor of timestamp timer device. This device is used by Altera HAL timestamp drivers for high-resolution time measurement. This setting defines the value of ALT_TIMESTAMP_CLK in system.h.</Description>
@@ -869,32 +869,44 @@
                 <attributes>memory</attributes>
         </MemoryMap>
         <MemoryMap>
+                <slaveDescriptor>timestamp_timer</slaveDescriptor>
+                <addressRange>0x00002000 - 0x0000201F</addressRange>
+                <addressSpan>32</addressSpan>
+                <attributes>timer</attributes>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>sys_clock</slaveDescriptor>
+                <addressRange>0x00002020 - 0x0000203F</addressRange>
+                <addressSpan>32</addressSpan>
+                <attributes>timer</attributes>
+        </MemoryMap>
+        <MemoryMap>
                 <slaveDescriptor>buttons</slaveDescriptor>
-                <addressRange>0x00002000 - 0x0000200F</addressRange>
+                <addressRange>0x00002040 - 0x0000204F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>LEDs_g</slaveDescriptor>
-                <addressRange>0x00002010 - 0x0000201F</addressRange>
+                <addressRange>0x00002050 - 0x0000205F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>switches</slaveDescriptor>
-                <addressRange>0x00002020 - 0x0000202F</addressRange>
+                <addressRange>0x00002060 - 0x0000206F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>jtag_uart_0</slaveDescriptor>
-                <addressRange>0x00002030 - 0x00002037</addressRange>
+                <addressRange>0x00002070 - 0x00002077</addressRange>
                 <addressSpan>8</addressSpan>
                 <attributes>printable</attributes>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>character_lcd_0</slaveDescriptor>
-                <addressRange>0x00002038 - 0x00002039</addressRange>
+                <addressRange>0x00002078 - 0x00002079</addressRange>
                 <addressSpan>2</addressSpan>
                 <attributes/>
         </MemoryMap>

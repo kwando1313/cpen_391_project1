@@ -142,7 +142,7 @@ ACDS_VERSION := 13.0sp1
 ELF := project_1_exercises.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS := hello_world.c
+C_SRCS := main.c
 CXX_SRCS :=
 ASM_SRCS :=
 
@@ -165,7 +165,7 @@ APP_CFLAGS_UNDEFINED_SYMBOLS :=
 APP_CFLAGS_OPTIMIZATION := -O0
 APP_CFLAGS_DEBUG_LEVEL := -g
 APP_CFLAGS_WARNINGS := -Wall
-APP_CFLAGS_USER_FLAGS :=
+APP_CFLAGS_USER_FLAGS := -std=c99
 
 APP_ASFLAGS_USER :=
 APP_LDFLAGS_USER :=
