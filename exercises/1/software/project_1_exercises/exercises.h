@@ -30,7 +30,7 @@ void exercise_two() {
 
 	int end = alt_timestamp();
 	printf("time taken : %f seconds\n", (float)end / (float)alt_timestamp_freq());
-	printf("clock ticks: %d seconds\n", end);
+	printf("cycles : %d \n", end);
 }
 
 int** createSquareMatrix(int size){
