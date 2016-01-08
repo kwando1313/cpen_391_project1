@@ -18,7 +18,7 @@
 
 int main()
 {
-  printf("Hello from Nios II!\n");
+  printf("Hello from Caleb!\n");
 
   return 0;
 }
