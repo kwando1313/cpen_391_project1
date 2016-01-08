@@ -12,3 +12,7 @@ db/
 .metadata/
 *.o
 *.d
+*.a
+*.elf
+*.objdump
+*.map
