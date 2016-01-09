@@ -8,7 +8,7 @@ ENTITY project1Exercises IS
 
    PORT (
       SW : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-      KEY : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
+      KEY : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
       CLOCK_50 : IN STD_LOGIC;
       LEDG : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
       DRAM_CLK, DRAM_CKE : OUT STD_LOGIC;
@@ -45,7 +45,8 @@ ARCHITECTURE Structure OF project1Exercises IS
 		lcd_data_BLON : OUT STD_LOGIC;
 		lcd_data_EN : OUT STD_LOGIC;
 		lcd_data_RS : OUT STD_LOGIC;
-		lcd_data_RW : OUT STD_LOGIC);
+		lcd_data_RW : OUT STD_LOGIC;
+		buttons_export : IN STD_LOGIC_VECTOR(3 downto 0));
    END COMPONENT;
 
    SIGNAL DQM : STD_LOGIC_VECTOR(1 DOWNTO 0);
@@ -78,7 +79,8 @@ ARCHITECTURE Structure OF project1Exercises IS
 			lcd_data_BLON => LCD_BLON,
 			lcd_data_EN => LCD_EN,
 			lcd_data_RS => LCD_RS,
-			lcd_data_RW => LCD_RW
+			lcd_data_RW => LCD_RW,
+			buttons_export => KEY
 		);
 
 END Structure;
