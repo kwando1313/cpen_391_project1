@@ -67,7 +67,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
   </table>
   <table class="blueBar">
    <tr>
-    <td class="l">2016.01.08.00:48:27</td>
+    <td class="l">2016.01.09.00:00:51</td>
     <td class="r">Datasheet</td>
    </tr>
   </table>
@@ -326,7 +326,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        <a href="#module_clk_0">clk_0</a>
       </td>
       <td class="from">clk_reset&#160;&#160;</td>
-      <td class="main" rowspan="60">nios2_qsys_0</td>
+      <td class="main" rowspan="62">nios2_qsys_0</td>
      </tr>
      <tr>
       <td class="to">&#160;&#160;reset_n</td>
@@ -549,7 +549,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
       <td></td>
       <td></td>
       <td class="from">data_master&#160;&#160;</td>
-      <td class="neighbor" rowspan="2">
+      <td class="neighbor" rowspan="4">
        <a href="#module_buttons">buttons</a>
       </td>
      </tr>
@@ -557,6 +557,16 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
       <td></td>
       <td></td>
       <td class="to">&#160;&#160;avalon_parallel_port_slave</td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="from">jtag_debug_module_reset&#160;&#160;</td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="to">&#160;&#160;clock_reset_reset</td>
      </tr>
      <tr style="height:6px">
       <td></td>
@@ -2704,7 +2714,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        <a href="#module_clocks">clocks</a>
       </td>
       <td class="from">sys_clk&#160;&#160;</td>
-      <td class="main" rowspan="8">buttons</td>
+      <td class="main" rowspan="10">buttons</td>
      </tr>
      <tr>
       <td class="to">&#160;&#160;clock_reset</td>
@@ -2725,13 +2735,19 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
       <td></td>
      </tr>
      <tr>
-      <td class="neighbor" rowspan="2">
+      <td class="neighbor" rowspan="4">
        <a href="#module_nios2_qsys_0">nios2_qsys_0</a>
       </td>
       <td class="from">data_master&#160;&#160;</td>
      </tr>
      <tr>
       <td class="to">&#160;&#160;avalon_parallel_port_slave</td>
+     </tr>
+     <tr>
+      <td class="from">jtag_debug_module_reset&#160;&#160;</td>
+     </tr>
+     <tr>
+      <td class="to">&#160;&#160;clock_reset_reset</td>
      </tr>
     </table>
    </div>
@@ -3220,7 +3236,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
   <table class="blueBar">
    <tr>
     <td class="l">generation took 0.02 seconds</td>
-    <td class="r">rendering took 0.60 seconds</td>
+    <td class="r">rendering took 0.42 seconds</td>
    </tr>
   </table>
  </body>

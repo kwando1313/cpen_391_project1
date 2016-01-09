@@ -108,11 +108,11 @@
          type = "int";
       }
    }
-   element timestamp_timer.s1
+   element switches.s1
    {
       datum baseAddress
       {
-         value = "8192";
+         value = "8288";
          type = "String";
       }
    }
@@ -132,19 +132,11 @@
          type = "boolean";
       }
    }
-   element switches.s1
+   element timestamp_timer.s1
    {
       datum baseAddress
       {
-         value = "8288";
-         type = "String";
-      }
-   }
-   element LEDs_g.s1
-   {
-      datum baseAddress
-      {
-         value = "8272";
+         value = "8192";
          type = "String";
       }
    }
@@ -153,6 +145,14 @@
       datum baseAddress
       {
          value = "8224";
+         type = "String";
+      }
+   }
+   element LEDs_g.s1
+   {
+      datum baseAddress
+      {
+         value = "8272";
          type = "String";
       }
    }
@@ -203,7 +203,7 @@
  <parameter name="projectName">project1Exercises.qpf</parameter>
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="1" />
- <parameter name="timeStamp" value="1452237708525" />
+ <parameter name="timeStamp" value="1452326414221" />
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
@@ -817,6 +817,11 @@
    end="sys_clock.irq">
   <parameter name="irqNumber" value="0" />
  </connection>
+ <connection
+   kind="reset"
+   version="13.0"
+   start="nios2_qsys_0.jtag_debug_module_reset"
+   end="buttons.clock_reset_reset" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="1" />
 </system>
