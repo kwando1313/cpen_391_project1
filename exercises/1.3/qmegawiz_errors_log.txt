@@ -1,0 +1,8 @@
+
+
+C:/QsysTutorial/db/ip/nios_system/submodules/nios_system_nios2_qsys_0.v
+
+Apr 17 04PM:21:09>: MegaWizard Plug-In Manager does not recognize C:/QsysTutorial/db/ip/nios_system/submodules/nios_system_nios2_qsys_0.v as a wizard-generated
+custom megafunction variation.
+
+Do you want to use a wizard to overwrite it?

@@ -1,0 +1,281 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 1991-2013 Altera Corporation
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, Altera MegaCore Function License 
+Agreement, or other applicable license agreement, including, 
+without limitation, that your use is for the sole purpose of 
+programming logic devices manufactured by Altera and sold by 
+Altera or its authorized distributors.  Please refer to the 
+applicable agreement for further details.
+*/
+(header "symbol" (version "1.1"))
+(symbol
+	(rect 16 16 288 512)
+	(text "lights" (rect 5 0 23 12)(font "Arial" ))
+	(text "inst" (rect 8 480 20 492)(font "Arial" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "SW[7..0]" (rect 0 0 36 12)(font "Arial" ))
+		(text "SW[7..0]" (rect 21 27 57 39)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32)(line_width 3))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "KEY[0..0]" (rect 0 0 41 12)(font "Arial" ))
+		(text "KEY[0..0]" (rect 21 43 62 55)(font "Arial" ))
+		(line (pt 0 48)(pt 16 48)(line_width 3))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "CLOCK_50" (rect 0 0 49 12)(font "Arial" ))
+		(text "CLOCK_50" (rect 21 59 70 71)(font "Arial" ))
+		(line (pt 0 64)(pt 16 64)(line_width 1))
+	)
+	(port
+		(pt 0 80)
+		(input)
+		(text "IO_acknowledge" (rect 0 0 64 12)(font "Arial" ))
+		(text "IO_acknowledge" (rect 21 75 85 87)(font "Arial" ))
+		(line (pt 0 80)(pt 16 80)(line_width 1))
+	)
+	(port
+		(pt 0 96)
+		(input)
+		(text "IO_irq" (rect 0 0 24 12)(font "Arial" ))
+		(text "IO_irq" (rect 21 91 45 103)(font "Arial" ))
+		(line (pt 0 96)(pt 16 96)(line_width 1))
+	)
+	(port
+		(pt 0 112)
+		(input)
+		(text "IO_read_data[15..0]" (rect 0 0 79 12)(font "Arial" ))
+		(text "IO_read_data[15..0]" (rect 21 107 100 119)(font "Arial" ))
+		(line (pt 0 112)(pt 16 112)(line_width 3))
+	)
+	(port
+		(pt 0 128)
+		(input)
+		(text "UART_RXD" (rect 0 0 56 12)(font "Arial" ))
+		(text "UART_RXD" (rect 21 123 77 135)(font "Arial" ))
+		(line (pt 0 128)(pt 16 128)(line_width 1))
+	)
+	(port
+		(pt 0 144)
+		(input)
+		(text "GPS_RXD" (rect 0 0 46 12)(font "Arial" ))
+		(text "GPS_RXD" (rect 21 139 67 151)(font "Arial" ))
+		(line (pt 0 144)(pt 16 144)(line_width 1))
+	)
+	(port
+		(pt 0 160)
+		(input)
+		(text "BlueTooth_RXD" (rect 0 0 66 12)(font "Arial" ))
+		(text "BlueTooth_RXD" (rect 21 155 87 167)(font "Arial" ))
+		(line (pt 0 160)(pt 16 160)(line_width 1))
+	)
+	(port
+		(pt 272 32)
+		(output)
+		(text "LEDG[7..0]" (rect 0 0 47 12)(font "Arial" ))
+		(text "LEDG[7..0]" (rect 204 27 251 39)(font "Arial" ))
+		(line (pt 272 32)(pt 256 32)(line_width 3))
+	)
+	(port
+		(pt 272 48)
+		(output)
+		(text "DRAM_CLK" (rect 0 0 57 12)(font "Arial" ))
+		(text "DRAM_CLK" (rect 194 43 251 55)(font "Arial" ))
+		(line (pt 272 48)(pt 256 48)(line_width 1))
+	)
+	(port
+		(pt 272 64)
+		(output)
+		(text "DRAM_CKE" (rect 0 0 59 12)(font "Arial" ))
+		(text "DRAM_CKE" (rect 192 59 251 71)(font "Arial" ))
+		(line (pt 272 64)(pt 256 64)(line_width 1))
+	)
+	(port
+		(pt 272 80)
+		(output)
+		(text "DRAM_ADDR[11..0]" (rect 0 0 90 12)(font "Arial" ))
+		(text "DRAM_ADDR[11..0]" (rect 161 75 251 87)(font "Arial" ))
+		(line (pt 272 80)(pt 256 80)(line_width 3))
+	)
+	(port
+		(pt 272 96)
+		(output)
+		(text "DRAM_BA_0" (rect 0 0 62 12)(font "Arial" ))
+		(text "DRAM_BA_0" (rect 189 91 251 103)(font "Arial" ))
+		(line (pt 272 96)(pt 256 96)(line_width 1))
+	)
+	(port
+		(pt 272 112)
+		(output)
+		(text "DRAM_BA_1" (rect 0 0 61 12)(font "Arial" ))
+		(text "DRAM_BA_1" (rect 190 107 251 119)(font "Arial" ))
+		(line (pt 272 112)(pt 256 112)(line_width 1))
+	)
+	(port
+		(pt 272 128)
+		(output)
+		(text "DRAM_CS_N" (rect 0 0 63 12)(font "Arial" ))
+		(text "DRAM_CS_N" (rect 188 123 251 135)(font "Arial" ))
+		(line (pt 272 128)(pt 256 128)(line_width 1))
+	)
+	(port
+		(pt 272 144)
+		(output)
+		(text "DRAM_CAS_N" (rect 0 0 71 12)(font "Arial" ))
+		(text "DRAM_CAS_N" (rect 180 139 251 151)(font "Arial" ))
+		(line (pt 272 144)(pt 256 144)(line_width 1))
+	)
+	(port
+		(pt 272 160)
+		(output)
+		(text "DRAM_RAS_N" (rect 0 0 73 12)(font "Arial" ))
+		(text "DRAM_RAS_N" (rect 178 155 251 167)(font "Arial" ))
+		(line (pt 272 160)(pt 256 160)(line_width 1))
+	)
+	(port
+		(pt 272 176)
+		(output)
+		(text "DRAM_WE_N" (rect 0 0 68 12)(font "Arial" ))
+		(text "DRAM_WE_N" (rect 183 171 251 183)(font "Arial" ))
+		(line (pt 272 176)(pt 256 176)(line_width 1))
+	)
+	(port
+		(pt 272 208)
+		(output)
+		(text "DRAM_UDQM" (rect 0 0 67 12)(font "Arial" ))
+		(text "DRAM_UDQM" (rect 184 203 251 215)(font "Arial" ))
+		(line (pt 272 208)(pt 256 208)(line_width 1))
+	)
+	(port
+		(pt 272 224)
+		(output)
+		(text "DRAM_LDQM" (rect 0 0 66 12)(font "Arial" ))
+		(text "DRAM_LDQM" (rect 185 219 251 231)(font "Arial" ))
+		(line (pt 272 224)(pt 256 224)(line_width 1))
+	)
+	(port
+		(pt 272 256)
+		(output)
+		(text "LCD_ON" (rect 0 0 40 12)(font "Arial" ))
+		(text "LCD_ON" (rect 211 251 251 263)(font "Arial" ))
+		(line (pt 272 256)(pt 256 256)(line_width 1))
+	)
+	(port
+		(pt 272 272)
+		(output)
+		(text "LCD_BLON" (rect 0 0 51 12)(font "Arial" ))
+		(text "LCD_BLON" (rect 200 267 251 279)(font "Arial" ))
+		(line (pt 272 272)(pt 256 272)(line_width 1))
+	)
+	(port
+		(pt 272 288)
+		(output)
+		(text "LCD_EN" (rect 0 0 40 12)(font "Arial" ))
+		(text "LCD_EN" (rect 211 283 251 295)(font "Arial" ))
+		(line (pt 272 288)(pt 256 288)(line_width 1))
+	)
+	(port
+		(pt 272 304)
+		(output)
+		(text "LCD_RS" (rect 0 0 40 12)(font "Arial" ))
+		(text "LCD_RS" (rect 211 299 251 311)(font "Arial" ))
+		(line (pt 272 304)(pt 256 304)(line_width 1))
+	)
+	(port
+		(pt 272 320)
+		(output)
+		(text "LCD_RW" (rect 0 0 44 12)(font "Arial" ))
+		(text "LCD_RW" (rect 207 315 251 327)(font "Arial" ))
+		(line (pt 272 320)(pt 256 320)(line_width 1))
+	)
+	(port
+		(pt 272 336)
+		(output)
+		(text "IO_address[9..0]" (rect 0 0 67 12)(font "Arial" ))
+		(text "IO_address[9..0]" (rect 184 331 251 343)(font "Arial" ))
+		(line (pt 272 336)(pt 256 336)(line_width 3))
+	)
+	(port
+		(pt 272 352)
+		(output)
+		(text "IO_bus_enable" (rect 0 0 60 12)(font "Arial" ))
+		(text "IO_bus_enable" (rect 191 347 251 359)(font "Arial" ))
+		(line (pt 272 352)(pt 256 352)(line_width 1))
+	)
+	(port
+		(pt 272 368)
+		(output)
+		(text "IO_byte_enable[1..0]" (rect 0 0 82 12)(font "Arial" ))
+		(text "IO_byte_enable[1..0]" (rect 169 363 251 375)(font "Arial" ))
+		(line (pt 272 368)(pt 256 368)(line_width 3))
+	)
+	(port
+		(pt 272 384)
+		(output)
+		(text "IO_rw" (rect 0 0 24 12)(font "Arial" ))
+		(text "IO_rw" (rect 227 379 251 391)(font "Arial" ))
+		(line (pt 272 384)(pt 256 384)(line_width 1))
+	)
+	(port
+		(pt 272 400)
+		(output)
+		(text "IO_write_data[15..0]" (rect 0 0 79 12)(font "Arial" ))
+		(text "IO_write_data[15..0]" (rect 172 395 251 407)(font "Arial" ))
+		(line (pt 272 400)(pt 256 400)(line_width 3))
+	)
+	(port
+		(pt 272 416)
+		(output)
+		(text "UART_TXD" (rect 0 0 54 12)(font "Arial" ))
+		(text "UART_TXD" (rect 197 411 251 423)(font "Arial" ))
+		(line (pt 272 416)(pt 256 416)(line_width 1))
+	)
+	(port
+		(pt 272 432)
+		(output)
+		(text "GPS_TXD" (rect 0 0 43 12)(font "Arial" ))
+		(text "GPS_TXD" (rect 208 427 251 439)(font "Arial" ))
+		(line (pt 272 432)(pt 256 432)(line_width 1))
+	)
+	(port
+		(pt 272 448)
+		(output)
+		(text "BlueTooth_TXD" (rect 0 0 63 12)(font "Arial" ))
+		(text "BlueTooth_TXD" (rect 188 443 251 455)(font "Arial" ))
+		(line (pt 272 448)(pt 256 448)(line_width 1))
+	)
+	(port
+		(pt 272 192)
+		(bidir)
+		(text "DRAM_DQ[15..0]" (rect 0 0 75 12)(font "Arial" ))
+		(text "DRAM_DQ[15..0]" (rect 176 187 251 199)(font "Arial" ))
+		(line (pt 272 192)(pt 256 192)(line_width 3))
+	)
+	(port
+		(pt 272 240)
+		(bidir)
+		(text "LCD_DATA[7..0]" (rect 0 0 75 12)(font "Arial" ))
+		(text "LCD_DATA[7..0]" (rect 176 235 251 247)(font "Arial" ))
+		(line (pt 272 240)(pt 256 240)(line_width 3))
+	)
+	(drawing
+		(rectangle (rect 16 16 256 480)(line_width 1))
+	)
+)
