@@ -7,7 +7,7 @@ USE ieee.std_logic_unsigned.all;
 ENTITY project1Exercises IS
 
    PORT (
-      SW : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+      SW : IN STD_LOGIC_VECTOR(17 DOWNTO 0);
       KEY : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
       CLOCK_50 : IN STD_LOGIC;
       LEDG : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
@@ -61,10 +61,10 @@ ARCHITECTURE Structure OF project1Exercises IS
 
 		NiosII: nios_system PORT MAP (
 			clk_clk => CLOCK_50,
-         reset_reset_n => KEY(0),
+         reset_reset_n => SW(17),
          sdram_clk_clk => DRAM_CLK,
          leds_g_export => LEDG,
-         switches_export => SW,
+         switches_export => SW(7 downto 0),
          sdram_wire_addr => DRAM_ADDR,
          sdram_wire_ba => BA,
          sdram_wire_cas_n => DRAM_CAS_N,
