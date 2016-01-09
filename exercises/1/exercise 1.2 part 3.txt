@@ -1,5 +1,5 @@
 proc.	Hardware Multipliers	# logic elements	# memory blocks 	Run-Time
 
-e		none					3079				14					19.985003 sec
-f		none									
-f		Embedded Multipliers	
+e	none			3079			14			19.985003 sec
+f	none			4512			30			1.269073 sec
+f	Embedded Multipliers	4803			30			1.209068 sec
