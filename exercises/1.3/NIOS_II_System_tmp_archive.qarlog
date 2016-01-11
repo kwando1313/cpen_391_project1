@@ -1,0 +1,113 @@
+Quartus II Archive log --	C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/NIOS_II_System_tmp_archive.qarlog
+
+Archive:	C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/NIOS_II_System_tmp_archive.qar
+Date:		Fri Jan 08 16:10:06 2016
+Quartus II 64-Bit		13.0.1 Build 232 06/12/2013 SP 1 SJ Web Edition
+
+	=========== Files Selected: ===========
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/ACIA_BaudRate_Generator.bdf
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/ColourPallette_2PortRam.bsf
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/ColourPallette_2PortRam.cmp
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/ColourPallette_2PortRam.mif
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/ColourPallette_2PortRam.qip
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/ColourPallette_2PortRam.vhd
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/GraphicsController.vhd
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/HexDisplays.bdf
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/HexTo7SegmentDisplay.vhd
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/IODecoder.vhd
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/Latch8Bit.vhd
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/M68xxIODecoder.vhd
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/NIOS_II_SYSTEM.vhd
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/NIOS_II_System.qpf
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/NIOS_II_System.sdc
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/OnChipIO.bdf
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/OnChipM68xxIO.bdf
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/RGBMapper.vhd
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/RamAddressMapper.vhd
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/SystemTopLevel.bdf
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/VGADataMux.vhd
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/VGA_Controller_256Pallette.vhd
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/VideoRamMux.vhd
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/Video_Controller800x480.bdf
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/nios_system.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_avalon_sc_fifo.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_avalon_st_pipeline_base.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_merlin_address_alignment.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_merlin_arbitrator.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_merlin_burst_adapter.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_merlin_burst_uncompressor.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_merlin_master_agent.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_merlin_master_translator.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_merlin_slave_agent.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_merlin_slave_translator.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_merlin_traffic_limiter.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_merlin_width_adapter.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_reset_controller.sdc
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_reset_controller.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_reset_synchronizer.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_up_character_lcd_communication.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_up_character_lcd_initialization.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_up_rs232_counters.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_up_rs232_in_deserializer.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_up_rs232_out_serializer.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/altera_up_sync_fifo.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_addr_router.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_addr_router_001.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_character_lcd_0.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_cmd_xbar_demux.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_cmd_xbar_demux_001.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_cmd_xbar_mux.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_id_router.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_id_router_001.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_id_router_006.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_id_router_014.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_irq_mapper.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_jtag_uart_0.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_new_sdram_controller_0.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0.ocp
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0.sdc
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0_bht_ram.mif
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0_dc_tag_ram.mif
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0_ic_tag_ram.mif
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0_jtag_debug_module_sysclk.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0_jtag_debug_module_tck.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0_jtag_debug_module_wrapper.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0_mult_cell.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0_oci_test_bench.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0_ociram_default_contents.mif
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0_rf_ram_a.mif
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0_rf_ram_b.mif
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_nios2_qsys_0_test_bench.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_onchip_memory2_0.hex
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_onchip_memory2_0.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_pio_0.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_pio_1.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_pio_2.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_pio_3.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_rs232_0.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_rsp_xbar_demux.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_rsp_xbar_demux_014.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_rsp_xbar_mux.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_rsp_xbar_mux_001.sv
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_timer_0.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_to_external_bus_bridge_0.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/db/ip/nios_system/submodules/nios_system_up_clocks_0.v
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/incremental_db/compiled_partitions/lights.db_info
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/lights.qsf
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/lpm_bustri1.vhd
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/nios_system.qsys
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/output_files/Latch2Bit.vhd
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/output_files/lights_.cdf
+C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/output_files/lpm_bustri0.vhd
+c:/altera/13.0sp1/quartus/bin64/assignment_defaults.qdf
+	======= Total: 96 files to archive =======
+
+	================ Status: ===============
+All files archived successfully.
+
+
+******* Archived project restoration attempt on Fri Jan 08 16:10:12 2016
+Source archive file:	C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/NIOS_II_System_tmp_archive.qar
+Archive was extracted into	C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3_copy/
+		 - successfully.

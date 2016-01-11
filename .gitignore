@@ -1,6 +1,7 @@
 incremental_db/
 output_files/
 db/
+greybox_tmp/
 *.bak
 *.sof
 *.pof
