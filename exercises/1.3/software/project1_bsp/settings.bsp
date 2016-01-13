@@ -2,10 +2,10 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>May 11, 2015 5:30:59 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1431390659587</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>.\</BspGeneratedLocation>
-        <BspSettingsFile>C:\NIOSII_Systems_DE2_Based\NIOS_II_System_Touch_For381_DE2\software\hal_bsp\settings.bsp</BspSettingsFile>
+        <BspGeneratedTimeStamp>12-Jan-2016 6:40:11 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1452652811237</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>C:\Users\Alex\Desktop\UBC\cpen391\cpen_391_project1\exercises\1.3\software\project1_bsp</BspGeneratedLocation>
+        <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\nios_system.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
         <Cpu>nios2_qsys_0</Cpu>
