@@ -93,8 +93,9 @@ void exercise_two() {
 }
 
 int** createSquareMatrix(int size){
-	int a[size][size];
+	int** a = (int**) malloc(size * sizeof(int*));
 	for (int col = 0; col < size; col++){
+		a[col] = (int*) malloc(size * sizeof(int));
 		for (int row = 0; row < size; row++) {
 			a[col][row] = rand() % 10; //arbitrary upper bound
 		}
