@@ -21,7 +21,8 @@ void Init_RS232(void){
 	// set RTS low, use 8 bits of data, no parity, 1 stop bit,
 	// transmitter interrupt disabled
 	// program baud rate generator to use 115k baud
-
+	alt_up_rs232_dev * char_rs232;
+	char_rs232 = alt_up_rs232_open_dev('/dev/rs232');
 	RS232_Baud = 0x001;
 	RS232_Control = 0x95;
 }
