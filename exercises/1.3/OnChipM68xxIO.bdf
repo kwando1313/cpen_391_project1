@@ -86,7 +86,7 @@ applicable agreement for further details.
 )
 (pin
 	(input)
-	(rect 240 176 408 192)
+	(rect 224 176 392 192)
 	(text "INPUT" (rect 133 0 161 10)(font "Arial" (font_size 6)))
 	(text "DataIn[7..0]" (rect 5 0 64 12)(font "Arial" ))
 	(pt 168 8)
@@ -1218,11 +1218,6 @@ applicable agreement for further details.
 	(bus)
 )
 (connector
-	(pt 864 184)
-	(pt 408 184)
-	(bus)
-)
-(connector
 	(pt 1024 832)
 	(pt 1040 832)
 )
@@ -1712,10 +1707,6 @@ applicable agreement for further details.
 	(pt 840 16)
 )
 (connector
-	(pt 1104 64)
-	(pt 840 64)
-)
-(connector
 	(pt 840 16)
 	(pt 840 64)
 )
@@ -1750,47 +1741,6 @@ applicable agreement for further details.
 (connector
 	(pt 952 -72)
 	(pt 952 80)
-)
-(connector
-	(pt 1104 32)
-	(pt 888 32)
-	(bus)
-)
-(connector
-	(pt 1104 184)
-	(pt 888 184)
-	(bus)
-)
-(connector
-	(text "DataIn[2..0]" (rect 874 168 933 180)(font "Arial" ))
-	(pt 888 184)
-	(pt 864 184)
-	(bus)
-)
-(connector
-	(pt 1104 -120)
-	(pt 888 -120)
-	(bus)
-)
-(connector
-	(pt 888 32)
-	(pt 888 184)
-	(bus)
-)
-(connector
-	(pt 1104 -272)
-	(pt 888 -272)
-	(bus)
-)
-(connector
-	(pt 888 -272)
-	(pt 888 -120)
-	(bus)
-)
-(connector
-	(pt 888 -120)
-	(pt 888 32)
-	(bus)
 )
 (connector
 	(pt 808 400)
@@ -1865,10 +1815,6 @@ applicable agreement for further details.
 	(pt 1336 16)
 )
 (connector
-	(pt 1336 16)
-	(pt 1336 560)
-)
-(connector
 	(pt 1304 520)
 	(pt 960 520)
 )
@@ -1929,14 +1875,6 @@ applicable agreement for further details.
 	(pt 1008 1456)
 )
 (connector
-	(pt 1288 -136)
-	(pt 1360 -136)
-)
-(connector
-	(pt 1360 -136)
-	(pt 1360 576)
-)
-(connector
 	(pt 976 576)
 	(pt 1360 576)
 )
@@ -1947,14 +1885,6 @@ applicable agreement for further details.
 (connector
 	(pt 976 1336)
 	(pt 976 1352)
-)
-(connector
-	(pt 1288 -288)
-	(pt 1376 -288)
-)
-(connector
-	(pt 1376 592)
-	(pt 1376 -288)
 )
 (connector
 	(pt 984 592)
@@ -1988,6 +1918,79 @@ applicable agreement for further details.
 	(pt 984 1624)
 	(pt 984 1640)
 )
+(connector
+	(pt 392 184)
+	(pt 864 184)
+	(bus)
+)
+(connector
+	(pt 1336 560)
+	(pt 1336 16)
+)
+(connector
+	(pt 1360 576)
+	(pt 1360 -136)
+)
+(connector
+	(pt 1376 592)
+	(pt 1376 -288)
+)
+(connector
+	(pt 840 64)
+	(pt 1104 64)
+)
+(connector
+	(text "DataIn[2..0]" (rect 898 16 957 28)(font "Arial" ))
+	(pt 1104 32)
+	(pt 888 32)
+	(bus)
+)
+(connector
+	(pt 1360 -136)
+	(pt 1288 -136)
+)
+(connector
+	(pt 1376 -288)
+	(pt 1288 -288)
+)
+(connector
+	(text "DataIn[2..0]" (rect 898 -136 957 -124)(font "Arial" ))
+	(pt 888 -120)
+	(pt 1104 -120)
+	(bus)
+)
+(connector
+	(pt 864 184)
+	(pt 888 184)
+	(bus)
+)
+(connector
+	(text "DataIn[2..0]" (rect 898 168 957 180)(font "Arial" ))
+	(pt 888 184)
+	(pt 1104 184)
+	(bus)
+)
+(connector
+	(pt 888 32)
+	(pt 888 184)
+	(bus)
+)
+(connector
+	(text "DataIn[2..0]" (rect 898 -288 957 -276)(font "Arial" ))
+	(pt 1104 -272)
+	(pt 888 -272)
+	(bus)
+)
+(connector
+	(pt 888 -272)
+	(pt 888 -120)
+	(bus)
+)
+(connector
+	(pt 888 -120)
+	(pt 888 32)
+	(bus)
+)
 (junction (pt 472 384))
 (junction (pt 472 736))
 (junction (pt 672 688))
@@ -2020,17 +2023,17 @@ applicable agreement for further details.
 (junction (pt 840 -136))
 (junction (pt 840 -88))
 (junction (pt 840 16))
-(junction (pt 840 64))
 (junction (pt 952 232))
 (junction (pt 952 80))
 (junction (pt 952 -72))
-(junction (pt 888 184))
-(junction (pt 888 32))
-(junction (pt 888 -120))
 (junction (pt 960 768))
 (junction (pt 968 1048))
 (junction (pt 976 1336))
 (junction (pt 984 1624))
+(junction (pt 840 64))
+(junction (pt 888 -120))
+(junction (pt 888 184))
+(junction (pt 888 32))
 (text "It should be enabled when the CPU writes (or reads) to location hex 8400_0204. Data in bits 2, 1 and 0 of the data bus is used to set the baud rate" (rect 1032 360 1863 374)(font "Arial" (font_size 8)))
 (text "Interrupt request output from serial port(s)" (rect 1608 720 1847 734)(font "Arial" (font_size 8)))
 (text "ByteSelect_L is driven to '0' when CPU accesses EVEN address" (rect 64 448 430 462)(font "Arial" (font_size 8)))
