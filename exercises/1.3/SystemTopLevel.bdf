@@ -1937,6 +1937,32 @@ applicable agreement for further details.
 		(rectangle (rect 16 16 288 208))
 	)
 )
+(symbol
+	(rect 488 1712 536 1744)
+	(text "NOT" (rect 27 22 47 32)(font "Arial" (font_size 6)))
+	(text "inst1" (rect 22 -1 45 11)(font "Arial" ))
+	(port
+		(pt 48 16)
+		(input)
+		(text "IN" (rect 2 7 13 19)(font "Courier New" (bold))(invisible))
+		(text "IN" (rect 35 13 46 25)(font "Courier New" (bold))(invisible))
+		(line (pt 48 16)(pt 35 16))
+	)
+	(port
+		(pt 0 16)
+		(output)
+		(text "OUT" (rect 32 7 49 19)(font "Courier New" (bold))(invisible))
+		(text "OUT" (rect -1 13 16 25)(font "Courier New" (bold))(invisible))
+		(line (pt 9 16)(pt 0 16))
+	)
+	(drawing
+		(line (pt 35 7)(pt 35 25))
+		(line (pt 35 25)(pt 17 16))
+		(line (pt 35 7)(pt 17 16))
+		(circle (rect 9 12 17 20))
+	)
+	(rotate180)
+)
 (connector
 	(pt 432 296)
 	(pt 448 296)
@@ -2590,20 +2616,12 @@ applicable agreement for further details.
 	(pt 384 1120)
 )
 (connector
-	(pt 360 1120)
-	(pt 360 1728)
-)
-(connector
 	(pt 1200 1792)
 	(pt 1224 1792)
 )
 (connector
 	(pt 1224 1728)
 	(pt 1224 1792)
-)
-(connector
-	(pt 1224 1728)
-	(pt 360 1728)
 )
 (connector
 	(pt 1200 1776)
@@ -2626,6 +2644,18 @@ applicable agreement for further details.
 	(pt 328 1136)
 	(pt 328 1704)
 	(bus)
+)
+(connector
+	(pt 360 1728)
+	(pt 488 1728)
+)
+(connector
+	(pt 360 1120)
+	(pt 360 1728)
+)
+(connector
+	(pt 1224 1728)
+	(pt 536 1728)
 )
 (junction (pt 560 296))
 (junction (pt 704 296))
