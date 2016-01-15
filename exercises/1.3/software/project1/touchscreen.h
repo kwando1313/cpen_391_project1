@@ -26,13 +26,22 @@ void Init_Touch(void){
 int ScreenTouched( void){
 	// return TRUE if any data received from 6850 connected to touchscreen
 	// or FALSE otherwise
-	return 1; //TRUE
+	if (Touchscreen_Status & 0x81) // some value received //0x81 = 10000001 = pen down command
+		return 1; //TRUE
+	return 0; //FALSE
 }
 /*****************************************************************************
 **   wait for screen to be touched
 *****************************************************************************/
 void WaitForTouch(){
 	while(!ScreenTouched());
+}
+
+/*****************************************************************************
+**   wait for screen to be released
+*****************************************************************************/
+void WaitForRelease(){
+	while(ScreenTouched());
 }
 /* a data type to hold a point/coord */
 typedef struct{int x, y; } Point;
@@ -43,6 +52,12 @@ Point GetPress(void){
 	Point p1;
 	// wait for a pen down command then return the X,Y coord of the point
 	// calibrated correctly so that it maps to a pixel on screen
+	WaitForTouch();
+	//Get value here for x
+	int x = 0;
+	//Get value here for y
+	int y = 0;
+	p1 = Point(x,y);
 	return p1;
 }
 /*****************************************************************************
@@ -52,6 +67,14 @@ Point GetRelease(void){
 	Point p1;
 	// wait for a pen up command then return the X,Y coord of the point
 	// calibrated correctly so that it maps to a pixel on screen
+	GetPress();
+	WaitForRelease();
+
+	//Get value here for x
+	int x = 0;
+	//Get value here for y
+	int y = 0;
+	p1 = Point(x,y);
 	return p1;
 }
 
