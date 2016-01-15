@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include "rs232.h"
 
 int main(void) {
-	printf("RS232 code");
+
+	test_rs232();
 
 	return 0;
 }

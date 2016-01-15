@@ -17,27 +17,34 @@ void Init_RS232(void){
 	// program baud rate generator to use 115k baud
 	// enabling rx irq for now
 	RS232_Baud = 0x01;
-	RS232_Control = 0x95;
+	RS232_Control = 0x15;
 }
 
-int putcharRS232(int c) {
+void putcharRS232(char c) {
 	//wait for tx data to be ready
-	while (RS232_Status & 0x2);
+	while (!(RS232_Status & 0x2));
 	RS232_TxData = c;
-
-	return c;
 }
 
-int getcharRS232(void){
+char getcharRS232(void){
 	// wait for Rx bit
-	while (RS232_Status & 0x1);
-
+	while (!(RS232_Status & 0x1));
 	return RS232_RxData;
 }
 
 // returns true if Rx data available
 int RS232TestForReceivedData(void){
 	return (RS232_Status & 0x1);
+}
+
+void test_rs232(void) {
+	printf("Test RS232\n");
+	Init_RS232();
+	while(1) {
+		char val = getcharRS232();
+		putcharRS232(val);
+		printf("received: %c\n", val);
+	}
 }
 
 #endif /* RS232_H_ */
