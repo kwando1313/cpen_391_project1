@@ -44,6 +44,13 @@ void WaitForTouch(){
 void WaitForRelease(){
 	while(ScreenTouched());
 }
+
+/*****************************************************************************
+**   wait for screen to be released
+*****************************************************************************/
+void WaitForReadStatus(){
+	while(!(Touchscreen_Status & 0x00));
+}
 /* a data type to hold a point/coord */
 typedef struct{int x, y; } Point;
 /*****************************************************************************
@@ -56,13 +63,13 @@ Point GetPress(void){
 	WaitForTouch();
 	//Get value here for x
 	//Read first 2(?) bytes
-	while (!(Touchscreen_Status & 0x00));
+	WaitForReadStatus();
 	int x_first_half = Touchscreen_RxData;
-	while (!(Touchscreen_Status & 0x00));
+	WaitForReadStatus();
 	int x_second_half = Touchscreen_RxData;
-	while (!(Touchscreen_Status & 0x00));
+	WaitForReadStatus();
 	int y_first_half = Touchscreen_RxData;
-	while (!(Touchscreen_Status & 0x00));
+	WaitForReadStatus();
 	int y_second_half = Touchscreen_RxData;
 
 	int x = (x_second_half * 128) + (x_first_half);
