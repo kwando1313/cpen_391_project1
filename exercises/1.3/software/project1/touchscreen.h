@@ -17,8 +17,9 @@ void Init_Touch(void){
 	// send touchscreen controller an "enable touch" command
 
 	Touchscreen_Baud = 0x05;
-	Touchscreen_Control = 0x00; //wtf where do i set this to be 8 data bits and 1 stop bit
-
+	Touchscreen_Control = 0x55;
+	Touchscreen_Control = 0x01;
+	Touchscreen_Control = 0x12;
 }
 /*****************************************************************************
 **   test if screen touched
@@ -26,7 +27,7 @@ void Init_Touch(void){
 int ScreenTouched( void){
 	// return TRUE if any data received from 6850 connected to touchscreen
 	// or FALSE otherwise
-	if (Touchscreen_Status & 0x81) // some value received //0x81 = 10000001 = pen down command
+	if (Touchscreen_RxData & 0x81) // some value received //0x81 = 10000001 = pen down command
 		return 1; //TRUE
 	return 0; //FALSE
 }
@@ -54,9 +55,18 @@ Point GetPress(void){
 	// calibrated correctly so that it maps to a pixel on screen
 	WaitForTouch();
 	//Get value here for x
-	int x = 0;
-	//Get value here for y
-	int y = 0;
+	//Read first 2(?) bytes
+	while (!(Touchscreen_Status & 0x00));
+	int x_first_half = Touchscreen_RxData;
+	while (!(Touchscreen_Status & 0x00));
+	int x_second_half = Touchscreen_RxData;
+	while (!(Touchscreen_Status & 0x00));
+	int y_first_half = Touchscreen_RxData;
+	while (!(Touchscreen_Status & 0x00));
+	int y_second_half = Touchscreen_RxData;
+
+	int x = (x_second_half * 128) + (x_first_half);
+	int y = (y_second_half * 128) + (y_first_half);
 	p1 = Point(x,y);
 	return p1;
 }
@@ -70,10 +80,17 @@ Point GetRelease(void){
 	GetPress();
 	WaitForRelease();
 
-	//Get value here for x
-	int x = 0;
-	//Get value here for y
-	int y = 0;
+	while (!(Touchscreen_Status & 0x00));
+	int x_first_half = Touchscreen_RxData;
+	while (!(Touchscreen_Status & 0x00));
+	int x_second_half = Touchscreen_RxData;
+	while (!(Touchscreen_Status & 0x00));
+	int y_first_half = Touchscreen_RxData;
+	while (!(Touchscreen_Status & 0x00));
+	int y_second_half = Touchscreen_RxData;
+
+	int x = (x_second_half * 128) + (x_first_half);
+	int y = (y_second_half * 128) + (y_first_half);
 	p1 = Point(x,y);
 	return p1;
 }
