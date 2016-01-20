@@ -48,7 +48,12 @@ ENTITY NIOS_II_SYSTEM IS
 		Hex0_1			: out   std_logic_vector(7 downto 0) ;
 		Hex2_3			: out   std_logic_vector(7 downto 0) ;
 		Hex4_5			: out   std_logic_vector(7 downto 0) ;
-		Hex6_7			: out   std_logic_vector(7 downto 0) 
+		Hex6_7			: out   std_logic_vector(7 downto 0) ;
+		
+		SDCard_cmd 		: inout	std_logic := '0'; 		-- sdcard.b_SD_cmd
+		SDCard_dat		: inout 	std_logic := '0';			-- .b_SD_dat
+		SDCard_dat3		: inout 	std_logic := '0';			--	.b_SD_dat3
+		SDCard_clock	: out		std_logic					-- .o_SD_clock
 );
 END NIOS_II_SYSTEM;
 
@@ -95,7 +100,11 @@ ARCHITECTURE Structure OF NIOS_II_SYSTEM IS
 			hex0_1_export          : out   std_logic_vector(7 downto 0);                     -- export
 			hex2_3_export          : out   std_logic_vector(7 downto 0);                     -- export
 			hex4_5_export          : out   std_logic_vector(7 downto 0);                     -- export
-			hex6_7_export          : out   std_logic_vector(7 downto 0)                      -- export
+			hex6_7_export          : out   std_logic_vector(7 downto 0);                      -- export
+			sdcard_b_SD_cmd        : inout std_logic:= '0';       									--sdcard.b_SD_cmd
+			sdcard_b_SD_dat        : inout std_logic:= '0';       									--.b_SD_dat
+			sdcard_b_SD_dat3       : inout std_logic:= '0';												--.b_SD_dat3
+			sdcard_o_SD_clock      : out   std_logic                                   		--.o_SD_clock
 		);
 	end component nios_system;
 	
@@ -152,6 +161,11 @@ BEGIN
 		hex0_1_export => Hex0_1,
 		hex2_3_export => Hex2_3,
 		hex4_5_export => Hex4_5,
-		hex6_7_export => Hex6_7
+		hex6_7_export => Hex6_7,
+		
+		sdcard_b_SD_cmd  => SDCard_cmd,
+		sdcard_b_SD_dat	=> SDCard_dat,
+		sdcard_b_SD_dat3 => SDCard_dat3,
+		sdcard_o_SD_clock =>SDCard_clock
 	);
 END Structure;
