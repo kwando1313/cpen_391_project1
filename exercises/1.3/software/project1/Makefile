@@ -142,7 +142,8 @@ ACDS_VERSION := 13.0sp1
 ELF := project1.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS := main.c
+C_SRCS += main.c
+C_SRCS += Bresenhams_Line_Drawing_Algorithm.c
 CXX_SRCS :=
 ASM_SRCS :=
 

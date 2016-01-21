@@ -104,7 +104,19 @@ architecture bhvr of GraphicsController is
 	-- you should only attempt to read/write memory when this signal is '0'
 	
 	signal	OkToDraw_L																			: Std_Logic;
-	 
+
+
+
+--------------- added signals ---------------------------
+	signal curr_x :  Std_Logic_Vector(15 downto 0) := (others=>'0');
+	signal load_curr_x :  Std_Logic;
+	signal inc_curr_x :  Std_Logic;
+	
+	signal curr_y :  Std_Logic_Vector(15 downto 0) := (others=>'0');
+	signal load_curr_y :  Std_Logic;
+	signal inc_curr_y :  Std_Logic;
+---------------------------------------------------------
+	
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -- States and signals for state machine
 -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -130,8 +142,9 @@ architecture bhvr of GraphicsController is
 	constant ReadPixel2							 	: Std_Logic_Vector(7 downto 0) := X"08";		-- State for reading a pixel
 	constant ReadPixel3							 	: Std_Logic_Vector(7 downto 0) := X"09";		-- State for reading a pixel
 	constant PalletteReProgram						: Std_Logic_Vector(7 downto 0) := X"0A";		-- State for programming a pallette
-
-	-- add any extra states you need here for example to draw lines etc.
+	constant DrawHlineInit		 	 				: Std_Logic_Vector(7 downto 0) := X"0B";		-- State for initializing drawing a Horizontal line
+	constant DrawVlineInit		 	 				: Std_Logic_Vector(7 downto 0) := X"0C";		-- State for initializing drawing a Veritcal line
+	
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -- Commands that can be written to command register by NIOS to get graphics controller to draw a shape
 -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -141,6 +154,7 @@ architecture bhvr of GraphicsController is
 	constant	PutPixel									: Std_Logic_Vector(15 downto 0) := X"000a";	-- command to Graphics chip from NIOS to draw a pixel
 	constant	GetPixel									: Std_Logic_Vector(15 downto 0) := X"000b";	-- command to Graphics chip from NIOS to read a pixel
 	constant ProgramPallette						: Std_Logic_Vector(15 downto 0) := X"0010";	-- command to Graphics chip from NIOS is program one of the pallettes with a new RGB value
+	
 Begin
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -463,6 +477,18 @@ Begin
 			ColourPalletteData	<= Sig_ColourPalletteData;
 			ColourPallette_WE_H	<= Sig_ColourPallette_WE_H; 
 	
+			if load_curr_x = '1' then
+				curr_x <= X1;
+			elsif inc_curr_x = '1' then
+				curr_x <= curr_x + 1;
+			end if;
+	
+			if load_curr_y = '1' then
+				curr_y <= Y1;
+			elsif inc_curr_y = '1' then
+				curr_y <= curr_y + 1;
+			end if;
+	
 		end if; 
 	end process;
 	
@@ -471,7 +497,7 @@ Begin
 ----------------------------------------------------------------------------------------------------------------------	
 	
 	process(CurrentState, CommandWritten_H, Command, X1, X2, Y1, Y2, Colour, OKToDraw_L, VSync_L,
-				BackGroundColour, AS_L, Sram_DataIn, CLK, Colour_Latch)
+				BackGroundColour, AS_L, Sram_DataIn, CLK, Colour_Latch, curr_x, curr_y)
 	begin
 	
 	----------------------------------------------------------------------------------------------------------------------------------
@@ -507,7 +533,11 @@ Begin
 		-------------------------------------------------------------------------------------
 		
 		NextState							<= Idle;	
-				
+			
+		load_curr_x <= '0';
+		inc_curr_x <= '0';
+		load_curr_y <= '0';
+		inc_curr_y <= '0';
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------				
 		if(CurrentState = Idle ) then
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -538,9 +568,9 @@ Begin
 			elsif(Command = ProgramPallette) then
 				NextState <= PalletteReProgram ;				
 			elsif(Command = Hline) then
-				NextState <= DrawHLine;
+				NextState <= DrawHLineInit;
 			elsif(Command = Vline) then
-				NextState <= DrawVline;
+				NextState <= DrawVlineInit;
 			elsif(Command = ALine) then
 				NextState <= DrawLine;	
 				
@@ -680,19 +710,62 @@ Begin
 			Sig_LDS_Out_L <= '1';
 			Sig_RW_Out <= '1' ;
 			NextState <= IDLE;
-			
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		elsif(CurrentState = DrawHlineInit) then
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			load_curr_x <= '1';
+			NextState <= DrawHLine;
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		elsif(CurrentState = DrawHline) then
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-			-- TODO in your project
-			NextState <= IDLE;
+
+			NextState <= DrawHLine;
+
+			if(OKToDraw_L = '0') then
+				inc_curr_x <= '1';
+				Sig_AddressOut 	<= Y1(8 downto 0) & curr_x(9 downto 1);				
+				Sig_RW_Out			<= '0';													
 				
+				if(curr_x(0) = '0')	then													
+					Sig_UDS_Out_L 	<= '0';													
+				else
+					Sig_LDS_Out_L 	<= '0';													
+				end if;
+
+				if curr_x = X2 then
+					NextState <= IDLE;
+				end if;
+				
+			end if;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		elsif(CurrentState = DrawVlineInit) then
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------		
+			load_curr_y <= '1';
+			NextState <= DrawVline;			
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		elsif(CurrentState = DrawVline) then
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------		
-			-- TODO in your project
-			NextState <= IDLE;
-			
+
+			NextState <= DrawVLine;
+
+			if(OKToDraw_L = '0') then
+				inc_curr_y <= '1';
+				Sig_AddressOut 	<= curr_y(8 downto 0) & X1(9 downto 1);				
+				Sig_RW_Out			<= '0';													
+				
+				if(X1(0) = '0')	then													
+					Sig_UDS_Out_L 	<= '0';													
+				else
+					Sig_LDS_Out_L 	<= '0';													
+				end if;
+
+				if curr_y = Y2 then
+					NextState <= IDLE;
+				end if;
+				
+			end if;
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		elsif(CurrentState = DrawLine) then
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------		
@@ -700,5 +773,6 @@ Begin
 			NextState <= IDLE;
 			
 		end if ;
-	end process;	
+	end process;
+	
 end;

@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #ifndef RS232_H_
 #define RS232_H_
 
@@ -7,7 +9,6 @@
 #define RS232_RxData  (*(volatile unsigned char *)(0x84000202))
 #define RS232_Baud    (*(volatile unsigned char *)(0x84000204))
 
-#include "altera_up_avalon_rs232.h"
 
 // Call this before attempting to read or write via the RS232 port
 void Init_RS232(void){
@@ -38,12 +39,12 @@ int RS232TestForReceivedData(void){
 }
 
 void test_rs232(void) {
-	printf("Test RS232\n");
+	//printf("Test RS232\n");
 	Init_RS232();
 	while(1) {
 		char val = getcharRS232();
 		putcharRS232(val);
-		printf("received: %c\n", val);
+		//printf("received: %c\n", val);
 	}
 }
 

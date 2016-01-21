@@ -10,7 +10,7 @@
 
 #define	BLACK			0
 #define	WHITE			1
-#define	RED			2
+#define	RED				2
 #define	LIME			3
 #define	BLUE			4
 #define	YELLOW			5
@@ -58,7 +58,7 @@ void VLine(int x1, int y1, int length, int Colour);
 // Implementation of Bresenhams line drawing algorithm
 void Line(int x1, int y1, int x2, int y2, int Colour);
 
-void clear_screen(colour);
+void clear_screen(int colour);
 
 
 #endif /* BRESENHAMS_LINE_DRAWING_ALGORITHM_H_ */

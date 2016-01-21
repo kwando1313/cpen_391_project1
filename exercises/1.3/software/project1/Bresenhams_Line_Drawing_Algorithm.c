@@ -93,7 +93,7 @@ void HLine(int x1, int y1, int length, int Colour)
 	WAIT_FOR_GRAPHICS;
 
 	GraphicsX1Reg = x1; //start
-	GraphicsX2Reg = x1 + length; //end
+	GraphicsX2Reg = x1 + length - 1; //end
 	GraphicsY1Reg = y1;
 	GraphicsColourReg = Colour;
 	GraphicsCommandReg = DrawHLine;
@@ -109,7 +109,7 @@ void VLine(int x1, int y1, int length, int Colour)
 
 	GraphicsX1Reg = x1;
 	GraphicsY1Reg = y1; //start
-	GraphicsY2Reg = y1 + length; //end
+	GraphicsY2Reg = y1 + length - 1; //end
 	GraphicsColourReg = Colour;
 	GraphicsCommandReg = DrawVLine;
 }
@@ -193,7 +193,7 @@ void Line(int x1, int y1, int x2, int y2, int Colour)
 }
 
 
-void clear_screen(colour){
+void clear_screen(int colour){
 	int length = 1000;
 
 	for (int x1 = 0; x1<=800; x1++){
