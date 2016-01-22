@@ -2,9 +2,9 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>14-Jan-2016 7:01:38 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1452826898761</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>C:\Users\Alex\Desktop\UBC\cpen391\cpen_391_project1\exercises\1.3\software\project1_bsp</BspGeneratedLocation>
+        <BspGeneratedTimeStamp>19-Jan-2016 7:30:10 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1453260610356</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>C:\Users\kwando1313\cpen_391_project1\cpen_391_project1\exercises\1.3\software\project1_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\nios_system.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
@@ -944,6 +944,12 @@
                 <slaveDescriptor>pio_4</slaveDescriptor>
                 <addressRange>0x00001110 - 0x0000111F</addressRange>
                 <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>Altera_UP_SD_Card_Avalon_Interface_0</slaveDescriptor>
+                <addressRange>0x00200400 - 0x002007FF</addressRange>
+                <addressSpan>1024</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
