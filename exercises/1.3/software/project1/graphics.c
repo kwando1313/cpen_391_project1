@@ -234,11 +234,58 @@ void draw_filled_triangle(Point a, Point b, Point c, int colour){
 	Line(a.x, a.y, b.x, b.y, colour);
 	Line(a.x, a.y, c.x, c.y, colour);
 	Line(c.x, c.y, b.x, b.y, colour);
-	Fill(c.x+5, c.y-5, RED, RED);
+	//TODO: Check if this point is always going to be in the triangle
+	Fill(avg_val(a.x,b.x,c.x), avg_val(a.y,b.y,c.y), colour, colour);
 }
 
-void draw_filled_triangle_border(Point a, Point b, Point c, int colour, int borderColour, int borderWidth);
+void draw_filled_triangle_border(Point a, Point b, Point c, int colour, int borderColour){
+	Line(a.x, a.y, b.x, b.y, borderColour);
+	Line(a.x, a.y, c.x, c.y, borderColour);
+	Line(c.x, c.y, b.x, b.y, borderColour);
+	Fill(avg_val(a.x,b.x,c.x), avg_val(a.y,b.y,c.y), colour, borderColour);
+}
 
+/* for shapes that don't fit into the other draw functions
+ * lines connect points[0] to points[1], points[1] to points[2],
+ * ..., points[num_points-1] to points[0]
+ * assumes num_points >= 3
+ * Note: if you find yourself drawing the same shape over & over with this,
+ * we should probably write a new function for that shape in particular
+*/
+void draw_shape(Point points[], int num_points, int colour){
+	for(int i = 1; i<num_points; i++){
+		Line(points[i-1].x, points[i-1].y, points[i].x, points[i].y, colour);
+	}
+	Line(points[0].x, points[0].y, points[num_points-1].x, points[num_points-1].y, colour);
+}
+
+// see notes for draw_shape
+// let me know if filling doesn't work - it might have problems with weird shapes
+void draw_filled_shape(Point points[], int num_points, int colour){
+	int xTot = points[0].x;
+	int yTot = points[0].y;
+	for(int i = 1; i<num_points; i++){
+		Line(points[i-1].x, points[i-1].y, points[i].x, points[i].y, colour);
+		xTot += points[i].x;
+		yTot += points[i].y;
+	}
+	Line(points[0].x, points[0].y, points[num_points-1].x, points[num_points-1].y, colour);
+	Fill(xTot/num_points, yTot/num_points, colour, colour);
+}
+
+// see notes for draw_shape
+// let me know if filling doesn't work - it might have problems with weird shapes
+void draw_filled_shape_border(Point points[], int num_points, int colour, int borderColour){
+	int xTot = points[0].x;
+	int yTot = points[0].y;
+	for(int i = 1; i<num_points; i++){
+		Line(points[i-1].x, points[i-1].y, points[i].x, points[i].y, borderColour);
+		xTot += points[i].x;
+		yTot += points[i].y;
+	}
+	Line(points[0].x, points[0].y, points[num_points-1].x, points[num_points-1].y, borderColour);
+	Fill(xTot/num_points, yTot/num_points, colour, borderColour);
+}
 
 //draws random lines, prints coords
 void rand_lines_test(int num){

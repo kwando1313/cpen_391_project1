@@ -36,8 +36,11 @@ void draw_filled_rectangle_border(Point topLeft, Point topRight, Point botLeft, 
 
 void draw_triangle(Point a, Point b, Point c, int colour);
 void draw_filled_triangle(Point a, Point b, Point c, int colour);
-void draw_filled_triangle_border(Point a, Point b, Point c, int colour, int borderColour, int borderWidth);
+void draw_filled_triangle_border(Point a, Point b, Point c, int colour, int borderColour);
 
+void draw_shape(Point points[], int num_points, int colour);
+void draw_filled_shape(Point points[], int num_points, int colour);
+void draw_filled_shape_border(Point points[], int num_points, int colour, int borderColour);
 /*
  *
  * Build a small library of functions to draw things line 'rectangles,' 'filled rectangles', 'filled
