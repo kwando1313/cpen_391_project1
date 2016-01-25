@@ -26,13 +26,14 @@ typedef struct{
 } Point;
 
 //TODO: input validation
-// rectangle, triangles
+// triangles
 // rest will be drawshape
 // circles
 void draw_rectangle(Point topLeft, Point topRight, Point botLeft, Point botRight, int colour);
 void draw_filled_rectangle(Point topLeft, Point topRight, Point botLeft, Point botRight, int colour);
 void draw_filled_rectangle_border(Point topLeft, Point topRight, Point botLeft, Point botRight,
 		int colour, int borderColour, int borderWidth);
+
 void draw_triangle(Point a, Point b, Point c, int colour);
 void draw_filled_triangle(Point a, Point b, Point c, int colour);
 void draw_filled_triangle_border(Point a, Point b, Point c, int colour, int borderColour, int borderWidth);

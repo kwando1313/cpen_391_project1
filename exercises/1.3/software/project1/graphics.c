@@ -229,8 +229,16 @@ void draw_triangle(Point a, Point b, Point c, int colour){
 	Line(a.x, a.y, c.x, c.y, colour);
 	Line(c.x, c.y, b.x, b.y, colour);
 }
-void draw_filled_triangle(Point a, Point b, Point c, int colour);
+
+void draw_filled_triangle(Point a, Point b, Point c, int colour){
+	Line(a.x, a.y, b.x, b.y, colour);
+	Line(a.x, a.y, c.x, c.y, colour);
+	Line(c.x, c.y, b.x, b.y, colour);
+	Fill(c.x+5, c.y-5, RED, RED);
+}
+
 void draw_filled_triangle_border(Point a, Point b, Point c, int colour, int borderColour, int borderWidth);
+
 
 //draws random lines, prints coords
 void rand_lines_test(int num){
