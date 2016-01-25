@@ -68,7 +68,7 @@ void ProgramPalette(int PaletteNumber, int RGB){
  * requires: x1, y1, length >= 0
  */
 void HLine(int x1, int y1, int length, int Colour){
-	if (length == 0) {
+	if (length <= 0) {
 		return;
 	}
 
@@ -87,7 +87,7 @@ void HLine(int x1, int y1, int length, int Colour){
  * requires: x1, y1, length >= 0
  */
 void VLine(int x1, int y1, int length, int Colour){
-	if (length == 0) {
+	if (length <= 0) {
 		return;
 	}
 

@@ -143,7 +143,7 @@ ELF := project1.elf
 
 # Paths to C, C++, and assembly source files.
 C_SRCS += main.c
-C_SRCS += Bresenhams_Line_Drawing_Algorithm.c
+C_SRCS += graphics.c
 CXX_SRCS :=
 ASM_SRCS :=
 
