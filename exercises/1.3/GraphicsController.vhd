@@ -1,8 +1,9 @@
 LIBRARY ieee; 
 USE ieee.Std_Logic_1164.all;
-use ieee.Std_Logic_arith.all; 
-use ieee.Std_Logic_signed.all;  
-   
+use ieee.numeric_std.all;
+-- use ieee.Std_Logic_arith.all;
+-- use ieee.Std_Logic_signed.all;
+
 entity GraphicsController is  
 	Port (  
  
@@ -108,13 +109,19 @@ architecture bhvr of GraphicsController is
 
 
 --------------- added signals ---------------------------
-	signal curr_x :  Std_Logic_Vector(15 downto 0) := (others=>'0');
-	signal load_curr_x :  Std_Logic;
-	signal inc_curr_x :  Std_Logic;
+	signal curr_x, curr_y :  unsigned(15 downto 0) := (others=>'0');
+	signal final_x, final_y:  unsigned(15 downto 0) := (others=>'0');
+	signal load_curr_x, load_curr_y, load_final_x, load_final_y  :  Std_Logic;
+	signal inc_curr_x, inc_curr_y, dec_curr_x, dec_curr_y : std_Logic;
+	signal err_sub_dy, err_add_dx : std_Logic;
+
+	-- may want to change size of dx, dy
+	signal dx : signed(16 downto 0) := (others=>'0');
+	signal dy : signed(16 downto 0) := (others=>'0');
+	signal sx : integer := 1;
+	signal sy : integer := 1;
+	signal err : signed(16 downto 0) := (others=>'0');
 	
-	signal curr_y :  Std_Logic_Vector(15 downto 0) := (others=>'0');
-	signal load_curr_y :  Std_Logic;
-	signal inc_curr_y :  Std_Logic;
 ---------------------------------------------------------
 	
 -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -144,6 +151,8 @@ architecture bhvr of GraphicsController is
 	constant PalletteReProgram						: Std_Logic_Vector(7 downto 0) := X"0A";		-- State for programming a pallette
 	constant DrawHlineInit		 	 				: Std_Logic_Vector(7 downto 0) := X"0B";		-- State for initializing drawing a Horizontal line
 	constant DrawVlineInit		 	 				: Std_Logic_Vector(7 downto 0) := X"0C";		-- State for initializing drawing a Veritcal line
+	constant DrawLineInit		 	 				: Std_Logic_Vector(7 downto 0) := X"0D";		-- State for initializing drawing a Veritcal line
+	constant DrawLineInit2		 	 				: Std_Logic_Vector(7 downto 0) := X"0E";		-- State for initializing drawing a Veritcal line
 	
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -- Commands that can be written to command register by NIOS to get graphics controller to draw a shape
@@ -477,18 +486,61 @@ Begin
 			ColourPalletteData	<= Sig_ColourPalletteData;
 			ColourPallette_WE_H	<= Sig_ColourPallette_WE_H; 
 	
+			-- loads
 			if load_curr_x = '1' then
-				curr_x <= X1;
-			elsif inc_curr_x = '1' then
+				curr_x <= unsigned(X1);
+			end if;
+			if load_curr_y = '1' then
+				curr_y <= unsigned(Y1);
+			end if;
+			if load_final_x = '1' then
+				final_x <= unsigned(X2);
+			end if;
+			if load_final_y = '1' then
+				final_y <= unsigned(Y2);
+			end if;
+
+			-- incs/decs
+			if inc_curr_x = '1' then
 				curr_x <= curr_x + 1;
 			end if;
-	
-			if load_curr_y = '1' then
-				curr_y <= Y1;
-			elsif inc_curr_y = '1' then
+			if inc_curr_y = '1' then
 				curr_y <= curr_y + 1;
 			end if;
-	
+			if dec_curr_x = '1' then
+				curr_x <= curr_x - 1;
+			end if;
+			if dec_curr_y = '1' then
+				curr_y <= curr_y - 1;
+			end if;
+
+			-- done here because we want ffs
+			if currentState = DrawLineInit then
+				if Y2 > Y1 then
+					dy <= signed('0' & (unsigned(Y2) - unsigned(Y1)));
+					sy <= 1;
+				else
+					dy <= signed('0' & (unsigned(Y1) - unsigned(Y2)));
+					sy <= -1;
+				end if;
+				if X2 > X1 then
+					dx <= signed('0' & (unsigned(X2) - unsigned(X1)));
+					sx <= 1;
+				else
+					dx <= signed('0' & (unsigned(X1) - unsigned(X2)));
+					sx <= -1;
+				end if;
+				err <= (others => '0');
+			end if;
+
+			if err_add_dx = '1' and err_sub_dy = '1' then
+				err <= err + dx - dy;
+			elsif err_add_dx = '1' then
+				err <= err + dx;
+			elsif err_sub_dy = '1' then
+				err <= err - dy;
+			end if;
+
 		end if; 
 	end process;
 	
@@ -497,7 +549,10 @@ Begin
 ----------------------------------------------------------------------------------------------------------------------	
 	
 	process(CurrentState, CommandWritten_H, Command, X1, X2, Y1, Y2, Colour, OKToDraw_L, VSync_L,
-				BackGroundColour, AS_L, Sram_DataIn, CLK, Colour_Latch, curr_x, curr_y)
+				BackGroundColour, AS_L, Sram_DataIn, CLK, Colour_Latch,
+				curr_x, curr_y, final_x, final_y, dx, dy, sx, sy, err)
+
+			variable e2 : signed(33 downto 0) := (others=>'0');
 	begin
 	
 	----------------------------------------------------------------------------------------------------------------------------------
@@ -535,9 +590,19 @@ Begin
 		NextState							<= Idle;	
 			
 		load_curr_x <= '0';
-		inc_curr_x <= '0';
 		load_curr_y <= '0';
+		load_final_x <= '0';
+		load_final_y <= '0';
+
+		inc_curr_x <= '0';
 		inc_curr_y <= '0';
+		dec_curr_x <= '0';
+		dec_curr_y <= '0';
+
+		e2 := (others => '0');
+		err_sub_dy <= '0';
+		err_add_dx <= '0';
+
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------				
 		if(CurrentState = Idle ) then
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -572,7 +637,7 @@ Begin
 			elsif(Command = Vline) then
 				NextState <= DrawVlineInit;
 			elsif(Command = ALine) then
-				NextState <= DrawLine;	
+				NextState <= DrawLineInit;
 				
 			-- add other code to process any new commands here e.g. draw a circle if you decide to implement that
 			-- or draw a rectangle etc
@@ -715,16 +780,18 @@ Begin
 		elsif(CurrentState = DrawHlineInit) then
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 			load_curr_x <= '1';
+			load_final_x <= '1';
 			NextState <= DrawHLine;
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		elsif(CurrentState = DrawHline) then
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 			NextState <= DrawHLine;
+			SetBusy_H <= '1';
 
 			if(OKToDraw_L = '0') then
 				inc_curr_x <= '1';
-				Sig_AddressOut 	<= Y1(8 downto 0) & curr_x(9 downto 1);				
+				Sig_AddressOut 	<= Y1(8 downto 0) & std_Logic_Vector(curr_x(9 downto 1));
 				Sig_RW_Out			<= '0';													
 				
 				if(curr_x(0) = '0')	then													
@@ -733,7 +800,7 @@ Begin
 					Sig_LDS_Out_L 	<= '0';													
 				end if;
 
-				if curr_x = X2 then
+				if curr_x = final_x then
 					NextState <= IDLE;
 				end if;
 				
@@ -743,16 +810,19 @@ Begin
 		elsif(CurrentState = DrawVlineInit) then
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------		
 			load_curr_y <= '1';
-			NextState <= DrawVline;			
+			load_final_y <= '1';
+			NextState <= DrawVline;
+
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		elsif(CurrentState = DrawVline) then
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------		
 
 			NextState <= DrawVLine;
+			SetBusy_H <= '1';
 
 			if(OKToDraw_L = '0') then
 				inc_curr_y <= '1';
-				Sig_AddressOut 	<= curr_y(8 downto 0) & X1(9 downto 1);				
+				Sig_AddressOut 	<= std_Logic_Vector(curr_y(8 downto 0)) & X1(9 downto 1);
 				Sig_RW_Out			<= '0';													
 				
 				if(X1(0) = '0')	then													
@@ -761,17 +831,74 @@ Begin
 					Sig_LDS_Out_L 	<= '0';													
 				end if;
 
-				if curr_y = Y2 then
+				if curr_y = final_y then
 					NextState <= IDLE;
 				end if;
-				
+
 			end if;
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		elsif(CurrentState = DrawLineInit) then
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+			NextState <= DrawLineInit2;
+
+			load_curr_x <= '1';
+			load_curr_y <= '1';
+			load_final_y <= '1';
+			load_final_x <= '1';
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		elsif(CurrentState = DrawLineInit2) then
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			err_add_dx <= '1';
+			err_sub_dy <= '1';
+			NextState <= DrawLine;
+s
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		elsif(CurrentState = DrawLine) then
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------		
-			-- TODO in your project
-			NextState <= IDLE;
-			
+
+			NextState <= DrawLine;
+			SetBusy_H  <= '1';
+
+			if(OKToDraw_L = '0') then
+
+				e2 := 2 * err;
+
+				if (e2 > (0 - dy)) then
+						err_sub_dy <= '1';
+
+						if (sx = 1) then
+							inc_curr_x <= '1';
+						else
+							dec_curr_x <= '1';
+						end if;
+				end if;
+
+				if (e2 < dx) then
+						err_add_dx <= '1';
+
+						if (sy = 1) then
+							inc_curr_y <= '1';
+						else
+							dec_curr_y <= '1';
+						end if;
+				end if;
+
+				Sig_AddressOut 	<= std_Logic_Vector(curr_y(8 downto 0) & curr_x(9 downto 1));
+				Sig_RW_Out			<= '0';
+
+				if(curr_x(0) = '0')	then
+					Sig_UDS_Out_L 	<= '0';
+				else
+					Sig_LDS_Out_L 	<= '0';
+				end if;
+
+				if curr_x = final_x and curr_y = final_y then
+					NextState <= IDLE;
+				end if;
+
+			end if;
 		end if ;
 	end process;
 	

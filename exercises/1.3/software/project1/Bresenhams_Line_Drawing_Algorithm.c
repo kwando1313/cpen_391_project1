@@ -1,6 +1,4 @@
-//#include "Bresenhams_Line_Drawing_Algorithms.h"
-#include <stdio.h>
-// graphics registers all address begin with '8' so as to by pass data cache on NIOS
+#include "misc_helpers.h"
 
 #define GraphicsCommandReg   		(*(volatile unsigned short int *)(0x84000000))
 #define GraphicsStatusReg   		(*(volatile unsigned short int *)(0x84000000))
@@ -11,38 +9,25 @@
 #define GraphicsColourReg   		(*(volatile unsigned short int *)(0x8400000E))
 #define GraphicsBackGroundColourReg   	(*(volatile unsigned short int *)(0x84000010))
 
+// constants representing values we write to the graphics 'command' register
+#define DrawHLine				0x1
+#define DrawVLine				0x2
+#define DrawLine				0x3
+#define	PutAPixel				0xA
+#define	GetAPixel				0xB
+#define	ProgramPaletteColour 	0x10
 
-// #defined constants representing values we write to the graphics 'command' register to get
-// it to draw something. You will add more values as you add hardware to the graphics chip
-// Note DrawHLine, DrawVLine and DrawLine at the moment do nothing - you will modify these
+// for lab's monitors, NOT touchscreen
+#define MAX_X 800
+#define MAX_Y 479
 
-#define DrawHLine		1
-#define DrawVLine		2
-#define DrawLine			3
-#define	PutAPixel		0xA
-#define	GetAPixel		0xB
-#define	ProgramPaletteColour    0x10
-
-/************************************************************************************************
-** This macro pauses until the graphics chip status register indicates that it is idle
-***********************************************************************************************/
+// pauses until the graphics chip status register indicates that it is idle
 #define WAIT_FOR_GRAPHICS		while((GraphicsStatusReg & 0x0001) != 0x0001);
 
 
-// defined constants representing colours pre-programmed into colour palette
-// there are 256 colours but only 8 are shown below, we write these to the colour registers
-//
-// the header files "Colours.h" contains constants for all 256 colours
-// while the course file ColourPaletteData.c contains the 24 bit RGB data
-// that is pre-programmed into the palette
-
-
-/*******************************************************************************************
-* This function writes a single pixel to the x,y coords specified using the specified colour
-* Note colour is a byte and represents a palette number (0-255) not a 24 bit RGB value
-********************************************************************************************/
-void WriteAPixel(int x, int y, int Colour)
-{
+// This function writes a single pixel to the x,y coords specified using the specified colour
+// Note colour is a byte and represents a palette number (0-255) not a 24 bit RGB value
+void WriteAPixel(int x, int y, int Colour){
 	WAIT_FOR_GRAPHICS;				// is graphics ready for new command
 
 	GraphicsX1Reg = x;				// write coords to x1, y1
@@ -55,9 +40,7 @@ void WriteAPixel(int x, int y, int Colour)
 * This function read a single pixel from the x,y coords specified and returns its colour
 * Note returned colour is a byte and represents a palette number (0-255) not a 24 bit RGB value
 *********************************************************************************************/
-
-int ReadAPixel(int x, int y)
-{
+int ReadAPixel(int x, int y){
 	WAIT_FOR_GRAPHICS;			// is graphics ready for new command
 
 	GraphicsX1Reg = x;			// write coords to x1, y1
@@ -72,11 +55,8 @@ int ReadAPixel(int x, int y)
 /**********************************************************************************
 ** subroutine to program a hardware (graphics chip) palette number with an RGB value
 ** e.g. ProgramPalette(RED, 0x00FF0000) ;
-**
 ************************************************************************************/
-
-void ProgramPalette(int PaletteNumber, int RGB)
-{
+void ProgramPalette(int PaletteNumber, int RGB){
     WAIT_FOR_GRAPHICS;
     GraphicsColourReg = PaletteNumber;
     GraphicsX1Reg = RGB >> 16   ;        // program red value in ls.8 bit of X1 reg
@@ -84,61 +64,67 @@ void ProgramPalette(int PaletteNumber, int RGB)
     GraphicsCommandReg = ProgramPaletteColour; // issue command
 }
 
-/*********************************************************************************************
-This function draw a horizontal line, 1 pixel at a time starting at the x,y coords specified
-*********************************************************************************************/
+/* Fast draw of horizontal line, will not draw past screen end
+ * requires: x1, y1, length >= 0
+ */
+void HLine(int x1, int y1, int length, int Colour){
+	if (length == 0) {
+		return;
+	}
 
-void HLine(int x1, int y1, int length, int Colour)
-{
+	int x2 = min(x1 + length - 1, MAX_X);
+
 	WAIT_FOR_GRAPHICS;
 
-	GraphicsX1Reg = x1; //start
-	GraphicsX2Reg = x1 + length - 1; //end
+	GraphicsX1Reg = x1;
+	GraphicsX2Reg = x2;
 	GraphicsY1Reg = y1;
 	GraphicsColourReg = Colour;
 	GraphicsCommandReg = DrawHLine;
 }
 
-/*********************************************************************************************
-This function draw a vertical line, 1 pixel at a time starting at the x,y coords specified
-*********************************************************************************************/
+/* Fast draw of vertical line, will not draw past screen end
+ * requires: x1, y1, length >= 0
+ */
+void VLine(int x1, int y1, int length, int Colour){
+	if (length == 0) {
+		return;
+	}
 
-void VLine(int x1, int y1, int length, int Colour)
-{
+	int y2 = min(y1 + length - 1, MAX_Y);
+
 	WAIT_FOR_GRAPHICS;
 
 	GraphicsX1Reg = x1;
-	GraphicsY1Reg = y1; //start
-	GraphicsY2Reg = y1 + length - 1; //end
+	GraphicsY1Reg = y1;
+	GraphicsY2Reg = y2;
 	GraphicsColourReg = Colour;
 	GraphicsCommandReg = DrawVLine;
 }
 
-/*******************************************************************************
-** Implementation of Bresenhams line drawing algorithm
-*******************************************************************************/
+// fast draw of line from (x1, y1) to (x2, y2)
+// assumes x1,y1,x2,y2 fit within screen bounds:
+// 0 <= x <= MAX_X, 0 <= y <= MAX_Y
+void Line(int x1, int y1, int x2, int y2, int Colour){
+	if (x1 == x2 && y1 == y2) {
+		WriteAPixel(x1, y1, Colour);
+		return;
+	}
 
-int abs(int a)
-{
-    if(a < 0)
-        return -a ;
-    else
-        return a ;
+	WAIT_FOR_GRAPHICS;
+
+	GraphicsX1Reg = x1;
+	GraphicsY1Reg = y1;
+	GraphicsX2Reg = x2;
+	GraphicsY2Reg = y2;
+	GraphicsColourReg = Colour;
+	GraphicsCommandReg = DrawLine;
 }
 
-int sign(int a)
-{
-    if(a < 0)
-        return -1 ;
-    else if (a == 0)
-        return 0 ;
-    else
-        return 1 ;
-}
-
-// Implementation of Bresenhams line drawing algorithm
-void Line(int x1, int y1, int x2, int y2, int Colour)
-{
+// Bresenham's line drawing algorithm, copy and pasted from Connect
+// Does not take advantage of HW accelerated graphics
+// Only use this method for testing Line()
+void LineSW(int x1, int y1, int x2, int y2, int Colour){
     int x = x1;
     int y = y1;
     int dx = abs(x2 - x1);
@@ -148,16 +134,15 @@ void Line(int x1, int y1, int x2, int y2, int Colour)
     int s2 = sign(y2 - y1);
     int i, temp, interchange = 0, error ;
 
-// if x1=x2 and y1=y2 then it is a line of zero length
-
-    if(dx == 0 && dy == 0)
+    // if x1=x2 and y1=y2 then it is a line of zero length
+    if(dx == 0 && dy == 0) {
         return ;
+    }
 
- // must be a complex line so use bresenhams algorithm
+    // must be a complex line so use bresenhams algorithm
     else    {
 
-// swap delta x and delta y depending upon slop of line
-
+    	// swap delta x and delta y depending upon slop of line
         if(dy > dx) {
             temp = dx ;
             dx = dy ;
@@ -165,11 +150,10 @@ void Line(int x1, int y1, int x2, int y2, int Colour)
             interchange = 1 ;
         }
 
-// initialise the error term to compensate for non-zero intercept
-
+        // initialise the error term to compensate for non-zero intercept
         error = (dy << 1) - dx ;    // (2 * dy) - dx
 
-// main loop
+        // main loop
         for(i = 1; i <= dx; i++)    {
             WriteAPixel(x, y, Colour);
 
@@ -192,21 +176,20 @@ void Line(int x1, int y1, int x2, int y2, int Colour)
     }
 }
 
-
-void clear_screen(int colour){
-	int length = 1000;
-
-	for (int x1 = 0; x1<=800; x1++){
-		for(int i = 0; i < length; i++ ){
-			//printf("start a pixel");
-			WriteAPixel(x1, i, colour);
-			//printf("done one pixel");
+// Does not take advantage of HW accelerated graphics
+// Only use this for testing
+void clear_screenSW(int colour){
+	for (int x1 = 0; x1<=MAX_X; x1++){
+		for(int y1 = 0; y1 <= MAX_Y ; y1++ ){
+			WriteAPixel(x1, y1, colour);
 		}
 	}
 }
 
-void swap(int* x, int* y) {
-	int tmp = *x;
-	*x = *y;
-	*y = tmp;
+//covers screen in "colour"
+void clear_screen(int colour){
+	for (int x1 = 0; x1<=MAX_X; x1++){
+		VLine(x1, 0, MAX_Y+1, colour);
+	}
 }
+

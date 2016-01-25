@@ -425,7 +425,7 @@ set_global_assignment -name VHDL_FILE VGA_Controller_256Pallette.vhd
 set_global_assignment -name VHDL_FILE RGBMapper.vhd
 set_global_assignment -name VHDL_FILE RamAddressMapper.vhd
 set_global_assignment -name VHDL_FILE VideoRamMux.vhd
-set_global_assignment -name VHDL_FILE GraphicsController.vhd
+set_global_assignment -name VHDL_FILE GraphicsController.vhd -hdl_version VHDL_2008
 set_global_assignment -name BDF_FILE SystemTopLevel.bdf
 set_global_assignment -name VHDL_FILE output_files/lpm_bustri0.vhd
 set_global_assignment -name VHDL_FILE NIOS_II_SYSTEM.vhd
@@ -443,4 +443,8 @@ set_global_assignment -name BDF_FILE HexDisplays.bdf
 set_global_assignment -name QIP_FILE ColourPallette_2PortRam.qip
 set_global_assignment -name SDC_FILE NIOS_II_System.sdc
 set_global_assignment -name BDF_FILE Video_Controller800x480.bdf
+set_global_assignment -name ENABLE_SIGNALTAP OFF
+set_global_assignment -name USE_SIGNALTAP_FILE stp1.stp
+set_global_assignment -name SIGNALTAP_FILE stp1.stp
+set_global_assignment -name SLD_FILE "C:/Users/Alex/Desktop/UBC/cpen391/cpen_391_project1/exercises/1.3/stp1_auto_stripped.stp"
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

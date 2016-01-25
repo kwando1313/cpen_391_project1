@@ -7,7 +7,6 @@
 // the header files "Colours.h" contains constants for all 256 colours
 // while the course file ColourPaletteData.c contains the 24 bit RGB data
 // that is pre-programmed into the palette
-
 #define	BLACK			0
 #define	WHITE			1
 #define	RED				2
@@ -16,6 +15,11 @@
 #define	YELLOW			5
 #define	CYAN			6
 #define	MAGENTA			7
+
+// should redo these for the touchscreen -> these numbers are for the lab's monitors
+#define MAX_X 800
+#define MAX_Y 479
+
 
 /*******************************************************************************************
 * This function writes a single pixel to the x,y coords specified using the specified colour
@@ -27,7 +31,6 @@ void WriteAPixel(int x, int y, int Colour);
 * This function read a single pixel from the x,y coords specified and returns its colour
 * Note returned colour is a byte and represents a palette number (0-255) not a 24 bit RGB value
 *********************************************************************************************/
-
 int ReadAPixel(int x, int y);
 
 /**********************************************************************************
@@ -35,30 +38,15 @@ int ReadAPixel(int x, int y);
 ** e.g. ProgramPalette(RED, 0x00FF0000) ;
 **
 ************************************************************************************/
-
 void ProgramPalette(int PaletteNumber, int RGB);
 
-/*********************************************************************************************
-This function draw a horizontal line, 1 pixel at a time starting at the x,y coords specified
-*********************************************************************************************/
-
 void HLine(int x1, int y1, int length, int Colour);
-
-/*********************************************************************************************
-This function draw a vertical line, 1 pixel at a time starting at the x,y coords specified
-*********************************************************************************************/
-
 void VLine(int x1, int y1, int length, int Colour);
 
-/*******************************************************************************
-** Implementation of Bresenhams line drawing algorithm
-*******************************************************************************/
-
-
-// Implementation of Bresenhams line drawing algorithm
 void Line(int x1, int y1, int x2, int y2, int Colour);
+void LineSW(int x1, int y1, int x2, int y2, int Colour);
 
 void clear_screen(int colour);
-
+void clear_screenSW(int colour);
 
 #endif /* BRESENHAMS_LINE_DRAWING_ALGORITHM_H_ */
