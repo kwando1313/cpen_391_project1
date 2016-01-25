@@ -144,6 +144,7 @@ ELF := project1.elf
 # Paths to C, C++, and assembly source files.
 C_SRCS += main.c
 C_SRCS += graphics.c
+C_SRCS += Fill.c
 CXX_SRCS :=
 ASM_SRCS :=
 

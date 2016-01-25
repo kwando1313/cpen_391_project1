@@ -16,3 +16,4 @@ db/
 *.elf
 *.objdump
 *.map
+obj/

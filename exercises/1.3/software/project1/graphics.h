@@ -20,6 +20,41 @@
 #define MAX_X 800
 #define MAX_Y 479
 
+typedef struct{
+	int x;
+	int y;
+} Point;
+
+//TODO: input validation
+// rectangle, triangles
+// rest will be drawshape
+// circles
+void draw_rectangle(Point topLeft, Point topRight, Point botLeft, Point botRight, int colour);
+void draw_filled_rectangle(Point topLeft, Point topRight, Point botLeft, Point botRight, int colour);
+void draw_filled_rectangle_border(Point topLeft, Point topRight, Point botLeft, Point botRight,
+		int colour, int borderColour, int borderWidth);
+void draw_triangle(Point a, Point b, Point c, int colour);
+void draw_filled_triangle(Point a, Point b, Point c, int colour);
+void draw_filled_triangle_border(Point a, Point b, Point c, int colour, int borderColour, int borderWidth);
+
+/*
+ *
+ * Build a small library of functions to draw things line 'rectangles,' 'filled rectangles', 'filled
+rectangles with a border', 'triangles' etc. There is also a 'circle' and 'arc' drawing algorithm
+that Bresenham came up with, see if you can dig that out on the web and implement it.
+(Check out http://en.wikipedia.org/wiki/Midpoint_circle_algorithm ). The circle algorithm is
+based on drawing a set of 8 x 45 degree arcs in opposite quadrants and is pretty easy to
+implement so why not add 'arc' and 'circle' drawing functions to your library.
+ *
+ *
+ *
+ *
+ */
+
+
+
+
+
 
 /*******************************************************************************************
 * This function writes a single pixel to the x,y coords specified using the specified colour
@@ -48,5 +83,7 @@ void LineSW(int x1, int y1, int x2, int y2, int Colour);
 
 void clear_screen(int colour);
 void clear_screenSW(int colour);
+
+void rand_lines_test(int num);
 
 #endif /* BRESENHAMS_LINE_DRAWING_ALGORITHM_H_ */

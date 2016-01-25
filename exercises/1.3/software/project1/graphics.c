@@ -1,4 +1,5 @@
 #include "misc_helpers.h"
+#include "graphics.h"
 
 #define GraphicsCommandReg   		(*(volatile unsigned short int *)(0x84000000))
 #define GraphicsStatusReg   		(*(volatile unsigned short int *)(0x84000000))
@@ -16,10 +17,6 @@
 #define	PutAPixel				0xA
 #define	GetAPixel				0xB
 #define	ProgramPaletteColour 	0x10
-
-// for lab's monitors, NOT touchscreen
-#define MAX_X 800
-#define MAX_Y 479
 
 // pauses until the graphics chip status register indicates that it is idle
 #define WAIT_FOR_GRAPHICS		while((GraphicsStatusReg & 0x0001) != 0x0001);
@@ -193,3 +190,59 @@ void clear_screen(int colour){
 	}
 }
 
+void draw_rectangle(Point topLeft, Point topRight, Point botLeft, Point botRight, int colour){
+	int width = topRight.x - topLeft.x + 1;
+	int height = botLeft.y - topLeft.y + 1;
+
+	HLine(topLeft.x, topLeft.y, width, colour);
+	HLine(botLeft.x, botLeft.y, width, colour);
+	VLine(topLeft.x, topLeft.y, height, colour);
+	VLine(topRight.x, topRight.y, height, colour);
+}
+
+void draw_filled_rectangle(Point topLeft, Point topRight, Point botLeft, Point botRight, int colour){
+	int width = topRight.x - topLeft.x + 1;
+
+	for (int y = topLeft.y; y<=botLeft.y; y++){
+		HLine(topLeft.x, y, width, colour);
+	}
+}
+
+void draw_filled_rectangle_border(Point topLeft, Point topRight, Point botLeft, Point botRight,
+		int colour, int borderColour, int borderWidth){
+	for(int i = 0; i<borderWidth; i++) {
+		draw_rectangle(topLeft, topRight, botLeft, botRight, borderColour);
+		topLeft.x++;
+		topLeft.y++;
+		topRight.x--;
+		topRight.y++;
+		botLeft.x++;
+		botLeft.y--;
+		botRight.x--;
+		botRight.y--;
+	}
+	draw_filled_rectangle(topLeft, topRight, botLeft, botRight, colour);
+}
+
+void draw_triangle(Point a, Point b, Point c, int colour){
+	Line(a.x, a.y, b.x, b.y, colour);
+	Line(a.x, a.y, c.x, c.y, colour);
+	Line(c.x, c.y, b.x, b.y, colour);
+}
+void draw_filled_triangle(Point a, Point b, Point c, int colour);
+void draw_filled_triangle_border(Point a, Point b, Point c, int colour, int borderColour, int borderWidth);
+
+//draws random lines, prints coords
+void rand_lines_test(int num){
+	int test_colours[] = {CYAN, YELLOW, RED, LIME};
+	clear_screen(BLACK);
+	for (int i = 0; i<num; i++) {
+		int x1 = rand()%MAX_X;
+		int x2 = rand()%MAX_X;
+		int y1 = rand()%MAX_Y;
+		int y2 = rand()%MAX_Y;
+		printf("(%d, %d), (%d, %d)", x1,x2,y1,y2);
+		printf("colour = %d\n\n", test_colours[i % 4]);
+		Line(x1,y1,x2,y2,test_colours[i%4]);
+	}
+}

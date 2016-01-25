@@ -4,16 +4,25 @@
 
 int main(void) {
 	printf("start\n");
-	int test_colours[] = {BLACK, CYAN, YELLOW, RED, LIME};
+	clear_screen(YELLOW);
+	Point corner_a = {0, 0};
+	Point corner_b = {MAX_X, 0};
+	Point corner_c = {0, MAX_Y};
+	Point corner_d = {MAX_X, MAX_Y};
 
-	clear_screen(BLACK);
-	WriteAPixel(0, 0, RED);
-	WriteAPixel(0, MAX_Y, RED);
-	WriteAPixel(MAX_X, 0, RED);
-	WriteAPixel(MAX_X, MAX_Y, RED);
-	Line(1, 1, MAX_X-1, MAX_Y-1, LIME);
-	int colour = ReadAPixel(MAX_X-1, MAX_Y-1);
-	Line(1, MAX_Y-1, MAX_X-1, 1, colour);
+	Point out_a = {100, 100};
+	Point out_b = {700, 100};
+	Point out_c = {100, 400};
+	Point out_d = {700, 400};
+
+	Point in_a = {300, 200};
+	Point in_b = {400, 200};
+	Point in_c = {300, 300};
+	Point in_d = {400, 300};
+
+	draw_filled_rectangle_border(corner_a, corner_b, corner_c, corner_d, BLACK, CYAN, 2);
+	draw_filled_rectangle_border(out_a, out_b, out_c, out_d, RED, YELLOW, 1);
+	draw_filled_rectangle_border(in_a, in_b, in_c, in_d, LIME, BLACK, 5);
 
 	printf("end\n");
 	return 0;
