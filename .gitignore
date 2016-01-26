@@ -18,3 +18,12 @@ db/
 *.objdump
 *.map
 obj/
+exercises/1.3/software/project1_bsp/alt_sys_init.c
+exercises/1.3/software/project1_bsp/linker.h
+exercises/1.3/software/project1_bsp/linker.x
+exercises/1.3/software/project1_bsp/system.h
+exercises/1.3/software/project1_bsp/memory.gdb
+exercises/1.3/software/project1_bsp/public.mk
+exercises/1.3/software/project1_bsp/summary.html
+
+
