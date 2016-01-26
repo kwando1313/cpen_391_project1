@@ -70,8 +70,15 @@ void Fill(int _x, int _y, int _FillColour, int _BoundaryColour)
         // fill the span to the right of the seed value
         SaveX = x++ ;                  // save the x coord of the the point we just filled and move one pixel right
 
-        while((char)(ReadAPixel(x,y)) != (char)(BoundaryColour))							// if new pixel is not the boundary colour
-            WriteAPixel(x++, y, FillColour);     											// fill it and keep moving right along a horizontal line
+
+		// if new pixel is not the boundary colour
+        // fill it and keep moving right along a horizontal line
+        int len = 0;
+        while((char)(ReadAPixel(x+len,y)) != (char)(BoundaryColour)) {
+        	len++;
+        }
+        HLine(x, y, len, FillColour);
+        x += len;
 
         // must have found the boundary colour when moving right
         XRight = x - 1 ;		// save X coord of the last filled pixel on this line when moving right
@@ -81,8 +88,14 @@ void Fill(int _x, int _y, int _FillColour, int _BoundaryColour)
 
         --x ;
 
-        while((char)(ReadAPixel(x,y)) != (char)(BoundaryColour))						// if new pixel is not the boundary colour
-            WriteAPixel(x--, y, FillColour);    											// fill it and keep moving left along a horizontal line
+        // if new pixel is not the boundary colour
+		// fill it and keep moving left along a horizontal line
+        len = 0;
+        while((char)(ReadAPixel(x-len,y)) != (char)(BoundaryColour)){
+            len++;
+        }
+        HLine(x-len+1, y, len, FillColour);
+        x -= len;
 
         XLeft = x + 1 ;			// save X coord of the last filled pixel on this line when moving left
         x = SaveX ; 			// get original x coord for the seed back

@@ -143,7 +143,8 @@ ELF := project1.elf
 
 # Paths to C, C++, and assembly source files.
 C_SRCS += main.c
-C_SRCS += Fonts.c
+C_SRCS += graphics.c
+C_SRCS += Fill.c
 CXX_SRCS :=
 ASM_SRCS :=
 
@@ -163,7 +164,7 @@ CREATE_LINKER_MAP := 1
 # Common arguments for ALT_CFLAGSs
 APP_CFLAGS_DEFINED_SYMBOLS :=
 APP_CFLAGS_UNDEFINED_SYMBOLS :=
-APP_CFLAGS_OPTIMIZATION := -O2
+APP_CFLAGS_OPTIMIZATION := -O2 #-O0
 APP_CFLAGS_DEBUG_LEVEL := -g
 APP_CFLAGS_WARNINGS := -Wall
 APP_CFLAGS_USER_FLAGS := -std=c99
