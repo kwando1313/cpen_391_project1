@@ -2,6 +2,7 @@ incremental_db/
 output_files/output_files/
 db/
 *.bak
+*.qws
 *.sof
 *.pof
 *.rpt
