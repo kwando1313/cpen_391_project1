@@ -1,5 +1,5 @@
-#ifndef BRESENHAMS_LINE_DRAWING_ALGORITHM_H_
-#define BRESENHAMS_LINE_DRAWING_ALGORITHM_H_
+#ifndef GRAPHICS_H_
+#define GRAPHICS_H_
 
 // defined constants representing colours pre-programmed into colour palette
 // there are 256 colours but only 8 are shown below, we write these to the colour registers
@@ -90,4 +90,4 @@ void clear_screenSW(int colour);
 
 void rand_lines_test(int num);
 
-#endif /* BRESENHAMS_LINE_DRAWING_ALGORITHM_H_ */
+#endif /* GRAPHICS_H_ */

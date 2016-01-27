@@ -145,6 +145,9 @@ ELF := project1.elf
 C_SRCS += main.c
 C_SRCS += graphics.c
 C_SRCS += Fill.c
+C_SRCS += rs232.c
+C_SRCS += touchscreen.c
+C_SRCS += misc_helpers.c
 CXX_SRCS :=
 ASM_SRCS :=
 
