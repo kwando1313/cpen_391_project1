@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "graphics.h"
+#include "graphics/graphics.h"
 #include "sys/alt_alarm.h"
 
 int main(void) {

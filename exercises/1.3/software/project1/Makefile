@@ -143,11 +143,13 @@ ELF := project1.elf
 
 # Paths to C, C++, and assembly source files.
 C_SRCS += main.c
-C_SRCS += graphics.c
-C_SRCS += Fill.c
-C_SRCS += rs232.c
-C_SRCS += touchscreen.c
-C_SRCS += misc_helpers.c
+C_SRCS += graphics/graphics.c
+C_SRCS += bluetooth/bluetooth.c
+C_SRCS += gps/gps.c
+C_SRCS += misc/misc_helpers.c
+C_SRCS += rs232/rs232.c
+C_SRCS += touchscreen/touchscreen.c
+C_SRCS += graphics/fill.c
 CXX_SRCS :=
 ASM_SRCS :=
 
@@ -185,7 +187,11 @@ SYS_LIB :=
 BSP_ROOT_DIR := ../project1_bsp/
 
 # List of application specific include directories, library directories and library names
-APP_INCLUDE_DIRS :=
+APP_INCLUDE_DIRS += misc
+APP_INCLUDE_DIRS += rs232
+APP_INCLUDE_DIRS += graphics
+APP_INCLUDE_DIRS += bluetooth
+APP_INCLUDE_DIRS += gps
 APP_LIBRARY_DIRS :=
 APP_LIBRARY_NAMES :=
 

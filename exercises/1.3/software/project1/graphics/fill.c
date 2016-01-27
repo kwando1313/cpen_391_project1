@@ -1,6 +1,6 @@
 // data structure to store a coordinate
+#include "fill.h"
 
-typedef struct { int x,y;} XYPixel ;
 
 // an array of coordinates and a pointer to first
 
