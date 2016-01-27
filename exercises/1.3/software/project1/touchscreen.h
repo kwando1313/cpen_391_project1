@@ -13,8 +13,7 @@
 **  Initialise touch screen controller
 *****************************************************************************/
 void wait(){
-	int i;
-	for ( i = 0; i < 10000000; i++ );
+	for ( int i = 0; i < 10000000; i++ );
 }
 
 void putChar_touch(char c){
@@ -41,13 +40,23 @@ void Init_Touch(void){
 }
 
 /*****************************************************************************
-**   test if screen touched
+**   test if PEN DOWN
 *****************************************************************************/
-int ScreenTouched( void){
+int ScreenTouched(void){
 	// return TRUE if any data received from 6850 connected to touchscreen
 	// or FALSE otherwise
-	return (getChar_touch() & 0x81) // some value received //0x81 = 10000001 = pen down command
+	return ((getChar_touch() & 0x81) == 0x81); // some value received //0x81 = 10000001 = pen down command
 }
+
+/*****************************************************************************
+**   test if PEN UP
+*****************************************************************************/
+int ScreenIdle(void){
+	// return TRUE if any data received from 6850 connected to touchscreen
+	// or FALSE otherwise
+	return ((getChar_touch() & 0x81) == 0x80); // some value received //0x80 = 10000000 = pen up command
+}
+
 /*****************************************************************************
 **   wait for screen to be touched
 *****************************************************************************/
@@ -59,7 +68,7 @@ void WaitForTouch(){
 **   wait for screen to be released
 *****************************************************************************/
 void WaitForRelease(){
-	while(ScreenTouched());
+	while(!ScreenIdle());
 }
 
 /*****************************************************************************
@@ -68,6 +77,7 @@ void WaitForRelease(){
 void WaitForReadStatus(){
 	while((Touchscreen_Status & 0x00));
 }
+
 /* a data type to hold a point/coord */
 typedef struct{int x, y; } Point;
 /*****************************************************************************
@@ -90,9 +100,8 @@ Point GetPress(void){
 	WaitForReadStatus();
 	int y_second_half = getChar_touch();
 
-	// Need to calibrate after
-	p1.x = ((x_second_half * 128) + (x_first_half))/256;
-	p1.y = ((y_second_half * 128) + (y_first_half))/256;
+	p1.x = ((x_second_half) * 128 + (x_first_half+1) ) / 8.5333;
+	p1.y = ((y_second_half) * 128 + (y_first_half+1) ) / 5.12;
 	return p1;
 }
 /*****************************************************************************
@@ -102,7 +111,7 @@ Point GetRelease(void){
 	Point p1;
 	// wait for a pen up command then return the X,Y coord of the point
 	// calibrated correctly so that it maps to a pixel on screen
-	GetPress();
+	WaitForTouch();
 	WaitForRelease();
 
 	WaitForReadStatus();
@@ -114,9 +123,8 @@ Point GetRelease(void){
 	WaitForReadStatus();
 	int y_second_half = getChar_touch();
 
-	// Need to calibrate after
-	p1.x = (x_second_half * 128) + (x_first_half);
-	p1.y = (y_second_half * 128) + (y_first_half);
+	p1.x = ((x_second_half) * 128 + (x_first_half+1) ) / 8.5333;
+	p1.y = ((y_second_half) * 128 + (y_first_half+1) ) / 5.12;
 
 	return p1;
 }
@@ -129,19 +137,19 @@ void test_touch(void){
 	char c;
 
 	while(1){
-		c = getChar_touch();
-
-		while(ScreenTouched()){
-			printf("touching: %d\n", c);
-			wait();
-		}
-
-
-//		//Point p1 = GetPress();
-//		Point p1 = GetRelease();
-//		printf("Coordinate: (%i, %i)\n", p1.x, p1.y);
+//		c = getChar_touch();
 //
-//		wait();
+//		while(ScreenTouched()){
+//			printf("touching: %d\n", c);
+//			wait();
+//		}
+
+
+		//Point p1 = GetPress();
+		Point p1 = GetRelease();
+		printf("Coordinate: (%i, %i)\n", p1.x, p1.y);
+
+		wait();
 	}
 }
 
