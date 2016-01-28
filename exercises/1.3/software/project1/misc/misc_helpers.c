@@ -1,4 +1,15 @@
+#include "misc_helpers.h"
 
+double convert_to_radians(double angle){
+	return (angle*M_PI/180);
+}
+
+//includes == case
+int falls_between(int item, int edge, int otherEdge){
+	int lower = min(edge, otherEdge);
+	int upper = max(edge, otherEdge);
+	return (lower <= item && item <= upper);
+}
 int avg_val(int x, int y, int z){
 	return (x+y+z)/3;
 }

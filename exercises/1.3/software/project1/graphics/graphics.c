@@ -23,7 +23,6 @@
 // pauses until the graphics chip status register indicates that it is idle
 #define WAIT_FOR_GRAPHICS		while((GraphicsStatusReg & 0x0001) != 0x0001);
 
-
 // This function writes a single pixel to the x,y coords specified using the specified colour
 // Note colour is a byte and represents a palette number (0-255) not a 24 bit RGB value
 void WriteAPixel(int x, int y, int Colour){
@@ -287,6 +286,129 @@ void draw_filled_shape_border(Point points[], int num_points, int colour, int bo
 	}
 	Line(points[0].x, points[0].y, points[num_points-1].x, points[num_points-1].y, borderColour);
 	Fill(xTot/num_points, yTot/num_points, colour, borderColour);
+}
+
+void WriteAPixelWrapper(int x, int y, int Colour, Point start, Point end){
+	if (falls_between(x, start.x, end.x) && falls_between(y, start.y, end.y)) {
+		WriteAPixel(x, y, Colour);
+	}
+}
+
+void draw_arc(Point centre, int radius, int colour, double angleStart, double angleEnd){
+	int x0 = centre.x;
+	int y0 = centre.y;
+	int x = radius;
+	int y = 0;
+	int decisionOver2 = 1 - x;   // Decision criterion divided by 2 evaluated at x=r, y=0
+	Point start = {centre.x + radius*cos(convert_to_radians(angleStart)), centre.y + radius*sin(convert_to_radians(angleStart))};
+	Point end = {centre.x + radius*cos(convert_to_radians(angleEnd)), centre.y + radius*sin(convert_to_radians(angleEnd))};
+
+	while( y <= x ) {
+		WriteAPixelWrapper( x + x0,  y + y0, colour, start, end); // Octant 1
+		WriteAPixelWrapper( y + x0,  x + y0, colour, start, end); // Octant 2
+		WriteAPixelWrapper(-x + x0,  y + y0, colour, start, end); // Octant 4
+		WriteAPixelWrapper(-y + x0,  x + y0, colour, start, end); // Octant 3
+		WriteAPixelWrapper(-x + x0, -y + y0, colour, start, end); // Octant 5
+		WriteAPixelWrapper(-y + x0, -x + y0, colour, start, end); // Octant 6
+		WriteAPixelWrapper( x + x0, -y + y0, colour, start, end); // Octant 7
+		WriteAPixelWrapper( y + x0, -x + y0, colour, start, end); // Octant 8
+		y++;
+
+		if (decisionOver2<=0) {
+		  decisionOver2 += 2 * y + 1;   // Change in decision criterion for y -> y+1
+		}
+		else {
+		  x--;
+		  decisionOver2 += 2 * (y - x) + 1;   // Change for y -> y+1, x -> x-1
+		}
+	}
+}
+
+// stolen from https://en.wikipedia.org/wiki/Midpoint_circle_algorithm
+void draw_circle(Point centre, int radius, int colour){
+	int x0 = centre.x;
+	int y0 = centre.y;
+	int x = radius;
+	int y = 0;
+	int decisionOver2 = 1 - x;   // Decision criterion divided by 2 evaluated at x=r, y=0
+
+	while( y <= x ) {
+		WriteAPixel( x + x0,  y + y0, colour); // Octant 1
+		WriteAPixel( y + x0,  x + y0, colour); // Octant 2
+		WriteAPixel(-x + x0,  y + y0, colour); // Octant 4
+		WriteAPixel(-y + x0,  x + y0, colour); // Octant 3
+		WriteAPixel(-x + x0, -y + y0, colour); // Octant 5
+		WriteAPixel(-y + x0, -x + y0, colour); // Octant 6
+		WriteAPixel( x + x0, -y + y0, colour); // Octant 7
+		WriteAPixel( y + x0, -x + y0, colour); // Octant 8
+		y++;
+
+		if (decisionOver2<=0) {
+		  decisionOver2 += 2 * y + 1;   // Change in decision criterion for y -> y+1
+		}
+		else {
+		  x--;
+		  decisionOver2 += 2 * (y - x) + 1;   // Change for y -> y+1, x -> x-1
+		}
+	}
+}
+
+void draw_filled_circle(Point centre, int radius, int colour){
+	int x0 = centre.x;
+	int y0 = centre.y;
+	int x = radius;
+	int y = 0;
+	int decisionOver2 = 1 - x;   // Decision criterion divided by 2 evaluated at x=r, y=0
+
+	while( y <= x ) {
+		WriteAPixel( x + x0,  y + y0, colour); // Octant 1
+		WriteAPixel( y + x0,  x + y0, colour); // Octant 2
+		WriteAPixel(-x + x0,  y + y0, colour); // Octant 4
+		WriteAPixel(-y + x0,  x + y0, colour); // Octant 3
+		WriteAPixel(-x + x0, -y + y0, colour); // Octant 5
+		WriteAPixel(-y + x0, -x + y0, colour); // Octant 6
+		WriteAPixel( x + x0, -y + y0, colour); // Octant 7
+		WriteAPixel( y + x0, -x + y0, colour); // Octant 8
+		y++;
+
+		if (decisionOver2<=0) {
+		  decisionOver2 += 2 * y + 1;   // Change in decision criterion for y -> y+1
+		}
+		else {
+		  x--;
+		  decisionOver2 += 2 * (y - x) + 1;   // Change for y -> y+1, x -> x-1
+		}
+	}
+	Fill(centre.x, centre.y, colour, colour);
+}
+
+void draw_filled_circle_border(Point centre, int radius, int colour, int borderColour){
+	int x0 = centre.x;
+	int y0 = centre.y;
+	int x = radius;
+	int y = 0;
+	int decisionOver2 = 1 - x;   // Decision criterion divided by 2 evaluated at x=r, y=0
+
+	while( y <= x ) {
+		WriteAPixel( x + x0,  y + y0, borderColour); // Octant 1
+		WriteAPixel( y + x0,  x + y0, borderColour); // Octant 2
+		WriteAPixel(-x + x0,  y + y0, borderColour); // Octant 4
+		WriteAPixel(-y + x0,  x + y0, borderColour); // Octant 3
+		WriteAPixel(-x + x0, -y + y0, borderColour); // Octant 5
+		WriteAPixel(-y + x0, -x + y0, borderColour); // Octant 6
+		WriteAPixel( x + x0, -y + y0, borderColour); // Octant 7
+		WriteAPixel( y + x0, -x + y0, borderColour); // Octant 8
+		y++;
+
+		if (decisionOver2<=0) {
+		  decisionOver2 += 2 * y + 1;   // Change in decision criterion for y -> y+1
+		}
+		else {
+		  x--;
+		  decisionOver2 += 2 * (y - x) + 1;   // Change for y -> y+1, x -> x-1
+		}
+	}
+	Fill(centre.x, centre.y, colour, borderColour);
 }
 
 //draws random lines, prints coords

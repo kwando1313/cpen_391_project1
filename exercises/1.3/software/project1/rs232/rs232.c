@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "rs232.h"
 
 #define RS232_Control (*(volatile unsigned char *)(0x84000200))
 #define RS232_Status  (*(volatile unsigned char *)(0x84000200))
