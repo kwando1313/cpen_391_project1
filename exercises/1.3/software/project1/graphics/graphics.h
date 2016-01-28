@@ -21,8 +21,8 @@
 #define	MAGENTA			7
 
 // should redo these for the touchscreen -> these numbers are for the lab's monitors
-#define MAX_X 800
-#define MAX_Y 479
+#define XRES 800
+#define YRES 479
 
 // "COLOUR" is always a palette number(0-255), NOT a RGB value
 

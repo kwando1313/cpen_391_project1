@@ -67,7 +67,7 @@ void HLine(int x1, int y1, int length, int Colour){
 		return;
 	}
 
-	int x2 = min(x1 + length - 1, MAX_X);
+	int x2 = min(x1 + length - 1, XRES);
 
 	WAIT_FOR_GRAPHICS;
 
@@ -86,7 +86,7 @@ void VLine(int x1, int y1, int length, int Colour){
 		return;
 	}
 
-	int y2 = min(y1 + length - 1, MAX_Y);
+	int y2 = min(y1 + length - 1, YRES);
 
 	WAIT_FOR_GRAPHICS;
 
@@ -99,7 +99,7 @@ void VLine(int x1, int y1, int length, int Colour){
 
 // fast draw of line from (x1, y1) to (x2, y2)
 // assumes x1,y1,x2,y2 fit within screen bounds:
-// 0 <= x <= MAX_X, 0 <= y <= MAX_Y
+// 0 <= x <= XRES, 0 <= y <= YRES
 void Line(int x1, int y1, int x2, int y2, int Colour){
 	if (x1 == x2 && y1 == y2) {
 		WriteAPixel(x1, y1, Colour);
@@ -118,8 +118,8 @@ void Line(int x1, int y1, int x2, int y2, int Colour){
 
 //covers screen in "colour"
 void clear_screen(int colour){
-	for (int x1 = 0; x1<=MAX_X; x1++){
-		VLine(x1, 0, MAX_Y+1, colour);
+	for (int x1 = 0; x1<=XRES; x1++){
+		VLine(x1, 0, YRES+1, colour);
 	}
 }
 
@@ -265,14 +265,14 @@ void draw_arc(Point centre, int radius, int colour, double angleStart, double an
 
 
 	while( y <= x ) {
-		WriteAPixelArcWrapper( x + x0,  y + y0, colour, min_x, max_x, min_y, max_y);
-		WriteAPixelArcWrapper( y + x0,  x + y0, colour, min_x, max_x, min_y, max_y);
-		WriteAPixelArcWrapper(-x + x0,  y + y0, colour, min_x, max_x, min_y, max_y);
-		WriteAPixelArcWrapper(-y + x0,  x + y0, colour, min_x, max_x, min_y, max_y);
-		WriteAPixelArcWrapper(-x + x0, -y + y0, colour, min_x, max_x, min_y, max_y);
-		WriteAPixelArcWrapper(-y + x0, -x + y0, colour, min_x, max_x, min_y, max_y);
-		WriteAPixelArcWrapper( x + x0, -y + y0, colour, min_x, max_x, min_y, max_y);
-		WriteAPixelArcWrapper( y + x0, -x + y0, colour, min_x, max_x, min_y, max_y);
+		WriteAPixelArcWrapper( x + x0,  y + y0, colour, min_x, XRES, min_y, YRES);
+		WriteAPixelArcWrapper( y + x0,  x + y0, colour, min_x, XRES, min_y, YRES);
+		WriteAPixelArcWrapper(-x + x0,  y + y0, colour, min_x, XRES, min_y, YRES);
+		WriteAPixelArcWrapper(-y + x0,  x + y0, colour, min_x, XRES, min_y, YRES);
+		WriteAPixelArcWrapper(-x + x0, -y + y0, colour, min_x, XRES, min_y, YRES);
+		WriteAPixelArcWrapper(-y + x0, -x + y0, colour, min_x, XRES, min_y, YRES);
+		WriteAPixelArcWrapper( x + x0, -y + y0, colour, min_x, XRES, min_y, YRES);
+		WriteAPixelArcWrapper( y + x0, -x + y0, colour, min_x, XRES, min_y, YRES);
 		y++;
 
 		if (decisionOver2<=0) {
@@ -329,10 +329,10 @@ void rand_lines_test(int num){
 	int test_colours[] = {CYAN, YELLOW, RED, LIME};
 	clear_screen(BLACK);
 	for (int i = 0; i<num; i++) {
-		int x1 = rand()%MAX_X;
-		int x2 = rand()%MAX_X;
-		int y1 = rand()%MAX_Y;
-		int y2 = rand()%MAX_Y;
+		int x1 = rand()%XRES;
+		int x2 = rand()%XRES;
+		int y1 = rand()%YRES;
+		int y2 = rand()%YRES;
 		printf("(%d, %d), (%d, %d)", x1,x2,y1,y2);
 		printf("colour = %d\n\n", test_colours[i % 4]);
 		Line(x1,y1,x2,y2,test_colours[i%4]);
@@ -397,8 +397,8 @@ void LineSW(int x1, int y1, int x2, int y2, int Colour){
 // Does not take advantage of HW accelerated graphics
 // Only use this for testing
 void clear_screenSW(int colour){
-	for (int x1 = 0; x1<=MAX_X; x1++){
-		for(int y1 = 0; y1 <= MAX_Y ; y1++ ){
+	for (int x1 = 0; x1<=XRES; x1++){
+		for(int y1 = 0; y1 <= YRES ; y1++ ){
 			WriteAPixel(x1, y1, colour);
 		}
 	}

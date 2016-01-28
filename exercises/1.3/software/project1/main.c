@@ -6,9 +6,9 @@ int main(void) {
 	 printf("start\n");
 	 clear_screen(YELLOW);
 	 Point corner_a = {0, 0};
-	 Point corner_b = {MAX_X, 0};
-	 Point corner_c = {0, MAX_Y};
-	 Point corner_d = {MAX_X, MAX_Y};
+	 Point corner_b = {XRES, 0};
+	 Point corner_c = {0, YRES};
+	 Point corner_d = {XRES, YRES};
 
 	 //	Point out_a = {100, 100};
 	 //	Point out_b = {700, 100};
@@ -72,6 +72,10 @@ int main(void) {
 
 //	draw_filled_circle(point1, 100, RED);
 //	draw_filled_circle_border(point2, 20, LIME, YELLOW);
+
+	clear_screen(WHITE);
+	OutGraphicsCharFont1(50, 50, BLACK, YELLOW, (int)('c'), 1);
+	OutGraphicsCharFont2a(200, 200, BLACK, YELLOW, (int)('A'), 0);
 
 	printf("end\n");
 	return 0;
