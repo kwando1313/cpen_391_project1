@@ -8,10 +8,6 @@
 #define Bluetooth_RxData 		(*(volatile unsigned char *)(0x84000222))
 #define Bluetooth_Baud    		(*(volatile unsigned char *)(0x84000224))
 
-// void wait(){
-// 	for ( int i = 0; i < 10000000; i++ );
-// }
-
 void putCharBluetooth(char c){
 	while((Bluetooth_Status & 0x02) != 0x02);
 	Bluetooth_TxData = c & 0xFF;
@@ -24,16 +20,17 @@ char getCharBluetooth(){
 
 void Init_Bluetooth(void){
 	Bluetooth_Control = 0x15;
-	Touchscreen_Baud = 0x01;
+	Bluetooth_Baud = 0x01;
 }
 
 // Set the bluetooth to command mode.
 void commandMode(void){
-	sleep();
-	for (int = 0; i < 3; i++){
+	usleep(1000000);
+	int i;
+	for (i = 0; i < 3; i++){
 		putCharBluetooth('$');
 	}
-	sleep();
+	usleep(1000000);
 
 	// Print "OK" if successful
 	printf("Command Mode\n");
@@ -43,7 +40,8 @@ void commandMode(void){
 
 // Set the bluetooth to data mode.
 void dataMode(void){
-	for (int = 0; i < 3; i++){
+	int i;
+	for (i = 0; i < 3; i++){
 		putCharBluetooth('-');
 	}
 	endCommand();
@@ -80,7 +78,7 @@ void changeName(char *name[]){
 	setName();
 
     int i;
-    for(i = 0; i<sizeof(str); i++){
+    for(i = 0; i<sizeof(name); i++){
         putCharBluetooth(name[i]);
     }
     endCommand();
@@ -99,7 +97,7 @@ void changePassword(char *pw[]){
 	setPassword();
 
 	int i;
-    for(i = 0; i<sizeof(str); i++){
+    for(i = 0; i<sizeof(pw); i++){
         putCharBluetooth(pw[i]);
     }
     endCommand();
@@ -114,3 +112,6 @@ void testBluetooth(void) {
 	char c;
 
 }
+
+
+
