@@ -23,39 +23,49 @@ void Init_Bluetooth(void){
 	Bluetooth_Baud = 0x01;
 }
 
+void WaitForReadStat(){
+	while(!(Bluetooth_Status & 0x01));
+}
+
 // Set the bluetooth to command mode.
 void commandMode(void){
-	usleep(1000000);
+	printf("Entering Command Mode\n");
+	usleep(2000000);
 	int i;
-	for (i = 0; i < 3; i++){
-		putCharBluetooth('$');
+	char data[] = "$$$";
+	for (i = 0; i < strlen(data); i++){
+		putCharBluetooth(data[i]);
 	}
-	usleep(1000000);
+	usleep(2000000);
 
 	// Print "OK" if successful
-	printf("Command Mode\n");
-	printf("%d", getCharBluetooth());
-	printf("%d\n", getCharBluetooth());
+	//WaitForReadStat();
+//	char O = getCharBluetooth();
+//	printf("%c", O);
+//	WaitForReadStat();
+//	char K = getCharBluetooth();
+//	printf("%c\n", K);
 }
 
 // Set the bluetooth to data mode.
 void dataMode(void){
+	printf("Entering Data Mode\n");
+	usleep(2000000);
+	char data[] = "---\r\n";
 	int i;
-	for (i = 0; i < 3; i++){
-		putCharBluetooth('-');
+	for (i = 0; i < strlen(data); i++){
+		putCharBluetooth(data[i]);
 	}
-	endCommand();
 
-	// Print "OK" if successful
-	printf("Data Mode\n");
-	printf("%d", getCharBluetooth());
-	printf("%d\n", getCharBluetooth());
-}
+	usleep(2000000);
 
-// Place at the end of a command while in command mode.
-void endCommand(){
-	putCharBluetooth("\r");
-	putCharBluetooth("\n");
+//	// Print "OK" if successful
+//	WaitForReadStat();
+//	char O = getCharBluetooth();
+//	printf("%c", O);
+//	WaitForReadStat();
+//	char K = getCharBluetooth();
+//	printf("%c\n", K);
 }
 
 // Prepare to give the device a name.
@@ -73,44 +83,61 @@ void setPassword(){
 }
 
 // Change the device's name
-void changeName(char *name[]){
+void changeName(char name[]){
+	printf("Changing name\n");
 	commandMode();
 	setName();
 
     int i;
-    for(i = 0; i<sizeof(name); i++){
+    for(i = 0; i<strlen(name); i++){
         putCharBluetooth(name[i]);
     }
-    endCommand();
+    usleep(2000000);
+
     // Print "OK" if successful
-	printf("Name Changed\n");
-	printf("%d", getCharBluetooth());
-	printf("%d\n", getCharBluetooth());
+//    WaitForReadStat();
+//    char O = getCharBluetooth();
+//    printf("%c", O);
+//    WaitForReadStat();
+//    char K = getCharBluetooth();
+//    printf("%c\n", K);
 
 	dataMode();
 }
 
 
 // Change the device's password.
-void changePassword(char *pw[]){
+void changePassword(char pw[]){
+	printf("Changing password\n");
 	commandMode();
 	setPassword();
 
 	int i;
-    for(i = 0; i<sizeof(pw); i++){
+    for(i = 0; i<strlen(pw); i++){
         putCharBluetooth(pw[i]);
     }
-    endCommand();
+    usleep(2000000);
+
+//    // Print "OK" if successful
+//    WaitForReadStat();
+//    char O = getCharBluetooth();
+//    printf("%c", O);
+//    WaitForReadStat();
+//    char K = getCharBluetooth();
+//    printf("%c\n", K);
 
 	dataMode();
 }
 
-void testBluetooth(void) {
+void assignBluetooth(void) {
 	printf("Test Bluetooth\n");
 	Init_Bluetooth();
 	printf("Bluetooth Initialized\n");
-	char c;
+	char name[] = "DankSquad\r\n";
+	char password[] = "0420\r\n";
 
+	changeName(name);
+	changePassword(password);
 }
 
 
