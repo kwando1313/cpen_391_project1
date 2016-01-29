@@ -2,6 +2,7 @@
 #define GRAPHICS_H_
 
 #include "Colours.h"
+#include "FontSize.h"
 #include "misc_helpers.h"
 
 // defined constants representing colours pre-programmed into colour palette
