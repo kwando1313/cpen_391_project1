@@ -7,4 +7,13 @@
 #define Bluetooth_RxData 		(*(volatile unsigned char *)(0x84000222))
 #define Bluetooth_Baud    		(*(volatile unsigned char *)(0x84000224))
 
+/**************************************************************************
+***
+**  Initialise bluetooth
+*****************************************************************************/
+void Init_Bluetooth(void){
+
+}
+
+
 #endif /* BLUETOOTH_H_ */
