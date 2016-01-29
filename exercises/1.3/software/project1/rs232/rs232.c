@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "rs232.h"
 
 #define RS232_Control (*(volatile unsigned char *)(0x84000200))
 #define RS232_Status  (*(volatile unsigned char *)(0x84000200))
@@ -36,12 +37,12 @@ int RS232TestForReceivedData(void){
 }
 
 void test_rs232(void) {
-	//printf("Test RS232\n");
+	printf("Test RS232\n");
 	Init_RS232();
 	while(1) {
 		char val = getcharRS232();
 		putcharRS232(val);
-		//printf("received: %c\n", val);
+		printf("received: %c\n", val);
 	}
 }
 

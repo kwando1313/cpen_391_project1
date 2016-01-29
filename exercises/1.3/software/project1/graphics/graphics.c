@@ -10,7 +10,7 @@
 #define GraphicsX2Reg   			(*(volatile unsigned short int *)(0x84000006))
 #define GraphicsY2Reg   			(*(volatile unsigned short int *)(0x84000008))
 #define GraphicsColourReg   		(*(volatile unsigned short int *)(0x8400000E))
-#define GraphicsBackGroundColourReg   	(*(volatile unsigned short int *)(0x84000010))
+#define GraphicsBackGroundColourReg (*(volatile unsigned short int *)(0x84000010))
 
 // constants representing values we write to the graphics 'command' register
 #define DrawHLine				0x1
@@ -23,16 +23,14 @@
 // pauses until the graphics chip status register indicates that it is idle
 #define WAIT_FOR_GRAPHICS		while((GraphicsStatusReg & 0x0001) != 0x0001);
 
-
 // This function writes a single pixel to the x,y coords specified using the specified colour
 // Note colour is a byte and represents a palette number (0-255) not a 24 bit RGB value
 void WriteAPixel(int x, int y, int Colour){
-	WAIT_FOR_GRAPHICS;				// is graphics ready for new command
-
-	GraphicsX1Reg = x;				// write coords to x1, y1
+	WAIT_FOR_GRAPHICS;
+	GraphicsX1Reg = x;
 	GraphicsY1Reg = y;
-	GraphicsColourReg = Colour;			// set pixel colour
-	GraphicsCommandReg = PutAPixel;			// give graphics "write pixel" command
+	GraphicsColourReg = Colour;
+	GraphicsCommandReg = PutAPixel;
 }
 
 /*********************************************************************************************
@@ -40,14 +38,12 @@ void WriteAPixel(int x, int y, int Colour){
 * Note returned colour is a byte and represents a palette number (0-255) not a 24 bit RGB value
 *********************************************************************************************/
 int ReadAPixel(int x, int y){
-	WAIT_FOR_GRAPHICS;			// is graphics ready for new command
-
-	GraphicsX1Reg = x;			// write coords to x1, y1
+	WAIT_FOR_GRAPHICS;
+	GraphicsX1Reg = x;
 	GraphicsY1Reg = y;
-	GraphicsCommandReg = GetAPixel;		// give graphics a "get pixel" command
-
+	GraphicsCommandReg = GetAPixel;
 	WAIT_FOR_GRAPHICS;			// is graphics done reading pixel
-	return (int)(GraphicsColourReg) ;	// return the palette number (colour)
+	return (int)(GraphicsColourReg) ;
 }
 
 
@@ -71,7 +67,7 @@ void HLine(int x1, int y1, int length, int Colour){
 		return;
 	}
 
-	int x2 = min(x1 + length - 1, MAX_X);
+	int x2 = min(x1 + length - 1, XRES);
 
 	WAIT_FOR_GRAPHICS;
 
@@ -90,7 +86,7 @@ void VLine(int x1, int y1, int length, int Colour){
 		return;
 	}
 
-	int y2 = min(y1 + length - 1, MAX_Y);
+	int y2 = min(y1 + length - 1, YRES);
 
 	WAIT_FOR_GRAPHICS;
 
@@ -103,7 +99,7 @@ void VLine(int x1, int y1, int length, int Colour){
 
 // fast draw of line from (x1, y1) to (x2, y2)
 // assumes x1,y1,x2,y2 fit within screen bounds:
-// 0 <= x <= MAX_X, 0 <= y <= MAX_Y
+// 0 <= x <= XRES, 0 <= y <= YRES
 void Line(int x1, int y1, int x2, int y2, int Colour){
 	if (x1 == x2 && y1 == y2) {
 		WriteAPixel(x1, y1, Colour);
@@ -118,6 +114,229 @@ void Line(int x1, int y1, int x2, int y2, int Colour){
 	GraphicsY2Reg = y2;
 	GraphicsColourReg = Colour;
 	GraphicsCommandReg = DrawLine;
+}
+
+//covers screen in "colour"
+void clear_screen(int colour){
+	for (int x1 = 0; x1<=XRES; x1++){
+		VLine(x1, 0, YRES+1, colour);
+	}
+}
+
+void draw_rectangle(Point topLeft, Point topRight, Point botLeft, Point botRight, int colour){
+	int width = topRight.x - topLeft.x + 1;
+	int height = botLeft.y - topLeft.y + 1;
+
+	HLine(topLeft.x, topLeft.y, width, colour);
+	HLine(botLeft.x, botLeft.y, width, colour);
+	VLine(topLeft.x, topLeft.y, height, colour);
+	VLine(topRight.x, topRight.y, height, colour);
+}
+
+void draw_filled_rectangle(Point topLeft, Point topRight, Point botLeft, Point botRight, int colour){
+	int width = topRight.x - topLeft.x + 1;
+
+	for (int y = topLeft.y; y<=botLeft.y; y++){
+		HLine(topLeft.x, y, width, colour);
+	}
+}
+
+void draw_filled_rectangle_border(Point topLeft, Point topRight, Point botLeft, Point botRight,
+		int colour, int borderColour, int borderWidth){
+	for(int i = 0; i<borderWidth; i++) {
+		draw_rectangle(topLeft, topRight, botLeft, botRight, borderColour);
+		topLeft.x++;
+		topLeft.y++;
+		topRight.x--;
+		topRight.y++;
+		botLeft.x++;
+		botLeft.y--;
+		botRight.x--;
+		botRight.y--;
+	}
+	draw_filled_rectangle(topLeft, topRight, botLeft, botRight, colour);
+}
+
+void draw_triangle(Point a, Point b, Point c, int colour){
+	Line(a.x, a.y, b.x, b.y, colour);
+	Line(a.x, a.y, c.x, c.y, colour);
+	Line(c.x, c.y, b.x, b.y, colour);
+}
+
+void draw_filled_triangle(Point a, Point b, Point c, int colour){
+	Line(a.x, a.y, b.x, b.y, colour);
+	Line(a.x, a.y, c.x, c.y, colour);
+	Line(c.x, c.y, b.x, b.y, colour);
+	Fill(avg_val(a.x,b.x,c.x), avg_val(a.y,b.y,c.y), colour, colour);
+}
+
+void draw_filled_triangle_border(Point a, Point b, Point c, int colour, int borderColour){
+	Line(a.x, a.y, b.x, b.y, borderColour);
+	Line(a.x, a.y, c.x, c.y, borderColour);
+	Line(c.x, c.y, b.x, b.y, borderColour);
+	Fill(avg_val(a.x,b.x,c.x), avg_val(a.y,b.y,c.y), colour, borderColour);
+}
+
+/* for shapes that don't fit into the other draw functions
+ * lines connect points[0] to points[1], points[1] to points[2],
+ * ..., points[num_points-1] to points[0]
+ * assumes num_points >= 3
+ * Note: if you find yourself drawing the same shape over & over with this,
+ * we should probably write a new function for that shape in particular
+*/
+void draw_shape(Point points[], int num_points, int colour){
+	for(int i = 1; i<num_points; i++){
+		Line(points[i-1].x, points[i-1].y, points[i].x, points[i].y, colour);
+	}
+	Line(points[0].x, points[0].y, points[num_points-1].x, points[num_points-1].y, colour);
+}
+
+// see notes for draw_shape
+// let me know if filling doesn't work - it might have problems with weird shapes
+void draw_filled_shape(Point points[], int num_points, int colour){
+	int xTot = points[0].x;
+	int yTot = points[0].y;
+	for(int i = 1; i<num_points; i++){
+		Line(points[i-1].x, points[i-1].y, points[i].x, points[i].y, colour);
+		xTot += points[i].x;
+		yTot += points[i].y;
+	}
+	Line(points[0].x, points[0].y, points[num_points-1].x, points[num_points-1].y, colour);
+	Fill(xTot/num_points, yTot/num_points, colour, colour);
+}
+
+// see notes for draw_shape
+// let me know if filling doesn't work - it might have problems with weird shapes
+void draw_filled_shape_border(Point points[], int num_points, int colour, int borderColour){
+	int xTot = points[0].x;
+	int yTot = points[0].y;
+	for(int i = 1; i<num_points; i++){
+		Line(points[i-1].x, points[i-1].y, points[i].x, points[i].y, borderColour);
+		xTot += points[i].x;
+		yTot += points[i].y;
+	}
+	Line(points[0].x, points[0].y, points[num_points-1].x, points[num_points-1].y, borderColour);
+	Fill(xTot/num_points, yTot/num_points, colour, borderColour);
+}
+
+void WriteAPixelArcWrapper(int x, int y, int Colour, int min_x, int max_x, int min_y, int max_y){
+	if (falls_between(x, min_x, max_x) && falls_between(y, min_y, max_y)) {
+		WriteAPixel(x, y, Colour);
+	}
+}
+
+// total distance between angles must be <= 180. It may occasionally work, but to be safe,
+// always call arcs > 180 in two calls, like below:
+// draw_arc(point0, 100, BLUE, 0, 180);
+// draw_arc(point0, 100, BLUE, 180, 230);
+// Let me know if this is slow -> it can probably be vastly improved
+void draw_arc(Point centre, int radius, int colour, double angleStart, double angleEnd){
+	int x0 = centre.x;
+	int y0 = centre.y;
+	int x = radius;
+	int y = 0;
+	int decisionOver2 = 1 - x;
+
+	int tmp_x_1 = centre.x + radius*cos(convert_to_radians(angleEnd));
+	int tmp_x_2 = centre.x + radius*cos(convert_to_radians(angleStart));
+	int tmp_y_1 = centre.y + radius*sin(convert_to_radians(angleStart));
+	int tmp_y_2 = centre.y + radius*sin(convert_to_radians(angleEnd));
+
+	int min_x = min(tmp_x_1, tmp_x_2);
+	int max_x = max(tmp_x_1, tmp_x_2);
+	int min_y = min(tmp_y_1, tmp_y_2);
+	int max_y = max(tmp_y_1, tmp_y_2);
+
+	//TODO: optimize all of this
+	if (falls_between(90, angleStart, angleEnd)) {
+		max_y = centre.y + radius;
+	}
+	if (falls_between(270, angleStart, angleEnd)) {
+		min_y = centre.y - radius;
+	}
+
+	if (falls_between(180, angleStart, angleEnd)) {
+		min_x = centre.x - radius;
+	}
+
+	if (falls_between(0, angleStart, angleEnd)) {
+		max_x = centre.x + radius;
+	}
+
+
+	while( y <= x ) {
+		WriteAPixelArcWrapper( x + x0,  y + y0, colour, min_x, XRES, min_y, YRES);
+		WriteAPixelArcWrapper( y + x0,  x + y0, colour, min_x, XRES, min_y, YRES);
+		WriteAPixelArcWrapper(-x + x0,  y + y0, colour, min_x, XRES, min_y, YRES);
+		WriteAPixelArcWrapper(-y + x0,  x + y0, colour, min_x, XRES, min_y, YRES);
+		WriteAPixelArcWrapper(-x + x0, -y + y0, colour, min_x, XRES, min_y, YRES);
+		WriteAPixelArcWrapper(-y + x0, -x + y0, colour, min_x, XRES, min_y, YRES);
+		WriteAPixelArcWrapper( x + x0, -y + y0, colour, min_x, XRES, min_y, YRES);
+		WriteAPixelArcWrapper( y + x0, -x + y0, colour, min_x, XRES, min_y, YRES);
+		y++;
+
+		if (decisionOver2<=0) {
+		  decisionOver2 += 2 * y + 1;
+		}
+		else {
+		  x--;
+		  decisionOver2 += 2 * (y - x) + 1;
+		}
+	}
+}
+
+// stolen from https://en.wikipedia.org/wiki/Midpoint_circle_algorithm
+void draw_circle(Point centre, int radius, int colour){
+	int x0 = centre.x;
+	int y0 = centre.y;
+	int x = radius;
+	int y = 0;
+	int decisionOver2 = 1 - x;   // Decision criterion divided by 2 evaluated at x=r, y=0
+
+	while( y <= x ) {
+		WriteAPixel( x + x0,  y + y0, colour); // Octant 1
+		WriteAPixel( y + x0,  x + y0, colour); // Octant 2
+		WriteAPixel(-x + x0,  y + y0, colour); // Octant 4
+		WriteAPixel(-y + x0,  x + y0, colour); // Octant 3
+		WriteAPixel(-x + x0, -y + y0, colour); // Octant 5
+		WriteAPixel(-y + x0, -x + y0, colour); // Octant 6
+		WriteAPixel( x + x0, -y + y0, colour); // Octant 7
+		WriteAPixel( y + x0, -x + y0, colour); // Octant 8
+		y++;
+
+		if (decisionOver2<=0) {
+		  decisionOver2 += 2 * y + 1;   // Change in decision criterion for y -> y+1
+		}
+		else {
+		  x--;
+		  decisionOver2 += 2 * (y - x) + 1;   // Change for y -> y+1, x -> x-1
+		}
+	}
+}
+
+void draw_filled_circle(Point centre, int radius, int colour){
+	draw_circle(centre, radius, colour);
+	Fill(centre.x, centre.y, colour, colour);
+}
+
+void draw_filled_circle_border(Point centre, int radius, int colour, int borderColour){
+	draw_circle(centre, radius, borderColour);
+	Fill(centre.x, centre.y, colour, borderColour);
+}
+
+//draws random lines, prints coords
+void rand_lines_test(int num){
+	int test_colours[] = {CYAN, YELLOW, RED, LIME};
+	clear_screen(BLACK);
+	for (int i = 0; i<num; i++) {
+		int x1 = rand()%XRES;
+		int x2 = rand()%XRES;
+		int y1 = rand()%YRES;
+		int y2 = rand()%YRES;
+		printf("(%d, %d), (%d, %d)", x1,x2,y1,y2);
+		printf("colour = %d\n\n", test_colours[i % 4]);
+		Line(x1,y1,x2,y2,test_colours[i%4]);
+	}
 }
 
 // Bresenham's line drawing algorithm, copy and pasted from Connect
@@ -178,128 +397,9 @@ void LineSW(int x1, int y1, int x2, int y2, int Colour){
 // Does not take advantage of HW accelerated graphics
 // Only use this for testing
 void clear_screenSW(int colour){
-	for (int x1 = 0; x1<=MAX_X; x1++){
-		for(int y1 = 0; y1 <= MAX_Y ; y1++ ){
+	for (int x1 = 0; x1<=XRES; x1++){
+		for(int y1 = 0; y1 <= YRES ; y1++ ){
 			WriteAPixel(x1, y1, colour);
 		}
-	}
-}
-
-//covers screen in "colour"
-void clear_screen(int colour){
-	for (int x1 = 0; x1<=MAX_X; x1++){
-		VLine(x1, 0, MAX_Y+1, colour);
-	}
-}
-
-void draw_rectangle(Point topLeft, Point topRight, Point botLeft, Point botRight, int colour){
-	int width = topRight.x - topLeft.x + 1;
-	int height = botLeft.y - topLeft.y + 1;
-
-	HLine(topLeft.x, topLeft.y, width, colour);
-	HLine(botLeft.x, botLeft.y, width, colour);
-	VLine(topLeft.x, topLeft.y, height, colour);
-	VLine(topRight.x, topRight.y, height, colour);
-}
-
-void draw_filled_rectangle(Point topLeft, Point topRight, Point botLeft, Point botRight, int colour){
-	int width = topRight.x - topLeft.x + 1;
-
-	for (int y = topLeft.y; y<=botLeft.y; y++){
-		HLine(topLeft.x, y, width, colour);
-	}
-}
-
-void draw_filled_rectangle_border(Point topLeft, Point topRight, Point botLeft, Point botRight,
-		int colour, int borderColour, int borderWidth){
-	for(int i = 0; i<borderWidth; i++) {
-		draw_rectangle(topLeft, topRight, botLeft, botRight, borderColour);
-		topLeft.x++;
-		topLeft.y++;
-		topRight.x--;
-		topRight.y++;
-		botLeft.x++;
-		botLeft.y--;
-		botRight.x--;
-		botRight.y--;
-	}
-	draw_filled_rectangle(topLeft, topRight, botLeft, botRight, colour);
-}
-
-void draw_triangle(Point a, Point b, Point c, int colour){
-	Line(a.x, a.y, b.x, b.y, colour);
-	Line(a.x, a.y, c.x, c.y, colour);
-	Line(c.x, c.y, b.x, b.y, colour);
-}
-
-void draw_filled_triangle(Point a, Point b, Point c, int colour){
-	Line(a.x, a.y, b.x, b.y, colour);
-	Line(a.x, a.y, c.x, c.y, colour);
-	Line(c.x, c.y, b.x, b.y, colour);
-	//TODO: Check if this point is always going to be in the triangle
-	Fill(avg_val(a.x,b.x,c.x), avg_val(a.y,b.y,c.y), colour, colour);
-}
-
-void draw_filled_triangle_border(Point a, Point b, Point c, int colour, int borderColour){
-	Line(a.x, a.y, b.x, b.y, borderColour);
-	Line(a.x, a.y, c.x, c.y, borderColour);
-	Line(c.x, c.y, b.x, b.y, borderColour);
-	Fill(avg_val(a.x,b.x,c.x), avg_val(a.y,b.y,c.y), colour, borderColour);
-}
-
-/* for shapes that don't fit into the other draw functions
- * lines connect points[0] to points[1], points[1] to points[2],
- * ..., points[num_points-1] to points[0]
- * assumes num_points >= 3
- * Note: if you find yourself drawing the same shape over & over with this,
- * we should probably write a new function for that shape in particular
-*/
-void draw_shape(Point points[], int num_points, int colour){
-	for(int i = 1; i<num_points; i++){
-		Line(points[i-1].x, points[i-1].y, points[i].x, points[i].y, colour);
-	}
-	Line(points[0].x, points[0].y, points[num_points-1].x, points[num_points-1].y, colour);
-}
-
-// see notes for draw_shape
-// let me know if filling doesn't work - it might have problems with weird shapes
-void draw_filled_shape(Point points[], int num_points, int colour){
-	int xTot = points[0].x;
-	int yTot = points[0].y;
-	for(int i = 1; i<num_points; i++){
-		Line(points[i-1].x, points[i-1].y, points[i].x, points[i].y, colour);
-		xTot += points[i].x;
-		yTot += points[i].y;
-	}
-	Line(points[0].x, points[0].y, points[num_points-1].x, points[num_points-1].y, colour);
-	Fill(xTot/num_points, yTot/num_points, colour, colour);
-}
-
-// see notes for draw_shape
-// let me know if filling doesn't work - it might have problems with weird shapes
-void draw_filled_shape_border(Point points[], int num_points, int colour, int borderColour){
-	int xTot = points[0].x;
-	int yTot = points[0].y;
-	for(int i = 1; i<num_points; i++){
-		Line(points[i-1].x, points[i-1].y, points[i].x, points[i].y, borderColour);
-		xTot += points[i].x;
-		yTot += points[i].y;
-	}
-	Line(points[0].x, points[0].y, points[num_points-1].x, points[num_points-1].y, borderColour);
-	Fill(xTot/num_points, yTot/num_points, colour, borderColour);
-}
-
-//draws random lines, prints coords
-void rand_lines_test(int num){
-	int test_colours[] = {CYAN, YELLOW, RED, LIME};
-	clear_screen(BLACK);
-	for (int i = 0; i<num; i++) {
-		int x1 = rand()%MAX_X;
-		int x2 = rand()%MAX_X;
-		int y1 = rand()%MAX_Y;
-		int y2 = rand()%MAX_Y;
-		printf("(%d, %d), (%d, %d)", x1,x2,y1,y2);
-		printf("colour = %d\n\n", test_colours[i % 4]);
-		Line(x1,y1,x2,y2,test_colours[i%4]);
 	}
 }

@@ -4,7 +4,7 @@
 
 // an array of coordinates and a pointer to first
 
-XYPixel XYStack[1000], *Next = &XYStack[0];
+Point XYStack[1000], *Next = &XYStack[0];
 
 
 /*****************************************************************************************************************************
@@ -12,7 +12,7 @@ XYPixel XYStack[1000], *Next = &XYStack[0];
 * Used for FILL algorithm
 ******************************************************************************************************************************/
 
-int PushPixel(XYPixel p1)
+int PushPixel(Point p1)
 {
     if(Next <= &XYStack[1000]) {
         *Next++ = p1;
@@ -22,10 +22,10 @@ int PushPixel(XYPixel p1)
         return -1 ;
 }
 
-int PopPixel(XYPixel *theXYPixel)
+int PopPixel(Point *thePoint)
 {
     if(Next >= XYStack) {
-        *theXYPixel = *(--Next);
+        *thePoint = *(--Next);
         return 0 ;
     }
     else
@@ -52,7 +52,7 @@ void Fill(int _x, int _y, int _FillColour, int _BoundaryColour)
 
     int     XRight, XLeft ;
     int     SaveX, SaveY ;      		// temp variable
-    XYPixel aPoint, aPoint1 ;           // temp var
+    Point aPoint, aPoint1 ;           // temp var
 
     Next = XYStack ;                    // initialise to start of stack
     aPoint.x = _x ;

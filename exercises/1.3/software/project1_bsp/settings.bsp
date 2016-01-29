@@ -4,6 +4,8 @@
         <BspVersion>default</BspVersion>
         <BspGeneratedTimeStamp>28-Jan-2016 4:21:27 PM</BspGeneratedTimeStamp>
         <BspGeneratedUnixTimeStamp>1454026887953</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>27-Jan-2016 1:57:54 AM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1453888674512</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>C:\Users\Alex\Desktop\UBC\cpen391\cpen_391_project1\exercises\1.3\software\project1_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\nios_system.sopcinfo</SopcDesignFile>

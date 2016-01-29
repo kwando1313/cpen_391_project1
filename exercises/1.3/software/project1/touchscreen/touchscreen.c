@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "touchscreen.h"
 
 #define Touchscreen_Status 		(*(volatile unsigned char *)(0x84000230))
 #define Touchscreen_Control 	(*(volatile unsigned char *)(0x84000230))
@@ -77,8 +78,7 @@ void WaitForReadStatus(){
 	while((Touchscreen_Status & 0x00));
 }
 
-/* a data type to hold a point/coord */
-typedef struct{int x, y; } Point;
+
 /*****************************************************************************
 * This function waits for a touch screen press event and returns X,Y coord
 *****************************************************************************/

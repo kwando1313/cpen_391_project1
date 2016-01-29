@@ -1,6 +1,8 @@
 #ifndef TOUCHSCREEN_H_
 #define TOUCHSCREEN_H_
 
+#include "misc_helpers.h"
+
 #define Touchscreen_Status 		(*(volatile unsigned char *)(0x84000230))
 #define Touchscreen_Control 	(*(volatile unsigned char *)(0x84000230))
 #define Touchscreen_TxData 		(*(volatile unsigned char *)(0x84000232))
@@ -44,7 +46,6 @@ void WaitForRelease();
 **   wait for screen ready to be read
 *****************************************************************************/
 void WaitForReadStatus();
-typedef struct{int x, y; } Point;
 
 /*****************************************************************************
 * This function waits for a touch screen press event and returns X,Y coord

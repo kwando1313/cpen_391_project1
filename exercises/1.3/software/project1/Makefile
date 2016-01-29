@@ -150,6 +150,7 @@ C_SRCS += misc/misc_helpers.c
 C_SRCS += rs232/rs232.c
 C_SRCS += touchscreen/touchscreen.c
 C_SRCS += graphics/fill.c
+C_SRCS += graphics/draw_font.c
 CXX_SRCS :=
 ASM_SRCS :=
 
