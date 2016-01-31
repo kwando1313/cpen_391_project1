@@ -1,9 +1,25 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+#include "gps.h"
+#include "rs232.h"
+
+#define push_buttons123 (volatile int *) 0x80001060
+#define hex0_1			(*(volatile unsigned char *)(0x80001110))
+#define hex2_3			(*(volatile unsigned char *)(0x80001100))
+#define hex4_5			(*(volatile unsigned char *)(0x800011b0))
+#define hex6_7			(*(volatile unsigned char *)(0x800011a0))
 
 #define GPS_Status 		(*(volatile unsigned char *)(0x84000210))
 #define GPS_Control 	(*(volatile unsigned char *)(0x84000210))
 #define GPS_TxData 		(*(volatile unsigned char *)(0x84000212))
 #define GPS_RxData 		(*(volatile unsigned char *)(0x84000212))
 #define GPS_Baud    	(*(volatile unsigned char *)(0x84000214))
+
+void wait_for_header(void);
+gps_data* get_new_gps_data(void);
 
 void Init_GPS(void){
 	// set up 6850 Control Register to utilise a divide by 16 clock,
@@ -27,186 +43,201 @@ char getcharGPS(void){
 	return GPS_RxData;
 }
 
-//angela's bs from main
-//TODO refactor this
 
+void test_command_gps (void){
+	Init_GPS();
+	char str;
+	char readlog[] = "$PMTK622,1*29\r\n";	//command for readlog
+	int len = strlen(readlog);
+	int i = 0;
+	bool end_readlog = false;
+
+	while (1){
 /*
- #include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
-#include "altera_up_avalon_character_lcd.h"
+ * 	We send in the read log command but it won't actually
+ * 	give us any useful info yet.
+ *
+ */
+		if (!end_readlog){
+			putcharGPS (readlog[i]);
+			i++;
+			if (i == len){
+				end_readlog = true;
+			}
+		}
+			str = getcharGPS();
+			printf("%c", str);
 
-#include "gps.h"
-#include "rs232.h"
+	}
+}
 
-void test_gps(void){
+void gps_data_1(alt_up_character_lcd_dev * char_lcd_dev, char *lati, char *NS, char *longi, char *EW){
+
+	alt_up_character_lcd_string(char_lcd_dev, "Lat:");
+	alt_up_character_lcd_string(char_lcd_dev, lati);
+	alt_up_character_lcd_string(char_lcd_dev, " ");
+	alt_up_character_lcd_string(char_lcd_dev, NS);
+
+	alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
+	alt_up_character_lcd_string(char_lcd_dev, "Lon:");
+	alt_up_character_lcd_string(char_lcd_dev, longi);
+	alt_up_character_lcd_string(char_lcd_dev, " ");
+	alt_up_character_lcd_string(char_lcd_dev, EW);
+
+}
+
+void gps_data_2(alt_up_character_lcd_dev * char_lcd_dev, char *time, char *alt){
+	alt_up_character_lcd_string(char_lcd_dev, "Time:");
+	alt_up_character_lcd_string(char_lcd_dev, time);
+	alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
+	alt_up_character_lcd_string(char_lcd_dev, "Alt:");
+	alt_up_character_lcd_string(char_lcd_dev, alt);
+}
+
+void gps_data_3(alt_up_character_lcd_dev * char_lcd_dev, char *numSat, char *pos){
+	alt_up_character_lcd_string(char_lcd_dev, "#Sat:");
+	alt_up_character_lcd_string(char_lcd_dev, numSat);
+	alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
+	alt_up_character_lcd_string(char_lcd_dev, "Pos:");
+	alt_up_character_lcd_string(char_lcd_dev, pos);
+}
+
+void test_read_gps(void){
 	alt_up_character_lcd_dev * char_lcd_dev;
 	char_lcd_dev = alt_up_character_lcd_open_dev ("/dev/character_lcd_0");
 	alt_up_character_lcd_init (char_lcd_dev);
 
 	printf("Test GPS\n");
 	Init_GPS();
-	int dataNum = 0;
 
-	char str[2];
-	str[1] = 0;
+	gps_data* data = get_gps_data();
 
 
+	/*	This is for printing onto the lcd
+	 */
+	while (1){
+		int old_button;
+		int button_value = *(push_buttons123); // get button value
 
-	char time[15];
-	char lati[15];
-	char longi[15];
-	char NS;
-	char EW;
-	char pos;
-	char numSat[3];
-	char HDOP[10];
-	char alt[10];
-	char altUnit;
-	char geo[10];
-	char geoUnit;
-
-	strcpy (time, "");
-	strcpy (lati, "");
-	strcpy (longi, "");
-	strcpy (numSat, "");
-	strcpy (HDOP, "");
-	strcpy (alt, "");
-	strcpy (geo, "");
-
-	int len;
-
-	bool header = false;
-	bool complete = false;
-
-	while(!complete) {
-		if (!header){
-			str[0] = getcharGPS();
-			if (str[0] == '$'){
-				str[0] = getcharGPS();
-				if (str[0] == 'G'){
-					str[0] = getcharGPS();
-					if (str[0] == 'P'){
-						str[0] = getcharGPS();
-						if (str[0] == 'G'){
-							str[0] = getcharGPS();
-							if (str[0] == 'G'){
-								str[0] = getcharGPS();
-								if (str[0] == 'A'){
-									header = true;
-								}
-							}
-						}
-					}
-				}
+		if (button_value != old_button){
+			if (button_value == 3){
+				alt_up_character_lcd_init (char_lcd_dev);
+				gps_data_1 (char_lcd_dev, data->lati, data->NS, data->longi, data->EW);
+			}
+			else if (button_value == 5){
+				alt_up_character_lcd_init (char_lcd_dev);
+				gps_data_2 (char_lcd_dev, data->time, data->alt);
+			}
+			else if (button_value == 6){
+				alt_up_character_lcd_init (char_lcd_dev);
+				gps_data_3 (char_lcd_dev, data->numSat, data->pos);
+			}
+			else if (button_value == 7){
+				alt_up_character_lcd_init (char_lcd_dev);
+				alt_up_character_lcd_string(char_lcd_dev, "Press buttons:");
+				alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
+				alt_up_character_lcd_string(char_lcd_dev, "KEY0:new data");
 			}
 		}
-		else {
-			str[0] = getcharGPS();
-			if (str[0] == '*'){
-				complete = true;
-			}
-			else if (str[0] == ','){
-				dataNum++;
-			}
-			else{
-				if (dataNum == 1){
-					//strcat (time, &str);
-					len = strlen (time);
-					time[len] = str[0];
-					printf ("str: %s  len: %d  time: %s\n",str, len, time);
 
-				}/*
-				else if (dataNum == 2){
-					strcat (lati, &str);
-					printf ("%s\n", lati);
-				}
-				else if (dataNum == 3){
-					NS = str;
-					printf ("%c\n", NS);
+		old_button = button_value;
+	}
+}
 
-				}
-				else if (dataNum == 4){
-					strcat (longi, &str);
-					printf ("%s\n", longi);
-				}
-				else if (dataNum == 5){
-					EW = str;
-					printf ("%c\n", EW);
+void wait_for_header(void) {
+	char str[] = "$GPGGA";
+	char buf[7];
+	buf[6] = 0;
 
-				}
-				else if (dataNum == 6){
-					pos = str;
-					printf ("%c\n", pos);
-
-				}
-				else if (dataNum == 7){
-					strcat(numSat, &str);
-					//numSat = str;
-					printf ("%s\n", numSat);
-				}
-				else if (dataNum == 8){
-					strcat (HDOP, &str);
-					printf ("%s\n", HDOP);
-
-				}
-				else if (dataNum == 9)
-					strcat (alt, &str);
-				else if (dataNum == 10)
-					altUnit = str;
-				else if (dataNum == 11)
-					strcat (geo, &str);
-				else if (dataNum == 12)
-					geoUnit = str;
-
-			}
+	while (true){
+		for (int i = 0; i < 6; i++) {
+			buf[i] = getcharGPS();
+		}
+		if (strcmp(str,buf) == 0) {
+			return;
 		}
 	}
-
-	printf ("Time: %s\n", time);
-	printf ("Latitude: %s\n", lati);
-	printf ("N/S: %c\n", NS);
-	printf ("Longitude: %s\n", longi);
-	printf ("E/W: %c\n", EW);
-	printf ("Position: %c\n", pos);
-	printf ("Number of Satellites: %s\n", numSat);
-	printf ("HDOP: %s\n", HDOP);
-	printf ("Altitude: %s\n", alt);
-	printf ("Units: %c\n", altUnit);
-	printf ("Geoidal Separation: %s\n", geo);
-	printf ("Units: %c\n", geoUnit);
-
-	alt_up_character_lcd_string(char_lcd_dev, lati);
-	//alt_up_character_lcd_string(char_lcd_dev, " ");
-	alt_up_character_lcd_string(char_lcd_dev, NS);
-
-
-	alt_up_character_lcd_set_cursor_pos(char_lcd_dev, 0, 1);
-	alt_up_character_lcd_string(char_lcd_dev, longi);
-	//alt_up_character_lcd_string(char_lcd_dev, " ");
-	alt_up_character_lcd_string(char_lcd_dev, EW);
-
 }
 
-void test_command_gps (void){
-	Init_GPS();
-	char str;
-
-
-
+void print_gps_data(gps_data* data) {
+	printf ("Time: %s\n", data->time);
+	printf ("Latitude: %s\n", data->lati);
+	printf ("N/S: %s\n", data->NS);
+	printf ("Longitude: %s\n", data->longi);
+	printf ("E/W: %s\n", data->EW);
+	printf ("Position: %s\n", data->pos);
+	printf ("Number of Satellites: %s\n", data->numSat);
+	printf ("HDOP: %s\n", data->HDOP);
+	printf ("Altitude: %s\n", data->alt);
+	printf ("Units: %s\n", data->altUnit);
+	printf ("Geoidal Separation: %s\n", data->geo);
+	printf ("Units: %s\n", data->geoUnit);
 }
 
-int main(void) {
+gps_data* get_new_gps_data(void){
+	int dataNum = 0;
+	char rx;
+	int i = 0;
 
-	test_gps();
+	gps_data* new_gps_data = malloc(sizeof(gps_data));
 
-	return 0;
+	while(true) {
+		rx = getcharGPS();
+		if (rx == '*'){
+			print_gps_data(new_gps_data);
+			break;
+		}
+		else if (rx == ','){
+			dataNum++;
+			i = 0;
+		}
+		else{
+			if (dataNum == 1){
+				new_gps_data->time[i] = rx;
+			}
+			else if (dataNum == 2){
+				new_gps_data->lati[i] = rx;
+			}
+
+			else if (dataNum == 3){
+				new_gps_data->NS[i] = rx;
+			}
+			else if (dataNum == 4){
+				new_gps_data->longi[i] = rx;
+			}
+			else if (dataNum == 5){
+				new_gps_data->EW[i] = rx;
+			}
+			else if (dataNum == 6){
+				new_gps_data->pos[i] = rx;
+			}
+			else if (dataNum == 7){
+				new_gps_data->numSat[i] = rx;
+			}
+			else if (dataNum == 8){
+				new_gps_data->HDOP[i] = rx;
+			}
+			else if (dataNum == 9){
+				new_gps_data->alt[i] = rx;
+			}
+			else if (dataNum == 10){
+				new_gps_data->altUnit[i] = rx;
+			}
+			else if (dataNum == 11){
+				new_gps_data->geo[i] = rx;
+			}
+			else if (dataNum == 12){
+				new_gps_data->geoUnit[i] = rx;
+			}
+			i++;
+		}
+
+	}
+
+	return new_gps_data;
 }
- *
- *
- *
- *
- *
- *
 
- */
+gps_data* get_gps_data(void){
+	wait_for_header();
+	return get_new_gps_data();
+}
