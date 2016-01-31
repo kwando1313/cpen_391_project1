@@ -63,5 +63,6 @@ void clear_screen(int colour);
 void LineSW(int x1, int y1, int x2, int y2, int Colour);
 void clear_screenSW(int colour);
 void rand_lines_test(int num);
+void test_graphics(void);
 
 #endif /* GRAPHICS_H_ */
