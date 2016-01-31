@@ -4,6 +4,7 @@
 #include "menu.h"
 
 int main(void) {
+<<<<<<< e12a01364cef9f227ea5fdc6ff9c7a284f20e559
 
 
 
@@ -26,6 +27,11 @@ int main(void) {
 
 	draw_menu(point4, 100, 50, 3, BLUE, BLACK, WHITE, SMALL, textArray);
 
+=======
+	printf("start\n");
+	test_graphics();
+	//test_rs232();
+>>>>>>> completed 1.7 demo
 	printf("end\n");
 	return 0;
 }

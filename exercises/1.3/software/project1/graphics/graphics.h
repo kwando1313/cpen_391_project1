@@ -62,7 +62,9 @@ void clear_screen(int colour);
 //useless methods
 void LineSW(int x1, int y1, int x2, int y2, int Colour);
 void clear_screenSW(int colour);
-void rand_lines_test(int num);
 void test_graphics(void);
+void rand_v_line(int min_x, int max_x, int min_y, int max_y, int colour);
+void rand_h_line(int min_x, int max_x, int min_y, int max_y, int colour);
+void rand_line(int min_x, int max_x, int min_y, int max_y, int colour);
 
 #endif /* GRAPHICS_H_ */

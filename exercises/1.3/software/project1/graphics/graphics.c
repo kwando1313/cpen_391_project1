@@ -1,7 +1,9 @@
 #include "misc_helpers.h"
 #include "fill.h"
 #include "graphics.h"
+#include "draw_font.h"
 #include <stdio.h>
+#include <string.h>
 
 #define GraphicsCommandReg   		(*(volatile unsigned short int *)(0x84000000))
 #define GraphicsStatusReg   		(*(volatile unsigned short int *)(0x84000000))
@@ -324,21 +326,6 @@ void draw_filled_circle_border(Point centre, int radius, int colour, int borderC
 	Fill(centre.x, centre.y, colour, borderColour);
 }
 
-//draws random lines, prints coords
-void rand_lines_test(int num){
-	int test_colours[] = {CYAN, YELLOW, RED, LIME};
-	clear_screen(BLACK);
-	for (int i = 0; i<num; i++) {
-		int x1 = rand()%XRES;
-		int x2 = rand()%XRES;
-		int y1 = rand()%YRES;
-		int y2 = rand()%YRES;
-		printf("(%d, %d), (%d, %d)", x1,x2,y1,y2);
-		printf("colour = %d\n\n", test_colours[i % 4]);
-		Line(x1,y1,x2,y2,test_colours[i%4]);
-	}
-}
-
 // Bresenham's line drawing algorithm, copy and pasted from Connect
 // Does not take advantage of HW accelerated graphics
 // Only use this method for testing Line()
@@ -405,53 +392,85 @@ void clear_screenSW(int colour){
 }
 
 void test_graphics(void){
-
 	clear_screen(WHITE);
 
-	Point h_a = {50, 50};
-	Point h_b = {200, 50};
-	Point h_c = {50, 400};
-	Point h_d = {200, 400};
+	Point h_a = {50, 100};
+	Point h_b = {200, 100};
+	Point h_c = {50, 450};
+	Point h_d = {200, 450};
 
-	Point v_a = {250, 50};
-	Point v_b = {400, 50};
-	Point v_c = {250, 400};
-	Point v_d = {400, 400};
+	Point v_a = {300, 100};
+	Point v_b = {450, 100};
+	Point v_c = {300, 450};
+	Point v_d = {450, 450};
 
-	Point l_a = {450, 50};
-	Point l_b = {600, 50};
-	Point l_c = {450, 400};
-	Point l_d = {600, 400};
+	Point l_a = {550, 100};
+	Point l_b = {700, 100};
+	Point l_c = {550, 450};
+	Point l_d = {700, 450};
 
 	draw_filled_rectangle_border(h_a, h_b, h_c, h_d, WHITE, BLACK, 2);
 	draw_filled_rectangle_border(v_a, v_b, v_c, v_d, WHITE, BLACK, 2);
 	draw_filled_rectangle_border(l_a, l_b, l_c, l_d, WHITE, BLACK, 2);
 
+	Point tri_a = {150, 20};
+	Point tri_b = {250, 40};
+	Point tri_c = {200, 80};
+	draw_filled_triangle_border(tri_a, tri_b, tri_c, YELLOW, BLUE);
 
+	Point circ0 = {500, 40};
+	draw_filled_circle_border(circ0, 40, LIGHT_GREEN, PURPLE);
+	draw_arc(circ0, 40, CORAL, 0, 120);
 
-	//oblique
-	Point tri_a = {52, 63};
-	Point tri_b = {652, 363};
-	Point tri_c = {152, 263};
+	char str0[] = "Horizontal Lines";
+	for (int i = 0; i<strlen(str0); i++) {
+		int letter = (int)str0[i];
+		OutGraphicsCharFont2a(45+i*FONT2_XPIXELS, 80, BLACK, WHITE, letter, 0);
+	}
 
+	char str1[] = "Vertical Lines";
+	for (int i = 0; i<strlen(str1); i++) {
+		int letter = (int)str1[i];
+		OutGraphicsCharFont2a(300+i*FONT2_XPIXELS, 80, BLACK, WHITE, letter, 0);
+	}
 
+	char str2[] = "Other Lines";
+	for (int i = 0; i<strlen(str2); i++) {
+		int letter = (int)str2[i];
+		OutGraphicsCharFont2a(550+i*FONT2_XPIXELS, 80, BLACK, WHITE, letter, 0);
+	}
 
-	Point point0 = {200, 200};
-	Point point1 = {500, 100};
-	Point point2 = {400, 300};
+	int i = 0;
+	int colour;
+	while(1){
+		colour = i % 12;
+		switch(i % 3){
+			case 0: rand_h_line(52, 199, 102, 448, colour); break;
+			case 1:	rand_v_line(302, 449, 102, 449, colour); break;
+			case 2: rand_line(552, 699, 102, 448, colour); break;
+		}
+		i++;
+	}
+}
 
-	draw_circle(point0, 100, RED);
-	//draw_arc(point0, 100, BLUE, 0, 180);
-	draw_arc(point0, 100, BLUE, 120, 300);
+void rand_v_line(int min_x, int max_x, int min_y, int max_y, int colour){
+	int x = (rand() % (max_x + 1 - min_x)) + min_x;
+	int y = (rand() % (max_y + 1 - min_y)) + min_y;
+	int height = rand() % (max_y - y + 1);
+	VLine(x, y, height, colour);
+}
 
-	draw_circle(point1, 100, RED);
-	draw_arc(point1, 100, LIME, 0, 120);
+void rand_h_line(int min_x, int max_x, int min_y, int max_y, int colour){
+	int x = (rand() % (max_x + 1 - min_x)) + min_x;
+	int y = (rand() % (max_y + 1 - min_y)) + min_y;
+	int width = rand() % (max_x - x + 1);
+	HLine(x, y, width, colour);
+}
 
-	draw_circle(point2, 100, RED);
-	draw_arc(point2, 100, YELLOW, 30, 300);
-
-
-	//	draw_filled_circle(point1, 100, RED);
-	//	draw_filled_circle_border(point2, 20, LIME, YELLOW);
-
+void rand_line(int min_x, int max_x, int min_y, int max_y, int colour){
+	int x1 = (rand() % (max_x + 1 - min_x)) + min_x;
+	int y1 = (rand() % (max_y + 1 - min_y)) + min_y;
+	int x2 = (rand() % (max_x + 1 - min_x)) + min_x;
+	int y2 = (rand() % (max_y + 1 - min_y)) + min_y;
+	Line(x1,y1,x2,y2,colour);
 }
