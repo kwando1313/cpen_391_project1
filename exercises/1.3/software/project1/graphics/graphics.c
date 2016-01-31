@@ -403,3 +403,55 @@ void clear_screenSW(int colour){
 		}
 	}
 }
+
+void test_graphics(void){
+
+	clear_screen(WHITE);
+
+	Point h_a = {50, 50};
+	Point h_b = {200, 50};
+	Point h_c = {50, 400};
+	Point h_d = {200, 400};
+
+	Point v_a = {250, 50};
+	Point v_b = {400, 50};
+	Point v_c = {250, 400};
+	Point v_d = {400, 400};
+
+	Point l_a = {450, 50};
+	Point l_b = {600, 50};
+	Point l_c = {450, 400};
+	Point l_d = {600, 400};
+
+	draw_filled_rectangle_border(h_a, h_b, h_c, h_d, WHITE, BLACK, 2);
+	draw_filled_rectangle_border(v_a, v_b, v_c, v_d, WHITE, BLACK, 2);
+	draw_filled_rectangle_border(l_a, l_b, l_c, l_d, WHITE, BLACK, 2);
+
+
+
+	//oblique
+	Point tri_a = {52, 63};
+	Point tri_b = {652, 363};
+	Point tri_c = {152, 263};
+
+
+
+	Point point0 = {200, 200};
+	Point point1 = {500, 100};
+	Point point2 = {400, 300};
+
+	draw_circle(point0, 100, RED);
+	//draw_arc(point0, 100, BLUE, 0, 180);
+	draw_arc(point0, 100, BLUE, 120, 300);
+
+	draw_circle(point1, 100, RED);
+	draw_arc(point1, 100, LIME, 0, 120);
+
+	draw_circle(point2, 100, RED);
+	draw_arc(point2, 100, YELLOW, 30, 300);
+
+
+	//	draw_filled_circle(point1, 100, RED);
+	//	draw_filled_circle_border(point2, 20, LIME, YELLOW);
+
+}
