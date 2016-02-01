@@ -7,7 +7,6 @@
 
 #include "misc_helpers.h"
 #include "graphics.h"
-#include "draw_font.h"
 #include "FontSize.h"
 #include <stdio.h>
 #include <string.h>
@@ -20,9 +19,6 @@ void draw_text_box(Point topLeft, int width, int height, int borderWidth, int bo
 	Point bottomRight = {topLeft.x + width, topLeft.y + height};
 
 	draw_filled_rectangle_border(topLeft, topRight, bottomLeft, bottomRight, fillColour, borderColour, borderWidth);
-	int initialX = 0;
-	int initialY = 0;
-
 
 	int fontSizePixelsWidth = 5;
 	int fontSizePixelsHeight = 7;
