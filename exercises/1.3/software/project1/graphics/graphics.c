@@ -1,9 +1,13 @@
 #include "misc_helpers.h"
-#include "fill.h"
 #include "graphics.h"
 #include "draw_font.h"
 #include <stdio.h>
+<<<<<<< 77d1a581d9f775a054167227816886464144d49a
 #include <string.h>
+=======
+#include <stdlib.h>
+#include <math.h>
+>>>>>>> cleaned up graphics dir - ....sorry, wrong branch >_>
 
 #define GraphicsCommandReg   		(*(volatile unsigned short int *)(0x84000000))
 #define GraphicsStatusReg   		(*(volatile unsigned short int *)(0x84000000))
