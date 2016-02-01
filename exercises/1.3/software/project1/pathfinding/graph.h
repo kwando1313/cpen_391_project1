@@ -1,6 +1,8 @@
 #ifndef GRAPH_H_
 #define GRAPH_H_
 
+#include <stdbool.h>
+
 #define DEFAULT_NUM_NEIGHBOURS 2
 
 typedef struct __cost{
@@ -10,8 +12,10 @@ typedef struct __cost{
 typedef struct __adjacencyList{
 	int max_neighbours;
 	int num_neighbours;
-	//TODO should these be sorted by id?
+	// TODO find better solution to this if memory is an issue
+	// costs are symmetric
 	cost* costs;
+	//too much work to sort, not worth it, max neighbours will probably be ~10
 	int* neighbours;
 } adjacencyList;
 
@@ -32,11 +36,13 @@ typedef struct __graph {
 } graph;
 
 graph* init_graph(int inital_num_vertices);
+void destroy_graph(graph* graph);
 //returns id of added vertex
 int add_vertex(graph* graph);
-//TODO better names for cost
-void add_edge(graph* graph, int v0, int v1, cost cost01, cost cost10);
-//graph_has_edge or edge exists
-void destroy_graph(graph* graph);
+vertex* get_vertex(graph* graph, int id);
+void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes);
+bool remove_edge(graph* graph, int v0_id, int v1_id);
+bool vertex_has_edge(vertex* v, int v1_id);
+bool graph_has_edge(graph* graph, int v0_id, int v1_id);
 
 #endif
