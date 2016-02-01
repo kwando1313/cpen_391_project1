@@ -151,7 +151,6 @@ C_SRCS += rs232/rs232.c
 C_SRCS += touchscreen/touchscreen.c
 C_SRCS += graphics/fill.c
 C_SRCS += graphics/draw_font.c
-C_SRCS += pathfinding/a_star.c
 C_SRCS += pathfinding/graph.c
 CXX_SRCS :=
 ASM_SRCS :=

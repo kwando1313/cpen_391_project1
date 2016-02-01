@@ -1,34 +1,14 @@
+#include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 
 #include "graph.h"
 
 adjacencyList* init_adjList(void);
 void add_directed_edge(adjacencyList* adjList, int vertex_id, cost cost);
-//
-//typedef struct __cost{
-//	int distance_cost;
-//} cost;
-//
-//typedef struct __adjacencyList{
-//	int max_neighbours;
-//	int num_neighbours;
-//	cost* costs;
-//	struct __vertex* neighbours;
-//} adjacencyList;
-//
-//typedef struct __vertex {
-//	char* name;
-//	double latitude, longitude, altitude;
-//  int x, y;
-//  struct __adjacencyList adjList;
-//} vertex;
-//
-//typedef struct __graph {
-//	int max_vertices;
-//    int num_vertices;
-//    vertex* vertices;
-//} graph;
+bool remove_directed_edge(adjacencyList* adjList, int vertex_id);
 
 graph* init_graph(int inital_max_vertices){
 	graph* new_graph = malloc(sizeof(graph));
@@ -67,24 +47,84 @@ int add_vertex(graph* graph){
 	return num_vertices;
 }
 
-void add_edge(graph* graph, int vertex0_id, int vertex1_id, cost cost_0_to_1, cost cost_1_to_0){
-	assert(vertex0_id < graph->num_vertices && vertex1_id < graph->num_vertices);
-	vertex v0 = graph->vertices[vertex0_id];
-	vertex v1 = graph->vertices[vertex1_id];
-	add_directed_edge(v0.adjList, vertex1_id, cost_0_to_1);
-	add_directed_edge(v1.adjList, vertex0_id, cost_1_to_0);
+void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes){
+	// v0, v1 should exist in the graph
+	assert(v0_id < graph->num_vertices && v1_id < graph->num_vertices);
+
+	vertex* v0 = get_vertex(graph, v0_id);
+	vertex* v1 = get_vertex(graph, v1_id);
+	add_directed_edge(v0->adjList, v1_id, cost_between_nodes);
+	add_directed_edge(v1->adjList, v0_id, cost_between_nodes);
 }
 
 void add_directed_edge(adjacencyList* adjList, int vertex_id, cost cost){
 	//TODO check for adding existing neighbour
 	if (adjList->num_neighbours == adjList->max_neighbours){
 		adjList->max_neighbours *= 1.5;
-		adjList->costs = realloc(adjList->max_neighbours, adjList->costs);
-		adjList->neighbours = realloc(adjList->max_neighbours, adjList->neighbours);
+		adjList->costs = realloc(adjList->costs, adjList->max_neighbours);
+		adjList->neighbours = realloc(adjList->neighbours, adjList->max_neighbours);
 	}
 	adjList->costs[adjList->num_neighbours] = cost;
 	adjList->neighbours[adjList->num_neighbours] = vertex_id;
 	adjList->num_neighbours++;
+}
+
+bool remove_directed_edge(adjacencyList* adjList, int vertex_id){
+	bool success = false;
+	for(int i = 0; i < adjList->num_neighbours; i++) {
+		int* neighbour = &adjList->neighbours[i];
+		cost* curr_cost = &adjList->costs[i];
+		if (*neighbour == vertex_id) {
+			// since all we do is shift data from right to left to replace what we want to "delete",
+			// there's no point in moving at the last spot
+			if (i != adjList->num_neighbours-1){
+				memmove(neighbour, neighbour+1, (adjList->num_neighbours-i-1)*sizeof(int));
+				memmove(curr_cost, curr_cost+1, (adjList->num_neighbours-i-1)*sizeof(cost));
+			}
+			success = true;
+			adjList->num_neighbours--;
+			break;
+		}
+	}
+
+	return success;
+}
+
+bool remove_edge(graph* graph, int v0_id, int v1_id){
+	// v0, v1 should exist in the graph
+	assert(v0_id < graph->num_vertices && v1_id < graph->num_vertices);
+
+	vertex* v0 = get_vertex(graph, v0_id);
+	vertex* v1 = get_vertex(graph, v1_id);
+	bool success = remove_directed_edge(v0->adjList, v1_id) && remove_directed_edge(v1->adjList, v0_id);
+	return success;
+}
+
+bool vertex_has_edge(vertex* v, int v1_id){
+	adjacencyList* list = v->adjList;
+	for(int i = 0; i < list->num_neighbours; i++) {
+		if (list->neighbours[i] == v1_id){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool graph_has_edge(graph* graph, int v0_id, int v1_id){
+	assert(v0_id < graph->num_vertices && v1_id < graph->num_vertices);
+
+	vertex* v0 = get_vertex(graph, v0_id);
+	vertex* v1 = get_vertex(graph, v1_id);
+	bool exists = vertex_has_edge(v0, v1_id) && vertex_has_edge(v1, v0_id);
+	return exists;
+}
+
+vertex* get_vertex(graph* graph, int id){
+	assert(id < graph->num_vertices);
+
+	vertex* v = &graph->vertices[id];
+	return v;
 }
 
 void destroy_graph(graph* graph){
@@ -98,4 +138,5 @@ void destroy_graph(graph* graph){
 	free(graph->vertices);
 	free(graph);
 }
+
 

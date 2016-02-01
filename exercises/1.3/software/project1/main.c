@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "graphics.h"
-#include "menu.h"
 
 int main(void) {
-<<<<<<< e12a01364cef9f227ea5fdc6ff9c7a284f20e559
+
 
 
 
@@ -35,11 +33,7 @@ int main(void) {
 
 	draw_menu(point7, 200, 75, 1, BLACK, WHITE, BLACK, SMALL, secondTextArray);
 
-=======
-	printf("start\n");
-	test_graphics();
-	//test_rs232();
->>>>>>> completed 1.7 demo
+
 	printf("end\n");
 	return 0;
 }
