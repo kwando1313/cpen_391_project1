@@ -19,13 +19,21 @@ int main(void) {
 
 	clear_screen(WHITE);
 
-	Point point6 = {0, 0};
+	Point point6 = {400, 330};
+	Point point7 = {600, 330}; //Adjust these to fit within the margins...
+	Point point8 = {400, 0};
+	Point point9 = {400, 330};
+	Point point10 = {800, 0};
+	Point point11 = {800, 330};
 
-	char* textArray[] = {"Item 1", "Longer Item", "Die the DEATH", "!!!!!!!!!", NULL};
+	char* firstTextArray[] = {"Info", "Photo", NULL};
+	char* secondTextArray[] = {"Directions", "Back", NULL};
 
-	draw_menu(point6, 100, 50, 1, BLACK, LIME, BLACK, SMALL, textArray);
+	draw_text_box(point8, 400, 330,1, BLACK, WHITE, BLACK, "Information about the building will go here...");
 
-	draw_menu(point4, 100, 50, 3, BLUE, BLACK, WHITE, SMALL, textArray);
+	draw_menu(point6, 200, 75, 1, BLACK, WHITE, BLACK, SMALL, firstTextArray);
+
+	draw_menu(point7, 200, 75, 1, BLACK, WHITE, BLACK, SMALL, secondTextArray);
 
 =======
 	printf("start\n");
