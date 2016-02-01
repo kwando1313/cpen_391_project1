@@ -151,6 +151,8 @@ C_SRCS += rs232/rs232.c
 C_SRCS += touchscreen/touchscreen.c
 C_SRCS += graphics/fill.c
 C_SRCS += graphics/draw_font.c
+C_SRCS += pathfinding/graph.c
+C_SRCS += pathfinding/min_heap.c
 CXX_SRCS :=
 ASM_SRCS :=
 
@@ -193,6 +195,7 @@ APP_INCLUDE_DIRS += rs232
 APP_INCLUDE_DIRS += graphics
 APP_INCLUDE_DIRS += bluetooth
 APP_INCLUDE_DIRS += gps
+APP_INCLUDE_DIRS += pathfinding
 APP_LIBRARY_DIRS :=
 APP_LIBRARY_NAMES :=
 
