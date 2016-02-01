@@ -53,12 +53,15 @@ void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes){
 
 	vertex* v0 = get_vertex(graph, v0_id);
 	vertex* v1 = get_vertex(graph, v1_id);
+	if (vertex_has_edge(v0, v1_id) || vertex_has_edge(v1, v0_id)){
+		printf("ERROR: trying to re-add an edge. Exiting.");
+		return;
+	}
 	add_directed_edge(v0->adjList, v1_id, cost_between_nodes);
 	add_directed_edge(v1->adjList, v0_id, cost_between_nodes);
 }
 
 void add_directed_edge(adjacencyList* adjList, int vertex_id, cost cost){
-	//TODO check for adding existing neighbour
 	if (adjList->num_neighbours == adjList->max_neighbours){
 		adjList->max_neighbours *= 1.5;
 		adjList->costs = realloc(adjList->costs, adjList->max_neighbours);
