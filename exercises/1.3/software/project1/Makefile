@@ -153,6 +153,7 @@ C_SRCS += graphics/fill.c
 C_SRCS += graphics/draw_font.c
 C_SRCS += pathfinding/graph.c
 C_SRCS += pathfinding/min_heap.c
+C_SRCS += graphics/menu.c
 CXX_SRCS :=
 ASM_SRCS :=
 
