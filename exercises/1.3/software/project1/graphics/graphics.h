@@ -2,6 +2,7 @@
 #define GRAPHICS_H_
 
 #include "Colours.h"
+#include "FontSize.h"
 #include "misc_helpers.h"
 
 #define FONT2_XPIXELS	10				// width of Font2 characters in pixels (no spacing)
