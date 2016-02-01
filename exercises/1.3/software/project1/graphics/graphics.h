@@ -4,6 +4,9 @@
 #include "Colours.h"
 #include "misc_helpers.h"
 
+#define FONT2_XPIXELS	10				// width of Font2 characters in pixels (no spacing)
+#define FONT2_YPIXELS	14				// height of Font2 characters in pixels (no spacing)
+
 // defined constants representing colours pre-programmed into colour palette
 // there are 256 colours but only 8 are shown below, we write these to the colour registers
 // Add more defines below for more colours as you like - just make sure they match up with ColourPallete.h
@@ -57,6 +60,11 @@ void HLine(int x1, int y1, int length, int Colour);
 void VLine(int x1, int y1, int length, int Colour);
 void Line(int x1, int y1, int x2, int y2, int Colour);
 void clear_screen(int colour);
+
+/************************* Others **************************************/
+void Fill(int _x, int _y, int _FillColour, int _BoundaryColour);
+void OutGraphicsCharFont1(int x, int y, int fontcolour, int backgroundcolour, int c, int Erase);
+void OutGraphicsCharFont2a(int x, int y, int colour, int backgroundcolour, int c, int Erase);
 
 //useless methods
 void LineSW(int x1, int y1, int x2, int y2, int Colour);

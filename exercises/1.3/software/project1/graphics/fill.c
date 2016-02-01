@@ -1,5 +1,4 @@
 // data structure to store a coordinate
-#include "fill.h"
 #include "graphics.h"
 
 // an array of coordinates and a pointer to first
