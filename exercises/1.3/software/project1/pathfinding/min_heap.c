@@ -5,28 +5,16 @@
     Author: Robin Thomas <robinthomas2591@gmail.com>
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include "min_heap.h"
 
 #define LCHILD(x) 2 * x + 1
 #define RCHILD(x) 2 * x + 2
 #define PARENT(x) (x - 1) / 2
 
-typedef struct node {
-    int data ;
-} node ;
-
-typedef struct minHeap {
-    int size ;
-    node *elem ;
-} minHeap ;
-
-
 /*
     Function to initialize the min heap with size = 0
 */
-minHeap initMinHeap(int size) {
+minHeap initMinHeap(void) {
     minHeap hp ;
     hp.size = 0 ;
     return hp ;
