@@ -2,8 +2,16 @@
 #define GRAPH_H_
 
 #include <stdbool.h>
+#include <stdio.h>
 
 #define DEFAULT_NUM_NEIGHBOURS 2
+
+typedef struct __astar_node{
+	int v_id;
+	int f_val; //estimated total cost from start, through this, to goal
+	int g_val; //cost so far, from start to current
+	int h_val; //heuristic val based on distance to goal
+} astar_node;
 
 typedef struct __cost{
 	int distance_cost;

@@ -1,4 +1,5 @@
-//http://www2.informatik.hu-berlin.de/~weber/slipOff/hashmap_c.html
+//stolen from http://www2.informatik.hu-berlin.de/~weber/slipOff/hashmap_c.html
+//hope it works.....
 
 #include "hashmap.h"
 #include <stdio.h>
@@ -176,7 +177,7 @@ void* hashmapGet(hashmap* hash, unsigned long key)
     }
   }
 
-  return 0;
+  return NULL;
 }
 
 long hashmapCount(hashmap* hash)

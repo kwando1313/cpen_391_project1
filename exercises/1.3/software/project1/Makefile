@@ -152,10 +152,10 @@ C_SRCS += touchscreen/touchscreen.c
 C_SRCS += graphics/fill.c
 C_SRCS += graphics/draw_font.c
 C_SRCS += pathfinding/graph.c
-C_SRCS += pathfinding/min_heap.c
 C_SRCS += pathfinding/a_star.c
-C_SRCS += misc/b_tree.c
 C_SRCS += misc/hashmap.c
+C_SRCS += pathfinding/min_heap.c
+C_SRCS += pathfinding/b_tree.c
 CXX_SRCS :=
 ASM_SRCS :=
 
