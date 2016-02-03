@@ -52,7 +52,7 @@ typedef struct __graph {
 graph* init_graph(int inital_num_vertices);
 void destroy_graph(graph* graph);
 //returns id of added vertex
-vertex init_vertex(int id, int latitude, int longitude, int altitude, char* name, int x, int y);
+vertex init_vertex(int latitude, int longitude, int altitude, char* name, int x, int y);
 int add_vertex(graph* graph, vertex v);
 vertex* get_vertex(graph* graph, int id);
 void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes);

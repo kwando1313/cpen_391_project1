@@ -17,10 +17,10 @@ graph* init_graph(int inital_max_vertices){
 	return new_graph;
 }
 
-vertex init_vertex(int id, int latitude, int longitude, int altitude, char* name,
+vertex init_vertex(int latitude, int longitude, int altitude, char* name,
 		int x, int y){
 	vertex new_vertex;
-	new_vertex.id = id;
+	new_vertex.id = -1;
 	new_vertex.adjList = init_adjList();
 	new_vertex.latitude = latitude;
 	new_vertex.longitude = longitude;
@@ -47,6 +47,7 @@ int add_vertex(graph* graph, vertex v){
 		graph->max_vertices *= 1.5;
 		graph->vertices = realloc(graph->vertices, graph->max_vertices);
 	}
+	v.id = num_vertices;
 	graph->vertices[num_vertices] = v;
 	graph->num_vertices++;
 	return num_vertices;
