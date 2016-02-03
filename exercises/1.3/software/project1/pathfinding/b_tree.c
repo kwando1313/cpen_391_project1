@@ -86,7 +86,7 @@ bnode* delete_bnode_with_key(bnode* root, int key){
 			bnode* curr = get_max_bnode(new_child);
 			curr->right = tmp;
 		}
-		free_bnode(root);
+		free_bnode(root, false);
 	} else if (key >= root->key) {
 		root->right = delete_bnode_with_key(root->right, key);
 	} else {
@@ -122,7 +122,7 @@ bnode* delete_bnode_with_v_id(bnode* root, int key, int v_id){
 			bnode* curr = get_max_bnode(new_child);
 			curr->right = tmp;
 		}
-		free_bnode(root);
+		free_bnode(root, false);
 	} else if (key >= root->key) {
 		root->right = delete_bnode_with_v_id(root->right, key, v_id);
 	} else {
@@ -132,18 +132,18 @@ bnode* delete_bnode_with_v_id(bnode* root, int key, int v_id){
 	return new_child;
 }
 
-void free_tree(bnode* root){
+void free_tree(bnode* root, bool free_data){
 	if (root->left) {
-		free_tree(root->left);
+		free_tree(root->left, free_data);
 	}
 	if (root->right) {
-		free_tree(root->right);
+		free_tree(root->right, free_data);
 	}
-	free_bnode(root);
+	free_bnode(root, free_data);
 }
 
-void free_bnode(bnode* root){
-	if (root->data){
+void free_bnode(bnode* root, bool free_data){
+	if (free_data && root->data){
 		free(root->data);
 	}
 	free(root);

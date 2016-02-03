@@ -9,6 +9,7 @@
 #define TABLE_STARTSIZE 53
 
 #define ACTIVE 1
+#define ERROR -1
 
 static unsigned long isPrime(unsigned long val)
 {
@@ -141,16 +142,16 @@ void* hashmapRemove(hashmap* hash, unsigned long key)
           return hash->table[index].data;
         }
         else /* in, but not active (i.e. deleted) */
-          return 0;
+          return ERROR;
       }
     }
     else /* found an empty place (can't be in) */
-      return 0;
+      return ERROR;
 
     index = (index + step) % hash->size;
   }
   /* everything searched through, but not in */
-  return 0;
+  return ERROR;
 }
 
 void* hashmapGet(hashmap* hash, unsigned long key)
@@ -177,7 +178,7 @@ void* hashmapGet(hashmap* hash, unsigned long key)
     }
   }
 
-  return NULL;
+  return ERROR;
 }
 
 long hashmapCount(hashmap* hash)

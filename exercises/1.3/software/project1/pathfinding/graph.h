@@ -15,6 +15,7 @@ typedef struct __astar_node{
 } astar_node;
 
 typedef struct __cost{
+	//TODO: replace this with some other bs. We already cover distance with get_distance_heuristic
 	int distance_cost;
 } cost;
 
@@ -59,5 +60,8 @@ void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes);
 bool remove_edge(graph* graph, int v0_id, int v1_id);
 bool vertex_has_edge(vertex* v, int v1_id);
 bool graph_has_edge(graph* graph, int v0_id, int v1_id);
+
+int* a_star(graph* graph, int start, int goal);
+void print_path(graph* graph, int start, int goal);
 
 #endif

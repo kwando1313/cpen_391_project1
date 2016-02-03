@@ -19,9 +19,11 @@ hashmap* hashmapCreate(int startsize);
 void hashmapInsert(hashmap*, const void* data, unsigned long key);
 
 /** Removes the storage for the element of the key and returns the element. */
+//returns -1 for fail
 void* hashmapRemove(hashmap*, unsigned long key);
 
 /** Returns the element for the key. */
+//returns -1 if it wasnt there
 void* hashmapGet(hashmap*, unsigned long key);
 
 /** Returns the number of saved elements. */
