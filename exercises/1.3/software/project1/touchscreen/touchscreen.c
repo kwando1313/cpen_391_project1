@@ -26,7 +26,7 @@ char getChar_touch(){
 	return Touchscreen_RxData;
 }
 
-void Init_Touch(void){
+void init_touch(void){
 	// Program 6850 and baud rate generator to communicate with touchscreen
 	// send touchscreen controller an "enable touch" command
 
@@ -99,8 +99,8 @@ Point GetPress(void){
 	WaitForReadStatus();
 	int y_second_half = getChar_touch();
 
-	p1.x = ((x_second_half) * 128 + (x_first_half+1) ) / 8.5333;
-	p1.y = ((y_second_half) * 128 + (y_first_half+1) ) / 5.12;
+	p1.x = ((x_second_half) * 128 + (x_first_half+1) ) / 5.12;
+	p1.y = ((y_second_half) * 128 + (y_first_half+1) ) / 8.5333;
 	return p1;
 }
 /*****************************************************************************
@@ -122,8 +122,8 @@ Point GetRelease(void){
 	WaitForReadStatus();
 	int y_second_half = getChar_touch();
 
-	p1.x = ((x_second_half) * 128 + (x_first_half+1) ) / 8.5333;
-	p1.y = ((y_second_half) * 128 + (y_first_half+1) ) / 5.12;
+	p1.x = ((x_second_half) * 128 + (x_first_half+1) ) / 5.12;
+	p1.y = ((y_second_half) * 128 + (y_first_half+1) ) / 8.5333;
 
 	return p1;
 }
@@ -131,7 +131,7 @@ Point GetRelease(void){
 void test_touch(void){
 	//printf("%d\n", Touchscreen_Status);
 	printf("Test touchscreen\n");
-	Init_Touch();
+	init_touch();
 	printf("Touch Initialized\n");
 	char c;
 
