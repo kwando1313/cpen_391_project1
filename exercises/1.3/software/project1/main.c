@@ -6,7 +6,9 @@
 
 int main(void) {
 	printf("start\n");
-	test_graphics();
+	//test_graphics();
+
+	init_screen();
 	//test_rs232();
 /*
 	clear_screen(WHITE);
