@@ -1,39 +1,92 @@
+// The following lines are for testing the SD Card, hence why they are commented out for now.
+
 #include <stdio.h>
-#include <stdlib.h>
+#include <touchscreen.h>
+#include <graphics.h>
+#include <string.h>
+#include <altera_up_sd_card_avalon_interface.h>
 
-int main(void) {
-
-
-
-
-	clear_screen(WHITE);
-
-	Point point4 = {100,0};
-
-	Point point5 = {50, 300};
-
-	draw_button(point4, 300, 100, 1, BLACK, LIME, BLACK, "Longer text", SMALL);
-	draw_button(point5, 200, 100, 1, BLACK, BLUE, RED, "What happens when I have text overflow?", MEDIUM);
+#define BMPHEIGHT 480
+#define BMPWIDTH 800
+int main(void){
+	alt_up_sd_card_dev* device_reference = NULL;
+	Init_Touch();
 
 	clear_screen(WHITE);
+	int connected = 0;
+	printf("Opening SDCard\n");
+	if ((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL){
+		printf("SDCard Open FAILED\n");
+		return 0 ;
+	}
+	else
+		printf("SDCard Open PASSED\n");
 
-	Point point6 = {400, 330};
-	Point point7 = {600, 330}; //Adjust these to fit within the margins...
-	Point point8 = {400, 0};
-	Point point9 = {400, 330};
-	Point point10 = {800, 0};
-	Point point11 = {800, 330};
+	if(device_reference != NULL ) {
+		while(1) {
+			if((connected == 0) && (alt_up_sd_card_is_Present())){
+				printf("Card connected.\n");
 
-	char* firstTextArray[] = {"Info", "Photo", NULL};
-	char* secondTextArray[] = {"Directions", "Back", NULL};
+				if(alt_up_sd_card_is_FAT16()) {
+					printf("FAT16 file system detected.\n");
 
-	draw_text_box(point8, 400, 330,1, BLACK, WHITE, BLACK, "Information about the building will go here...");
+					char * name;
+					char * image = "test.bmp";
+					char header;
 
-	draw_menu(point6, 200, 75, 1, BLACK, WHITE, BLACK, SMALL, firstTextArray);
+					if (alt_up_sd_card_find_first("/", name) == 0){
+						printf(name);
+						short int file = alt_up_sd_card_fopen(name, false);
+						if (file == -1){
+							printf("This file could not be opened.\n");
+						}
+						else if (file == -2){
+							printf("This file is already opened.\n");
+						}
+						else {
+							printf("Reading file...\n");
+							while(alt_up_sd_card_read(file) > 0){
+								printf("Continuing to read file...\n");
+							}
+							printf("Finished reading file!\n");
+						}
+						while(alt_up_sd_card_find_next(name) == 0){
+							printf(name);
+							char* name2;
+							strcpy(name2, name);
+							short int file = alt_up_sd_card_fopen(name, false);
+							if (file == -1){
+								printf("This file could not be opened.\n");
+							}
+							else if (file == -2){
+								printf("This file is already opened.\n");
+							}
+							else {
 
-	draw_menu(point7, 200, 75, 1, BLACK, WHITE, BLACK, SMALL, secondTextArray);
+								char pixel[BMPHEIGHT][BMPWIDTH];
+
+								printf("Reading file...\n");
+								for(int x=0 ; x<54 ; x++){
+									header=(unsigned char)(alt_up_sd_card_read(file));
+									printf ("%hhx ",header & 0xff);
+								}
+								printf("\n");
+								short data =0;
+								printf("%s\n", name);
+							}
+						}
+					}
+				}
+			}
 
 
-	printf("end\n");
+
+
+
+
+
+
 	return 0;
 }
+
+
