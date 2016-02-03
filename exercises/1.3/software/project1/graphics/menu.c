@@ -30,7 +30,10 @@ void draw_text_box(Point topLeft, int width, int height, int borderWidth, int bo
 	initialX = topLeft.x + 10; //give 10 pixels margin
 	initialY = topLeft.y + 10; //May make this an adjustable variable
 
-	char * token = strtok(text, " ");
+	char* temp_text;
+	strcpy(temp_text, text);
+
+	char * token = strtok(temp_text, " ");
 
 	while (token != NULL){
 		int stringLength = (int) strlen(token);
