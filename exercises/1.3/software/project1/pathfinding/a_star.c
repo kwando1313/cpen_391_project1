@@ -1,13 +1,15 @@
 #include "graph.h"
-//#include "min_heap.h"
 #include "b_tree.h"
 #include "hashmap.h"
+#include "misc_helpers.h"
+#include <limit.h>
+#include <math.h>
 
 #define DEFAULT_CLOSED_SET_SIZE
 
 astar_node* init_astar_node(int g_val, int h_val);
-int get_distance_heuristic(int start, int goal);
-int get_cost(int curr, int neighbour);
+int get_distance_heuristic(graph* graph, int start, int goal);
+int get_cost(graph* graph, int curr, int neighbour);
 astar_node* pop_smallest(bnode** root);
 
 /*
@@ -35,7 +37,7 @@ void a_star(graph* graph, int start, int goal){
 	bnode* closed_set = NULL;
 	hashmap* path = hashmapCreate(10);
 
-	astar_node* start_node = init_astar_node(0, get_distance_heuristic(start,goal));
+	astar_node* start_node = init_astar_node(0, get_distance_heuristic(graph, start,goal));
 	//maps fval to astar_node
 	bnode* open_set = create_new_bnode(start_node->f_val, start_node);
 	hashmap* vid_to_astar_node = hashmapCreate(10);
@@ -66,11 +68,11 @@ void a_star(graph* graph, int start, int goal){
 				continue;
 			}
 
-			int tentative_g = curr_node->g_val + get_cost(curr_node->v_id, neighbour_id);
+			int tentative_g = curr_node->g_val + get_cost(graph, curr_node->v_id, neighbour_id);
 
 			//node hasnt been explored. Either in our list to explore, or completely brand new
 			if (hashmapGet(vid_to_astar_node, curr_node->v_id) == NULL) {
-				next_node = init_astar_node(tentative_g, get_distance_heuristic(neighbour_id,goal));
+				next_node = init_astar_node(tentative_g, get_distance_heuristic(graph, neighbour_id,goal));
 				open_set = insert_bnode(open_set, neighbour_id, next_node);
 				hashmapInsert(vid_to_astar_node, next_node, neighbour_id);
 			} else {
@@ -81,7 +83,7 @@ void a_star(graph* graph, int start, int goal){
 					continue;
 				} else {
 					//found a better path to that node
-					next_node = init_astar_node(tentative_g, get_distance_heuristic(neighbour_id,goal));
+					next_node = init_astar_node(tentative_g, get_distance_heuristic(graph, neighbour_id,goal));
 					open_set = insert_bnode(open_set, neighbour_id, next_node);
 					hashmapInsert(vid_to_astar_node, next_node, neighbour_id);
 				}
@@ -90,26 +92,6 @@ void a_star(graph* graph, int start, int goal){
 			hashmapInsert(path, curr_vertex, curr_node->v_id);
 		}
 	}
-		/*
-
-		        for each neighbor of current
-		            if neighbor in ClosedSet
-		                continue		// Ignore the neighbor which is already evaluated.
-		            tentative_g_score := g_score[current] + dist_between(current,neighbor) // length of this path.
-		            if neighbor not in OpenSet	// Discover a new node
-		                OpenSet.Add(neighbor)
-		            else if tentative_g_score >= g_score[neighbor]
-		                continue		// This is not a better path.
-
-		            // This path is the best until now. Record it!
-		            Came_From[neighbor] := current
-		            g_score[neighbor] := tentative_g_score
-		            f_score[neighbor] := g_score[neighbor] + heuristic_cost_estimate(neighbor, goal)
-
-		*/
-
-
-
 	printf("couldn't find a path");
 }
 
@@ -138,11 +120,25 @@ astar_node* pop_smallest(bnode** root){
 	return data;
 }
 
-//TODO implement this - just triangle distance for now?
-int get_distance_heuristic(int start, int goal){
-	return 1;
+//ans^2 = sqrt(x^2 + y^2 + z^2)
+//at such a small scale, curvature of earth shouldn't matter
+int get_distance_heuristic(graph* graph, int start, int goal){
+	vertex* v_c = get_vertex(graph, start);
+	vertex* v_n = get_vertex(graph, goal);
+	int ans = sub_and_sqre(v_c->latitude, v_n->latitude) + sub_and_sqre(v_c->longitude, v_n->longitude)
+			+ sub_and_sqre(v_c->altitude, v_n->altitude);
+
+	return sqrtf(ans);
 }
 
-int get_cost(int curr, int neighbour){
-	return 1;
+int get_cost(graph* graph, int curr, int neighbour){
+	vertex* v_c = get_vertex(graph, curr);
+	adjacencyList* adjList = v_c->adjList;
+	for (int i = 0; i<adjList->num_neighbours; i++) {
+		if (adjList->neighbours[i] == neighbour) {
+			return adjList->costs[i].distance_cost;
+		}
+	}
+	//TODO: could this cause an overflow?
+	return INT_MAX;
 }

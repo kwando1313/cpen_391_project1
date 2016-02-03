@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #define DEFAULT_NUM_NEIGHBOURS 2
+#define DOUBLE_TO_INT_MULTIPLIER 100
 
 typedef struct __astar_node{
 	int v_id;
@@ -32,7 +33,12 @@ typedef struct __adjacencyList{
 typedef struct __vertex {
 	int id;
 	char* name;
-	double latitude, longitude, altitude;
+	//TODO: look over this
+	//obviously these aren't ints, but im worried about floats/double seeping into astar,
+	//and not being able to find the value we need.
+	//we should multiply lat/long/alt on creation by some constant(defined above)
+	//to maintain precision
+	int latitude, longitude, altitude;
     int x, y;
     adjacencyList* adjList;
 } vertex;
