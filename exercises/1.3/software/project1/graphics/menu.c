@@ -205,74 +205,17 @@ void init_screen(){
 }
 
 void about_screen(){
-//	clear_screen(WHITE);
-//
-//	Point point6 = {500, 330};
-//	Point point7 = {650, 330}; //Adjust these to fit within the margins...
-//
-//	char* firstTextArray[] = {"Info", "Photo", ""};
-//	char* secondTextArray[] = {"Directions", "About", ""};
-
 	draw_information_box("Pathfinding Map (Team 22)\nAngela Cho\nAndrew Charles\nCaleb Kwan\nWilliam Tang");
-//
-//	draw_menu(point6, 150, 75, 1, BLACK, WHITE, BLACK, SMALL, firstTextArray);
-//
-//	draw_menu(point7, 150, 75, 1, BLACK, WHITE, BLACK, SMALL, secondTextArray);
-//
-//	draw_arrows();
 }
 
 void info_screen(){
-	//clear_screen(WHITE);
-
-	//Point point6 = {500, 330};
-	//Point point7 = {650, 330}; //Adjust these to fit within the margins...
-
-	//char* firstTextArray[] = {"Info", "Photo", ""};
-	//char* secondTextArray[] = {"Directions", "About", ""};
-
-	draw_information_box("Need function to write info");
-
-	//draw_menu(point6, 150, 75, 1, BLACK, WHITE, BLACK, SMALL, firstTextArray);
-
-	//draw_menu(point7, 150, 75, 1, BLACK, WHITE, BLACK, SMALL, secondTextArray);
-
-	//draw_arrows();
-
+	draw_information_box("BUILDING INFO");
 }
 
 void directions_screen(){
-//	clear_screen(WHITE);
-//
-//	Point point6 = {500, 330};
-//	Point point7 = {650, 330}; //Adjust these to fit within the margins...
-//
-//	char* firstTextArray[] = {"Info", "Photo", ""};
-//	char* secondTextArray[] = {"Directions", "About", ""};
-//
-	draw_information_box("Need function to draw directions");
-//
-//	draw_menu(point6, 150, 75, 1, BLACK, WHITE, BLACK, SMALL, firstTextArray);
-//
-//	draw_menu(point7, 150, 75, 1, BLACK, WHITE, BLACK, SMALL, secondTextArray);
-//
-//	draw_arrows();
+	draw_information_box("DIRECTIONS");
 }
 
 void photo_screen(){
-//	clear_screen(WHITE);
-//
-//	Point point6 = {500, 330};
-//	Point point7 = {650, 330}; //Adjust these to fit within the margins...
-//
-//	char* firstTextArray[] = {"Info", "Photo", ""};
-//	char* secondTextArray[] = {"Directions", "About", ""};
-//
-	draw_information_box("need function to draw photo");
-//
-//	draw_menu(point6, 150, 75, 1, BLACK, WHITE, BLACK, SMALL, firstTextArray);
-//
-//	draw_menu(point7, 150, 75, 1, BLACK, WHITE, BLACK, SMALL, secondTextArray);
-//
-//	draw_arrows();
+	draw_information_box("BUILDING PHOTO");
 }

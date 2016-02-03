@@ -3,42 +3,70 @@
 #include "graph.h"
 #include "menu.h"
 #include "graphics.h"
+#include "touchscreen.h"
 
 int main(void) {
 	printf("start\n");
-	//test_graphics();
-
+	init_touch();
 	init_screen();
-	//test_rs232();
-/*
-	clear_screen(WHITE);
 
-	Point point4 = {100,0};
+	// Listen for button inputs
+	while(1){
+		Point p_i = GetPress();
+		int a = p_i.x;
+		int b = p_i.y;
+		printf("Pressed Coordinates: (%i, %i)\n", a, b);
 
-	Point point5 = {50, 300};
+		// Info Button
+		if(a >= IL && a <= IR && b > IU && b <= ID){
+			Point p_f = GetRelease();
+			int c = p_f.x;
+			int d = p_f.y;
+			printf("Released Coordinates: (%i, %i)\n", c, d);
 
-	draw_button(point4, 300, 100, 1, BLACK, LIME, BLACK, "Longer text", SMALL);
-	draw_button(point5, 200, 100, 1, BLACK, BLUE, RED, "What happens when I have text overflow?", MEDIUM);
+			if(c >= IL && c <= IR && d > IU && d <= ID){
+				info_screen();
+			}
+		}
 
-	clear_screen(WHITE);
+		// Directions Button
+		if(a > DL && a <= DR && b >= DU && b < DD){
+			Point p_f = GetRelease();
+			int c = p_f.x;
+			int d = p_f.y;
+			printf("Released Coordinates: (%i, %i)\n", c, d);
 
-	Point point6 = {400, 330};
-	Point point7 = {600, 330}; //Adjust these to fit within the margins...
-	Point point8 = {400, 0};
-	Point point9 = {400, 330};
-	Point point10 = {800, 0};
-	Point point11 = {800, 330};
+			if(c > DL && c <= DR && d >= DU && d < DD){
+				directions_screen();
+			}
+		}
 
-	char* firstTextArray[] = {"Info", "Photo", NULL};
-	char* secondTextArray[] = {"Directions", "Back", NULL};
+		// Photo Button
+		if(a >= PL && a <= PR && b >= PU && b <= PD){
+			Point p_f = GetRelease();
+			int c = p_f.x;
+			int d = p_f.y;
+			printf("Released Coordinates: (%i, %i)\n", c, d);
 
-	draw_text_box(point8, 400, 330,1, BLACK, WHITE, BLACK, "Information about the building will go here...");
+			if(c >= PL && c <= PR && d >= PU && d <= PD){
+				photo_screen();
+			}
+		}
 
-	draw_menu(point6, 200, 75, 1, BLACK, WHITE, BLACK, SMALL, firstTextArray);
+		// About Button
+		if(a > AL && a <= AR && b >= AU && b <= AD){
+			Point p_f = GetRelease();
+			int c = p_f.x;
+			int d = p_f.y;
+			printf("Released Coordinates: (%i, %i)\n", c, d);
 
-	draw_menu(point7, 200, 75, 1, BLACK, WHITE, BLACK, SMALL, secondTextArray);
+			if(c > AL && c <= AR && d >= AU && d <= AD){
+				about_screen();
+			}
+		}
 
-*/
+	}
+
 	printf("end\n");
 	return 0;
 }
