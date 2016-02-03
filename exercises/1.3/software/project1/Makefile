@@ -194,6 +194,7 @@ BSP_ROOT_DIR := ../project1_bsp/
 APP_INCLUDE_DIRS += misc
 APP_INCLUDE_DIRS += rs232
 APP_INCLUDE_DIRS += graphics
+APP_INCLUDE_DIRS += touchscreen
 APP_INCLUDE_DIRS += bluetooth
 APP_INCLUDE_DIRS += gps
 APP_INCLUDE_DIRS += pathfinding

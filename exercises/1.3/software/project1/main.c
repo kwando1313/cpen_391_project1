@@ -1,42 +1,130 @@
+// The following lines are for testing the SD Card, hence why they are commented out for now.
+
 #include <stdio.h>
-#include <stdlib.h>
-#include "graph.h"
-#include "menu.h"
-#include "graphics.h"
+#include <touchscreen.h>
+#include <graphics.h>
+#include <string.h>
+#include <altera_up_sd_card_avalon_interface.h>
 
-int main(void) {
-	printf("start\n");
-	test_graphics();
-	//test_rs232();
-/*
+#define BMPHEIGHT 480
+#define BMPWIDTH 800
+int main(void){
+	alt_up_sd_card_dev* device_reference = NULL;
+	Init_Touch();
 	clear_screen(WHITE);
+	int connected = 0;
+	printf("Opening SDCard\n");
+	if ((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL){
+		printf("SDCard Open FAILED\n");
+		return 0 ;
+	}
+	else
+		printf("SDCard Open PASSED\n");
 
-	Point point4 = {100,0};
+	if(device_reference != NULL ) {
+		while(1) {
+			if((connected == 0) && (alt_up_sd_card_is_Present())){
+				printf("Card connected.\n");
 
-	Point point5 = {50, 300};
+				if(alt_up_sd_card_is_FAT16()) {
+					printf("FAT16 file system detected.\n");
 
-	draw_button(point4, 300, 100, 1, BLACK, LIME, BLACK, "Longer text", SMALL);
-	draw_button(point5, 200, 100, 1, BLACK, BLUE, RED, "What happens when I have text overflow?", MEDIUM);
+					char * name;
+					char * image = "test.bmp";
+					char header;
 
-	clear_screen(WHITE);
+					if (alt_up_sd_card_find_first("/", name) == 0){
+						printf(name);
+						short int file = alt_up_sd_card_fopen(name, false);
+						if (file == -1){
+							printf("This file could not be opened.\n");
+						}
+						else if (file == -2){
+							printf("This file is already opened.\n");
+						}
+						else {
+							printf("Reading file...\n");
+							while(alt_up_sd_card_read(file) > 0){
+								printf("Continuing to read file...\n");
+							}
+							printf("Finished reading file!\n");
+						}
+						while(alt_up_sd_card_find_next(name) == 0){
+							printf(name);
+							char* name2;
+							strcpy(name2, name);
+							short int file = alt_up_sd_card_fopen(name, false);
+							if (file == -1){
+								printf("This file could not be opened.\n");
+							}
+							else if (file == -2){
+								printf("This file is already opened.\n");
+							}
+							else {
 
-	Point point6 = {400, 330};
-	Point point7 = {600, 330}; //Adjust these to fit within the margins...
-	Point point8 = {400, 0};
-	Point point9 = {400, 330};
-	Point point10 = {800, 0};
-	Point point11 = {800, 330};
+								char pixel[BMPHEIGHT][BMPWIDTH];
 
-	char* firstTextArray[] = {"Info", "Photo", NULL};
-	char* secondTextArray[] = {"Directions", "Back", NULL};
+								printf("Reading file...\n");
+								for(int x=0 ; x<54 ; x++){
+									header=(unsigned char)(alt_up_sd_card_read(file));
+									printf ("%hhx ",header & 0xff);
+								}
+								printf("\n");
+								short data =0;
+								printf("%s\n", name);
+								if (strcmp(name, "TEST.BMP")== 0){
+									for (int j = 0; j < BMPHEIGHT; j++){
+										for (int i = 0; i < BMPWIDTH; i++){
+												data = alt_up_sd_card_read(file);
+												pixel[j][i] = (char)data;
+												data = alt_up_sd_card_read(file);
+												data = alt_up_sd_card_read(file);
+										}
+									}
 
-	draw_text_box(point8, 400, 330,1, BLACK, WHITE, BLACK, "Information about the building will go here...");
 
-	draw_menu(point6, 200, 75, 1, BLACK, WHITE, BLACK, SMALL, firstTextArray);
 
-	draw_menu(point7, 200, 75, 1, BLACK, WHITE, BLACK, SMALL, secondTextArray);
 
-*/
-	printf("end\n");
+									for (int y = 0; y < BMPHEIGHT; y++){
+										for (int x = 0; x < BMPWIDTH; x++){
+											if (pixel[y][x] !=  (char)0xff){
+												//printf ("%hhx ", pixel[0] & 0xff);
+												WriteAPixel(x,BMPHEIGHT-y, BLACK);
+											}
+											else{
+												WriteAPixel (x,BMPWIDTH-y, WHITE);
+											}
+										}
+									}
+									printf("Finished reading file!!!!\n");
+									//return 0;
+								}
+								printf("Finished reading file!\n");
+							}
+						}
+					}
+					else if (alt_up_sd_card_find_first("/", name) == 1){
+						printf("This is an invalid directory.\n");
+					}
+					else if (alt_up_sd_card_find_first("/", name) == 2){
+						printf("The SD card has either been disconnected, or is NOT a FAT16 type.\n");
+					}
+				}
+
+				else{
+					printf("Unknown file system.\n");
+				}
+				connected = 1;
+			} else if((connected == 1) && (alt_up_sd_card_is_Present() == 0)){
+				printf("Card disconnected.\n");
+				connected =0;
+			}
+		}
+	}
+	else{
+		printf("Can't open device\n");
+	}
 	return 0;
 }
+
+
