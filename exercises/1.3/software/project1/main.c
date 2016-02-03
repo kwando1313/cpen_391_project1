@@ -5,6 +5,7 @@
 int main(void) {
 	printf("start\n");
 
+	graph* graph = init_graph(5);
 
 
 	printf("end\n");

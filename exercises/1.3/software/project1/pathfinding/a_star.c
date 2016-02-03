@@ -2,7 +2,6 @@
 #include "b_tree.h"
 #include "hashmap.h"
 #include "misc_helpers.h"
-#include <limit.h>
 #include <math.h>
 
 #define DEFAULT_CLOSED_SET_SIZE

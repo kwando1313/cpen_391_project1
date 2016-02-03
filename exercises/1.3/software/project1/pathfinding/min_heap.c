@@ -17,6 +17,7 @@
 minHeap initMinHeap(void) {
     minHeap hp ;
     hp.size = 0 ;
+    hp.elem = NULL;
     return hp;
 }
 
