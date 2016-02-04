@@ -63,6 +63,11 @@ void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes){
 	// v0, v1 should exist in the graph
 	assert(v0_id < graph->num_vertices && v1_id < graph->num_vertices);
 
+	if (v0_id == v1_id) {
+		printf("ERROR: trying add connect node to itself. Exiting.");
+		return;
+	}
+
 	vertex* v0 = get_vertex(graph, v0_id);
 	vertex* v1 = get_vertex(graph, v1_id);
 	if (vertex_has_edge(v0, v1_id) || vertex_has_edge(v1, v0_id)){

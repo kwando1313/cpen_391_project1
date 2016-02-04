@@ -8,6 +8,10 @@
 #include "misc_helpers.h"
 #include "control.h"
 
+#define ACCEPTABLE_DISTANCE 5
+
+int get_valid_vertex(graph* graph, Point p);
+
 // initialize and load up graphics on touchscreen
 void init_control(){
 	init_touch();
@@ -68,37 +72,45 @@ int get_button(int a, int b){
 }
 
 // Get the node from where we pressed
-int get_node(){
-	// TODO:
-	Point p_i = GetPress();
-	int a = p_i.x;
-	int b = p_i.y;
+int get_node(graph* graph){
 
-	Point p_f = GetRelease();
-	int c = p_f.x;
-	int d = p_f.y;
+	int node_id = -1;
 
-	do{
-	p_i = GetPress();
-	a = p_i.x;
-	b = p_i.y;
+	while(node_id == -1){
+		int a,b,c,d;
+		Point p_i, p_f;
+		do{
+			p_i = GetPress();
+			a = p_i.x;
+			b = p_i.y;
 
-	p_f = GetRelease();
-	c = p_f.x;
-	d = p_f.y;
-	} while(sqrt(pow((c-a),2) + pow((d-b),2)) > RADIUS);
+			p_f = GetRelease();
+			c = p_f.x;
+			d = p_f.y;
 
-	// vertex p = init_vertex(c, d, 0, "press", c, d);
+		} while(sqrt(pow((c-a),2) + pow((d-b),2)) > RADIUS); //check for valid press&release
 
-	// assuming we read have access to the graph data
+		// vertex p = init_vertex(c, d, 0, "press", c, d);
+		// assuming we read have access to the graph data
+		// IF WE CAN (especially for sprint2): create node in graph with coords a,b; find nearest node and check if distance < RADIUS
+		// ELSE: iterate through the nodes in the graph like a dumbass and check if shortest distance < RADIUS
+		node_id = get_valid_vertex(graph, p_f);
+		if (node_id == -1) {
+			printf("Not a valid node\n");
+		}
+	}
 
-	// IF WE CAN (especially for sprint2): create node in graph with coords a,b; find nearest node and check if distance < RADIUS
+	return node_id;
+}
 
-	// ELSE: iterate through the nodes in the graph like a dumbass and check if shortest distance < RADIUS
-
-	// return p
-
-	return 0;
+int get_valid_vertex(graph* graph, Point p){
+	for(int i = 0; i<graph->num_vertices; i++) {
+		vertex v = graph->vertices[i];
+		if ((abs(v.x-p.x) < ACCEPTABLE_DISTANCE) && (abs(v.y-p.y) < ACCEPTABLE_DISTANCE) ){
+			return v.id;
+		}
+	}
+	return -1;
 }
 
 
@@ -106,29 +118,27 @@ int get_node(){
 void do_info(){
 	// TODO: SPRINT2
 	info_screen();
-	int node = get_node();
+	//int node = get_node();
 	return;
 }
 
 // Ask for a start and end node and find the best directions
 void do_dir(graph* graph){
-	path_points* path = get_path_points(graph, 9, 13);
-	draw_path(path->ordered_point_arr, path->actual_size, BLUE);
-	destroy_path_points(path);
-	// TODO:
 	directions_screen();
 	draw_information_box("PLEASE SELECT STARTING POINT");
-	// vertex start_node = get_node();
+	int start_node = get_node(graph);
 	draw_information_box("PLEASE SELECT DESTINATION");
-	// vertex end_node = get_node();
-	// Now use a*star using nodes
+	int end_node = get_node(graph);
+	path_points* path = get_path_points(graph, start_node, end_node);
+	draw_path(path->ordered_point_arr, path->actual_size, BLUE);
+	destroy_path_points(path);
 }
 
 // Display photo of the next node touched
 void do_photo(){
 	// TODO: SPRINT2
 	photo_screen();
-	int node = get_node();
+	//int node = get_node();
 
 }
 
