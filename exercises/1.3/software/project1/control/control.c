@@ -8,7 +8,7 @@
 #include "misc_helpers.h"
 #include "control.h"
 
-#define ACCEPTABLE_DISTANCE 25
+#define ACCEPTABLE_DISTANCE 40
 
 int get_valid_vertex(graph* graph, Point p);
 
@@ -126,15 +126,17 @@ void do_info(){
 
 // Ask for a start and end node and find the best directions
 void do_dir(graph* graph){
+	printf("do dir\n");
 	directions_screen();
 	draw_information_box("PLEASE SELECT STARTING POINT");
 	int start_node = get_node(graph);
 	draw_information_box("PLEASE SELECT DESTINATION");
 	int end_node = get_node(graph);
 	path_points* path = get_path_points(graph, start_node, end_node);
-	draw_path(path->ordered_point_arr, path->actual_size, BLUE);
+	draw_path(path->ordered_point_arr, path->actual_size, CYAN);
 	destroy_path_points(path);
 	draw_information_box("HAVE A FUN TRIP!");
+	printf("done do dir\n");
 }
 
 // Display photo of the next node touched
@@ -152,7 +154,8 @@ void do_about(){
 
 // Listen for button inputs
 void listen(){
-		graph* graph = create_test_graph(false);
+		graph* graph = create_test_graph();
+		draw_graph(graph, YELLOW, RED);
 
 		while(1){
 			// Wait for button input
@@ -167,7 +170,10 @@ void listen(){
 				do_info();
 			}
 			else if(what_do == DIR){
+				draw_graph(graph, YELLOW, RED);
 				do_dir(graph);
+				destroy_graph(graph);
+				graph = create_test_graph();
 			}
 			else if(what_do == PHOTO){
 				do_photo();
@@ -180,7 +186,7 @@ void listen(){
 
 
 //TODO: remove after sprint 1
-graph* create_test_graph(bool draw){
+graph* create_test_graph(){
 	cost default_cost = {0};
 	graph* graph = init_graph(30);
 
@@ -245,24 +251,6 @@ graph* create_test_graph(bool draw){
 	add_edge(graph, v18id, v20id, default_cost);
 	add_edge(graph, v20id, v21id, default_cost);
 	add_edge(graph, v14id, v20id, default_cost);
-	//draw = true;
-	if (draw) {
-		for(int i = 0; i<graph->num_vertices; i++) {
-			vertex* v = get_vertex(graph, i);
-			WriteAPixel(v->x, v->y, CYAN);
-			adjacencyList* adjList = v->adjList;
-			int num_edges = adjList->num_neighbours;
-			for (int j = 0; j<num_edges; j++) {
-				vertex* w = get_vertex(graph, adjList->neighbours[j]);
-				Line(v->x, v->y, w->x, w->y, RED);
-			}
-		}
-
-		for(int i = 0; i<graph->num_vertices; i++) {
-			vertex* v = get_vertex(graph, i);
-			WriteAPixel(v->x, v->y, YELLOW);
-		}
-	}
 
 	return graph;
 }

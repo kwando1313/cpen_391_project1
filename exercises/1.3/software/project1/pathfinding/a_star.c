@@ -5,7 +5,7 @@
 #include <math.h>
 #include <assert.h>
 
-#define DEFAULT_PATH_SIZE 30
+#define DEFAULT_PATH_SIZE 100
 
 astar_node* init_astar_node(int v_id, int g_val, int h_val);
 int get_distance_heuristic(graph* graph, int start, int goal);

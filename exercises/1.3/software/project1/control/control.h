@@ -18,6 +18,6 @@ int get_button();
 int get_node(graph* graph);
 
 //TODO: remove after sprint 1
-graph* create_test_graph(bool draw);
+graph* create_test_graph(void);
 
 #endif /* CONTROL_H_ */

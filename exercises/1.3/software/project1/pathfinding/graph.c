@@ -164,3 +164,20 @@ void destroy_path_points(path_points* path){
 	free(path);
 }
 
+void draw_graph(graph* graph, int v_colour, int edge_colour){
+
+	for(int i = 0; i<graph->num_vertices; i++) {
+		vertex* v = get_vertex(graph, i);
+		adjacencyList* adjList = v->adjList;
+		int num_edges = adjList->num_neighbours;
+		for (int j = 0; j<num_edges; j++) {
+			vertex* w = get_vertex(graph, adjList->neighbours[j]);
+			Line(v->x, v->y, w->x, w->y, edge_colour);
+		}
+	}
+
+	for(int i = 0; i<graph->num_vertices; i++) {
+		vertex* v = get_vertex(graph, i);
+		WriteAPixel(v->x, v->y, v_colour);
+	}
+}
