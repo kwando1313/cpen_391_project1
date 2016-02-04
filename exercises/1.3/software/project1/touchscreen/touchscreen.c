@@ -129,10 +129,9 @@ void test_touch(void){
 	printf("Test touchscreen\n");
 	init_touch();
 	printf("Touch Initialized\n");
-	char c;
 
 	while(1){
-//		c = getChar_touch();
+//		char c = getChar_touch();
 //
 //		while(ScreenTouched()){
 //			printf("touching: %d\n", c);

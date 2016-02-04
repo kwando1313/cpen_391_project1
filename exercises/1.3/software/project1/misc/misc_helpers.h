@@ -15,6 +15,8 @@ typedef struct{int x, y; } Point;
 
 double convert_to_radians(double angle);
 
+float sub_and_sqre(int x, int y);
+
 //includes == case
 int falls_between(int item, int edge, int otherEdge);
 
