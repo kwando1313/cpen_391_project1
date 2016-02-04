@@ -5,15 +5,22 @@
 #include <touchscreen.h>
 #include <graphics.h>
 #include <string.h>
+#include <graph.h>
 #include <altera_up_sd_card_avalon_interface.h>
 
 int main(void){
 	//test_graphics();
 	Point topLeft = {0,0};
 	clear_screen(WHITE);
-	char* name = "TEST.BMP";
-	load_image(topLeft);//, name, 459, 500);
+	char* name = "UBC.BMP";
+	load_image(topLeft, name);//, name, 459, 500);
 	init_screen();
+//	usleep(1000000);
+//	char * name2 = "PIC2.BMP";
+//	load_image(topLeft, name2);
+//	usleep(1000000);
+//	char* name3 = "PIC.BMP";
+//	load_image(topLeft, name3);
 	//photo_screen();
 
 //	alt_up_sd_card_dev* device_reference = NULL;
