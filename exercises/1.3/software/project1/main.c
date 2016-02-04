@@ -14,11 +14,9 @@ int main(void) {
 
 	graph* graph = draw_test_graph();
 
-//	path_points* path = get_path_points(graph, v0id, v3id);
-//	for(int i = 0; i < path->actual_size; i++){
-//		printf("x: %d  y:  %d\n", path->ordered_point_arr[i].x, path->ordered_point_arr[i].y);
-//	}
-//	destroy_path_points(path);
+	path_points* path = get_path_points(graph, 9, 13);
+	draw_path(path->ordered_point_arr, path->actual_size, BLUE);
+	destroy_path_points(path);
 
 	printf("\n\nend\n");
 
