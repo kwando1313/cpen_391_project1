@@ -79,7 +79,7 @@ int* a_star(graph* graph, int start, int goal){
 			//node hasnt been explored. Either in our list to explore, or completely brand new
 			if (!node_exists(vid_to_astar_node, neighbour_id)) {
 				next_node = init_astar_node(neighbour_id, tentative_g, get_distance_heuristic(graph, neighbour_id, goal));
-				open_set = insert_bnode(open_set, neighbour_id, next_node);
+				open_set = insert_bnode(open_set, next_node->f_val, next_node);
 				vid_to_astar_node = insert_bnode(vid_to_astar_node, neighbour_id, next_node);
 			} else {
 				//get g score of neighbour
@@ -90,7 +90,7 @@ int* a_star(graph* graph, int start, int goal){
 				} else {
 					//found a better path to that node
 					next_node = init_astar_node(neighbour_id, tentative_g, get_distance_heuristic(graph, neighbour_id, goal));
-					open_set = insert_bnode(open_set, neighbour_id, next_node);
+					open_set = insert_bnode(open_set, next_node->f_val, next_node);
 					vid_to_astar_node = delete_bnode_with_key(vid_to_astar_node, neighbour_id);
 					vid_to_astar_node = insert_bnode(vid_to_astar_node, neighbour_id, next_node);
 				}
