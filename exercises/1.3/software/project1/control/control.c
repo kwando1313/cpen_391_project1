@@ -172,7 +172,7 @@ void listen(){
 			else if(what_do == DIR){
 				draw_graph(graph, YELLOW, RED);
 				do_dir(graph);
-				destroy_graph(graph);
+				//destroy_graph(graph);
 				graph = create_test_graph();
 			}
 			else if(what_do == PHOTO){

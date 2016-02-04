@@ -5,7 +5,7 @@
 #include <math.h>
 #include <assert.h>
 
-#define DEFAULT_PATH_SIZE 100
+#define DEFAULT_PATH_SIZE 30
 
 astar_node* init_astar_node(int v_id, int g_val, int h_val);
 int get_distance_heuristic(graph* graph, int start, int goal);
@@ -54,10 +54,10 @@ int* a_star(graph* graph, int start, int goal){
 		astar_node* next_node;
 
 		if (curr_node->v_id == goal) {
-			free_tree(closed_set, true);
-			free_tree(open_set, true);
-			free_tree(vid_to_astar_node, true);
-			free(curr_node);
+//			free_tree(closed_set, true);
+//			free_tree(open_set, true);
+//			free_tree(vid_to_astar_node, true);
+//			free(curr_node);
 			return reconstruct_path(path, start, goal);
 		}
 
