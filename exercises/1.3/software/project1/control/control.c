@@ -8,7 +8,7 @@
 #include "misc_helpers.h"
 #include "control.h"
 
-#define ACCEPTABLE_DISTANCE 5
+#define ACCEPTABLE_DISTANCE 25
 
 int get_valid_vertex(graph* graph, Point p);
 
@@ -96,14 +96,16 @@ int get_node(graph* graph){
 		// ELSE: iterate through the nodes in the graph like a dumbass and check if shortest distance < RADIUS
 		node_id = get_valid_vertex(graph, p_f);
 		if (node_id == -1) {
+			printf("x: %d, y: %d", p_f.x, p_f.y);
 			printf("Not a valid node\n");
 		}
 	}
-
+	printf("returning node: %d\n", node_id);
 	return node_id;
 }
 
 int get_valid_vertex(graph* graph, Point p){
+	printf("started valid vertex\n");
 	for(int i = 0; i<graph->num_vertices; i++) {
 		vertex v = graph->vertices[i];
 		if ((abs(v.x-p.x) < ACCEPTABLE_DISTANCE) && (abs(v.y-p.y) < ACCEPTABLE_DISTANCE) ){
@@ -132,6 +134,7 @@ void do_dir(graph* graph){
 	path_points* path = get_path_points(graph, start_node, end_node);
 	draw_path(path->ordered_point_arr, path->actual_size, BLUE);
 	destroy_path_points(path);
+	draw_information_box("HAVE A FUN TRIP!");
 }
 
 // Display photo of the next node touched
@@ -149,7 +152,7 @@ void do_about(){
 
 // Listen for button inputs
 void listen(){
-		graph* graph = draw_test_graph();
+		graph* graph = create_test_graph(false);
 
 		while(1){
 			// Wait for button input
@@ -177,16 +180,16 @@ void listen(){
 
 
 //TODO: remove after sprint 1
-graph* draw_test_graph(void){
+graph* create_test_graph(bool draw){
 	cost default_cost = {0};
 	graph* graph = init_graph(30);
 
-	int v0id = add_vertex(graph, init_vertex(5, 5, 0, "v0", 4, 425));
-	int v1id = add_vertex(graph, init_vertex(50, 400, 0, "v1", 6, 260));
-	int v2id = add_vertex(graph, init_vertex(10000, 10000, 0, "v2", 15, 214));
-	int v3id = add_vertex(graph, init_vertex(200, 200, 0, "v3", 35, 178));
-	int v4id = add_vertex(graph, init_vertex(300, 300, 0, "v4", 105, 132));
-	int v5id = add_vertex(graph, init_vertex(300, 300, 0, "v5", 181, 92));
+	int v0id = add_vertex(graph, init_vertex(5, 5, 0, "v0", 3, 440));
+	int v1id = add_vertex(graph, init_vertex(50, 400, 0, "v1", 10, 265));
+	int v2id = add_vertex(graph, init_vertex(10000, 10000, 0, "v2", 26, 197));
+	int v3id = add_vertex(graph, init_vertex(200, 200, 0, "v3", 51, 152));
+	int v4id = add_vertex(graph, init_vertex(300, 300, 0, "v4", 107, 115));
+	int v5id = add_vertex(graph, init_vertex(300, 300, 0, "v5", 181, 99));
 	add_edge(graph, v0id, v1id, default_cost);
 	add_edge(graph, v1id, v2id, default_cost);
 	add_edge(graph, v2id, v3id, default_cost);
@@ -194,10 +197,10 @@ graph* draw_test_graph(void){
 	add_edge(graph, v4id, v5id, default_cost);
 
 	//going down
-	int v6id = add_vertex(graph, init_vertex(5, 5, 0, "v6", 179, 249));
-	int v7id = add_vertex(graph, init_vertex(50, 400, 0, "v7", 103, 251));
-	int v8id = add_vertex(graph, init_vertex(10000, 10000, 0, "v8", 105, 428));
-	int v9id = add_vertex(graph, init_vertex(200, 200, 0, "v9", 181, 424));
+	int v6id = add_vertex(graph, init_vertex(5, 5, 0, "v6", 180, 255));
+	int v7id = add_vertex(graph, init_vertex(50, 400, 0, "v7", 104, 256));
+	int v8id = add_vertex(graph, init_vertex(10000, 10000, 0, "v8", 104, 447));
+	int v9id = add_vertex(graph, init_vertex(200, 200, 0, "v9", 180, 448));
 	add_edge(graph, v5id, v6id, default_cost);
 	add_edge(graph, v6id, v7id, default_cost);
 	add_edge(graph, v7id, v8id, default_cost);
@@ -205,58 +208,60 @@ graph* draw_test_graph(void){
 
 	//back to intersection
 	//going right along top road
-	int v10id = add_vertex(graph, init_vertex(5, 5, 0, "v10id", 394, 75));
-	int v11id = add_vertex(graph, init_vertex(50, 400, 0, "v11id", 272, 8));
-	int v12id = add_vertex(graph, init_vertex(10000, 10000, 0, "v12id", 172, 46));
-	int v13id = add_vertex(graph, init_vertex(200, 200, 0, "v13id", 455, 75));
+	int v10id = add_vertex(graph, init_vertex(5, 5, 0, "v10id", 378, 89));
+	int v11id = add_vertex(graph, init_vertex(50, 400, 0, "v11id", 242, 11));
+	int v12id = add_vertex(graph, init_vertex(10000, 10000, 0, "v12id", 173, 53));
+	int v13id = add_vertex(graph, init_vertex(200, 200, 0, "v13id", 460, 89));
 	add_edge(graph, v5id, v10id, default_cost);
 	add_edge(graph, v10id, v11id, default_cost);
 	add_edge(graph, v11id, v12id, default_cost);
 	add_edge(graph, v10id, v13id, default_cost);
 
 	//going down
-	int v14id = add_vertex(graph, init_vertex(200, 200, 0, "v14id", 455, 249));
+	int v14id = add_vertex(graph, init_vertex(200, 200, 0, "v14id", 459, 251));
 	add_edge(graph, v13id, v14id, default_cost);
 
 	//going left
-	int v15id = add_vertex(graph, init_vertex(200, 200, 0, "v15id", 305, 248));
+	int v15id = add_vertex(graph, init_vertex(200, 200, 0, "v15id", 303, 252));
 	add_edge(graph, v14id, v15id, default_cost);
 	add_edge(graph, v15id, v9id, default_cost);
 
 	//going left
-	int v16id = add_vertex(graph, init_vertex(200, 200, 0, "v16id", 226, 249));
+	int v16id = add_vertex(graph, init_vertex(200, 200, 0, "v16id", 218, 254));
 	add_edge(graph, v16id, v15id, default_cost);
 
 	//going up
-	int v17id = add_vertex(graph, init_vertex(200, 200, 0, "v17id", 306, 160));
+	int v17id = add_vertex(graph, init_vertex(200, 200, 0, "v17id", 303, 175));
 	add_edge(graph, v15id, v17id, default_cost);
 	add_edge(graph, v17id, v5id, default_cost);
 
 	//going down
-	int v18id = add_vertex(graph, init_vertex(5, 5, 0, "v18id", 306, 346));
-	int v19id = add_vertex(graph, init_vertex(50, 400, 0, "v19id", 306, 432));
-	int v20id = add_vertex(graph, init_vertex(10000, 10000, 0, "v20id", 456, 347));
-	int v21id = add_vertex(graph, init_vertex(200, 200, 0, "v21id", 456, 436));
+	int v18id = add_vertex(graph, init_vertex(5, 5, 0, "v18id", 303, 344));
+	int v19id = add_vertex(graph, init_vertex(50, 400, 0, "v19id", 302, 442));
+	int v20id = add_vertex(graph, init_vertex(10000, 10000, 0, "v20id", 459, 344));
+	int v21id = add_vertex(graph, init_vertex(200, 200, 0, "v21id", 461, 440));
 	add_edge(graph, v15id, v18id, default_cost);
 	add_edge(graph, v18id, v19id, default_cost);
 	add_edge(graph, v18id, v20id, default_cost);
 	add_edge(graph, v20id, v21id, default_cost);
 	add_edge(graph, v14id, v20id, default_cost);
 
-	for(int i = 0; i<graph->num_vertices; i++) {
-		vertex* v = get_vertex(graph, i);
-		WriteAPixel(v->x, v->y, CYAN);
-		adjacencyList* adjList = v->adjList;
-		int num_edges = adjList->num_neighbours;
-		for (int j = 0; j<num_edges; j++) {
-			vertex* w = get_vertex(graph, adjList->neighbours[j]);
-			Line(v->x, v->y, w->x, w->y, RED);
+	if (draw) {
+		for(int i = 0; i<graph->num_vertices; i++) {
+			vertex* v = get_vertex(graph, i);
+			WriteAPixel(v->x, v->y, CYAN);
+			adjacencyList* adjList = v->adjList;
+			int num_edges = adjList->num_neighbours;
+			for (int j = 0; j<num_edges; j++) {
+				vertex* w = get_vertex(graph, adjList->neighbours[j]);
+				Line(v->x, v->y, w->x, w->y, RED);
+			}
 		}
-	}
 
-	for(int i = 0; i<graph->num_vertices; i++) {
-		vertex* v = get_vertex(graph, i);
-		WriteAPixel(v->x, v->y, YELLOW);
+		for(int i = 0; i<graph->num_vertices; i++) {
+			vertex* v = get_vertex(graph, i);
+			WriteAPixel(v->x, v->y, YELLOW);
+		}
 	}
 
 	return graph;

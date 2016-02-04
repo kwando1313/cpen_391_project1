@@ -8,8 +8,13 @@
 
 int main(void) {
 	printf("start\n\n");
-	clear_screen(BLACK);
 
+	Point topLeft = {0,0};
+	clear_screen(WHITE);
+	char* name = "UBC.BMP";
+	load_image(topLeft, name);//, name, 459, 500);
+
+	init_screen();
 	init_control();
 	listen();
 

@@ -131,16 +131,16 @@ void test_touch(void){
 	printf("Touch Initialized\n");
 
 	while(1){
-//		char c = getChar_touch();
-//
-//		while(ScreenTouched()){
-//			printf("touching: %d\n", c);
-//			wait();
-//		}
+		char c = getChar_touch();
+
+		while(ScreenTouched()){
+			printf("touching: %d\n", c);
+			//wait();
+		}
 
 
-		//Point p1 = GetPress();
-		Point p1 = GetRelease();
+		Point p1 = GetPress();
+		//Point p1 = GetRelease();
 		printf("Coordinate: (%i, %i)\n", p1.x, p1.y);
 
 		wait();
