@@ -294,6 +294,7 @@ void draw_button(Point topLeft, int width, int height, int borderWidth, int bord
 	}
 }
 
+
 //menu is buttons from top down
 void draw_menu(Point leftCorner, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, int fontSize, char** menuText){
 	int x = 0;
@@ -305,7 +306,9 @@ void draw_menu(Point leftCorner, int width, int height, int borderWidth, int bor
 }
 
 
+
 void init_screen(){
+
 
 		Point point6 = {500, 330};
 		Point point7 = {650, 330}; //Adjust these to fit within the margins...
@@ -386,3 +389,4 @@ int check_colour(char* pixel){
 		return WHITE;
 	}
 }
+

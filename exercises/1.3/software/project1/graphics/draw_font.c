@@ -72,7 +72,6 @@ void OutGraphicsCharFont2a(int x, int y, int colour, int backgroundcolour, int c
 	register char 	theColour = colour  ;
 	register int 	BitMask,
 					theCharacter = c,
-					j,
 					theRow, theColumn;
 
 

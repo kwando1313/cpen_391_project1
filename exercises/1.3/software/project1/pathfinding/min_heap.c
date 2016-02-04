@@ -5,31 +5,20 @@
     Author: Robin Thomas <robinthomas2591@gmail.com>
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include "min_heap.h"
 
 #define LCHILD(x) 2 * x + 1
 #define RCHILD(x) 2 * x + 2
 #define PARENT(x) (x - 1) / 2
 
-typedef struct node {
-    int data ;
-} node ;
-
-typedef struct minHeap {
-    int size ;
-    node *elem ;
-} minHeap ;
-
-
 /*
     Function to initialize the min heap with size = 0
 */
-minHeap initMinHeap(int size) {
+minHeap initMinHeap(void) {
     minHeap hp ;
     hp.size = 0 ;
-    return hp ;
+    hp.elem = NULL;
+    return hp;
 }
 
 
@@ -66,7 +55,7 @@ void heapify(minHeap *hp, int i) {
     Instead of using insertNode() function n times for total complexity of O(nlogn),
     we can use the buildMinHeap() function to build the heap in O(n) time
 */
-void buildMinHeap(minHeap *hp, int *arr, int size) {
+void buildMinHeap(minHeap *hp, int* arrData, astar_node* arrNodes, int size) {
     int i ;
 
     // Insertion into the heap without violating the shape property
@@ -77,7 +66,8 @@ void buildMinHeap(minHeap *hp, int *arr, int size) {
             hp->elem = malloc(sizeof(node)) ;
         }
         node nd ;
-        nd.data = arr[i] ;
+        nd.data = arrData[i] ;
+        nd.astar_node = &arrNodes[i];
         hp->elem[(hp->size)++] = nd ;
     }
 
@@ -92,7 +82,7 @@ void buildMinHeap(minHeap *hp, int *arr, int size) {
     Function to insert a node into the min heap, by allocating space for that node in the
     heap and also making sure that the heap property and shape propety are never violated.
 */
-void insertNode(minHeap *hp, int data) {
+void insertNode(minHeap *hp, int data, astar_node* astar_node) {
     if(hp->size) {
         hp->elem = realloc(hp->elem, (hp->size + 1) * sizeof(node)) ;
     } else {
@@ -101,6 +91,7 @@ void insertNode(minHeap *hp, int data) {
 
     node nd ;
     nd.data = data ;
+    nd.astar_node = astar_node;
 
     int i = (hp->size)++ ;
     while(i && nd.data < hp->elem[PARENT(i)].data) {
@@ -129,6 +120,11 @@ void deleteNode(minHeap *hp) {
     }
 }
 
+astar_node* popNode(minHeap* hp){
+	astar_node* curr = hp->elem->astar_node;
+	deleteNode(hp);
+	return curr;
+}
 
 /*
     Function to get maximum node from a min heap
