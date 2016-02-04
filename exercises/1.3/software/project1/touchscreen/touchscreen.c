@@ -12,6 +12,10 @@
 ***
 **  Initialise touch screen controller
 *****************************************************************************/
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3cb93a7d300f932ae50583a4e7949a882833929d
 void putChar_touch(char c){
 	while((Touchscreen_Status & 0x02) != 0x02);
 	Touchscreen_TxData = c & 0xFF;
