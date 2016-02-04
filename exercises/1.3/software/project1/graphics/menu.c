@@ -10,6 +10,132 @@
 #include "FontSize.h"
 #include <stdio.h>
 #include <string.h>
+#include <touchscreen.h>
+#include <graphics.h>
+#include <altera_up_sd_card_avalon_interface.h>
+
+#define BMPHEIGHT 459
+#define BMPWIDTH 500
+
+void load_image(Point topLeft){//, char* filename, int bmpheight, int bmpwidth){
+	alt_up_sd_card_dev* device_reference = NULL;
+		//Init_Touch();
+		clear_screen(WHITE);
+		int connected = 0;
+		printf("Opening SDCard\n");
+		if ((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL){
+			printf("SDCard Open FAILED\n");
+			return;
+		}
+		else
+			printf("SDCard Open PASSED\n");
+
+		if(device_reference != NULL ) {
+			while(1) {
+				if((connected == 0) && (alt_up_sd_card_is_Present())){
+					printf("Card connected.\n");
+
+					if(alt_up_sd_card_is_FAT16()) {
+						printf("FAT16 file system detected.\n");
+
+						char * name;
+						char * image = "test.bmp";
+						char header;
+
+						if (alt_up_sd_card_find_first("/", name) == 0){
+							printf(name);
+							short int file = alt_up_sd_card_fopen(name, false);
+							if (file == -1){
+								printf("This file could not be opened.\n");
+							}
+							else if (file == -2){
+								printf("This file is already opened.\n");
+							}
+							else {
+								printf("Reading file...\n");
+								while(alt_up_sd_card_read(file) > 0){
+									printf("Continuing to read file...\n");
+								}
+								printf("Finished reading file!\n");
+							}
+							while(alt_up_sd_card_find_next(name) == 0){
+								printf(name);
+								short int file = alt_up_sd_card_fopen(name, false);
+								if (file == -1){
+									printf("This file could not be opened.\n");
+								}
+								else if (file == -2){
+									printf("This file is already opened.\n");
+								}
+								else {
+
+									char pixel[BMPHEIGHT][BMPWIDTH];
+
+									printf("Reading file...\n");
+									for(int x=0 ; x<54 ; x++){
+										header=(unsigned char)(alt_up_sd_card_read(file));
+										printf ("%hhx ",header & 0xff);
+									}
+									printf("\n");
+									short data =0;
+									printf("%s\n", name);
+									if (strcmp(name, "TEST.BMP")== 0){
+										for (int j = 0; j < BMPHEIGHT; j++){
+											for (int i = 0; i < BMPWIDTH; i++){
+													data = alt_up_sd_card_read(file);
+													pixel[j][i] = (char)data;
+													data = alt_up_sd_card_read(file);
+													data = alt_up_sd_card_read(file);
+											}
+										}
+
+
+
+
+										for (int y = 0; y < BMPHEIGHT; y++){
+											for (int x = 0; x < BMPWIDTH; x++){
+												if (pixel[y][x] !=  ((char)0xff)){
+													//printf ("%hhx ", pixel[0] & 0xff);
+													WriteAPixel(topLeft.x + x, topLeft.y+ BMPHEIGHT-y, BLACK);
+												}
+												else{
+													WriteAPixel (topLeft.x + x, topLeft.y+ BMPHEIGHT-y, WHITE);
+												}
+											}
+										}
+										printf("Finished reading file!!!!\n");
+										//return;
+										//return 0;
+									}
+									printf("Finished reading file!\n");
+								}
+							}
+							return;
+
+						}
+						else if (alt_up_sd_card_find_first("/", name) == 1){
+							printf("This is an invalid directory.\n");
+						}
+						else if (alt_up_sd_card_find_first("/", name) == 2){
+							printf("The SD card has either been disconnected, or is NOT a FAT16 type.\n");
+						}
+					}
+
+					else{
+						printf("Unknown file system.\n");
+					}
+					connected = 1;
+				} else if((connected == 1) && (alt_up_sd_card_is_Present() == 0)){
+					printf("Card disconnected.\n");
+					connected =0;
+				}
+			}
+		}
+		else{
+			printf("Can't open device\n");
+		}
+		return;
+}
 
 //Text box is left aligned and has text wrapping
 void draw_text_box(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize){
@@ -19,6 +145,9 @@ void draw_text_box(Point topLeft, int width, int height, int borderWidth, int bo
 	Point bottomRight = {topLeft.x + width, topLeft.y + height};
 
 	draw_filled_rectangle_border(topLeft, topRight, bottomLeft, bottomRight, fillColour, borderColour, borderWidth);
+	int initialX = 0;
+	int initialY = 0;
+
 
 	int fontSizePixelsWidth = 5;
 	int fontSizePixelsHeight = 7;
@@ -28,22 +157,52 @@ void draw_text_box(Point topLeft, int width, int height, int borderWidth, int bo
 		fontSizePixelsHeight = 14;
 	}
 
-	int initialX = topLeft.x + 10; //give 10 pixels margin
-	int initialY = topLeft.y + 10; //May make this an adjustable variable
-	for (int x = 0; x < textLength; x++){
+	initialX = topLeft.x + 10; //give 10 pixels margin
+	initialY = topLeft.y + 10; //May make this an adjustable variable
+
+	char* temp_text;
+	strcpy(temp_text, text);
+
+	char * token = strtok(temp_text, " ");
+
+	while (token != NULL){
+		int stringLength = (int) strlen(token);
+		if (initialX + (stringLength * (fontSizePixelsWidth + 1)) > topRight.x - 10){
+			initialX = topLeft.x + 10;
+			initialY = initialY + fontSizePixelsHeight + 1;
+		}
+		for (int x = 0; x < stringLength; x++){
+			if (token[x] == '\n'){
+				initialX = topLeft.x + 4;
+				initialY = initialY + fontSizePixelsHeight + 1;
+			}
+			if (fontSize == MEDIUM){
+				OutGraphicsCharFont2a(initialX, initialY, textColour, textColour, (int)token[x], 0);
+			}
+			else {
+				OutGraphicsCharFont1(initialX, initialY, textColour, textColour, (int)token[x], 0);
+			}
+			initialX = initialX + fontSizePixelsWidth + 1;
+		}
 		if (fontSize == MEDIUM){
-			OutGraphicsCharFont2a(initialX, initialY, textColour, textColour, (int)text[x], 0);
+			OutGraphicsCharFont2a(initialX, initialY, textColour, textColour, (int)" ", 0);
 		}
 		else {
-			OutGraphicsCharFont1(initialX, initialY, textColour, textColour, (int)text[x], 0);
+			OutGraphicsCharFont1(initialX, initialY, textColour, textColour, (int)" ", 0);
 		}
 		initialX = initialX + fontSizePixelsWidth + 1;
-
-		if (initialX > topRight.x + 10){
-			initialX = topLeft.x + 10;
-			initialY = initialY + fontSizePixelsHeight + 2;
-		}
+		token = strtok(NULL, " ");
 	}
+
+}
+
+//draw the info box on the RHS of the touchscreen
+void draw_information_box(char* text){
+	Point point8;
+
+	point8.x = 500;
+	point8.y = 0;
+	draw_text_box(point8, 300, 330,2, BLACK, WHITE, BLACK, text, SMALL);
 
 }
 
@@ -91,9 +250,44 @@ void draw_button(Point topLeft, int width, int height, int borderWidth, int bord
 //menu is buttons from top down
 void draw_menu(Point leftCorner, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, int fontSize, char** menuText){
 	int x = 0;
-	while (menuText[x] != NULL){
+	while (menuText[x] != ""){
 		draw_button(leftCorner, width, height, borderWidth, borderColour, fillColour, textColour, menuText[x], fontSize);
 		leftCorner.y+= height;
 		x++;
 	}
+}
+
+
+void init_screen(){
+
+		Point point6 = {500, 330};
+		Point point7 = {650, 330}; //Adjust these to fit within the margins...
+
+		char* firstTextArray[] = {"Info", "Photo", ""};
+		char* secondTextArray[] = {"Directions", "About", ""};
+
+		draw_information_box("Pathfinding Map (Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nThis is our project!");
+		draw_menu(point6, 150, 75, 2, BLACK, WHITE, BLACK, SMALL, firstTextArray);
+
+		draw_menu(point7, 150, 75, 2, BLACK, WHITE, BLACK, SMALL, secondTextArray);
+
+}
+
+void about_screen(){
+	draw_information_box("Pathfinding Map (Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nThis is our project!");
+}
+
+void info_screen(){
+	draw_information_box("BUILDING INFO");
+}
+
+void directions_screen(){
+	draw_information_box("DIRECTIONS");
+}
+
+void photo_screen(){
+//	char* name = "PIC.BMP";
+//	Point point = {500, 0};
+//	load_image(point, name, 330, 300);
+	draw_information_box("BUILDING PHOTO");
 }
