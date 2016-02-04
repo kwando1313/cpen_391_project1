@@ -2,7 +2,6 @@
 #define MENU_H_
 
 #include "graphics.h"
-#include "alt_up_"
 
 #define IL 500
 #define IR 650

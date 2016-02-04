@@ -12,7 +12,6 @@ int main(void) {
 	init_control();
 	listen();
 
-
 	printf("\n\nend\n");
 
 	return 0;
