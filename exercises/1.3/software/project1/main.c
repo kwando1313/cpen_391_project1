@@ -6,6 +6,7 @@
 #include "graphics.h"
 #include "touchscreen.h"
 #include "control.h"
+#include "load_node.h"
 
 int main(void) {
 //	init_control();
@@ -13,7 +14,7 @@ int main(void) {
 //	listen();
 
 	printf("start\n\n");
-
+	load_graph("SAMPLE.TXT");
 	cost default_cost = {0};
 	graph* graph = init_graph(5);
 
