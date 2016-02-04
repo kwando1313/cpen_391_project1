@@ -5,7 +5,6 @@
 #include "graphics.h"
 #include "touchscreen.h"
 #include "control.h"
-
 int main(void) {
 	printf("start\n\n");
 	clear_screen(BLACK);
