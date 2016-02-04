@@ -12,9 +12,6 @@
 ***
 **  Initialise touch screen controller
 *****************************************************************************/
-void wait(){
-	for ( int i = 0; i < 10000000; i++ );
-}
 
 void putChar_touch(char c){
 	while((Touchscreen_Status & 0x02) != 0x02);
