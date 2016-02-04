@@ -14,13 +14,11 @@
 ***
 **  Initialise touch screen controller
 *****************************************************************************/
-void wait();
-
 void putChar_touch(char c);
 
 char getChar_touch();
 
-void Init_Touch(void);
+void init_touch(void);
 
 /*****************************************************************************
 **   test if PEN DOWN

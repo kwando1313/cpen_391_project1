@@ -3,8 +3,14 @@
 #include "graph.h"
 #include "menu.h"
 #include "graphics.h"
+#include "touchscreen.h"
+#include "control.h"
 
 int main(void) {
+//	init_control();
+//
+//	listen();
+
 	printf("start\n\n");
 
 	cost default_cost = {0};
@@ -34,5 +40,6 @@ int main(void) {
 	destroy_path_points(path);
 
 	printf("\n\nend\n");
+
 	return 0;
 }
