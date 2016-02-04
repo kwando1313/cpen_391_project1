@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "misc_helpers.h"
 
-#define DEFAULT_NUM_NEIGHBOURS 2
+#define DEFAULT_NUM_NEIGHBOURS 10
 #define DOUBLE_TO_INT_MULTIPLIER 100
 
 typedef struct __path_points{

@@ -22,9 +22,15 @@ vertex init_vertex(int latitude, int longitude, int altitude, char* name,
 	vertex new_vertex;
 	new_vertex.id = -1;
 	new_vertex.adjList = init_adjList();
-	new_vertex.latitude = latitude;
-	new_vertex.longitude = longitude;
-	new_vertex.altitude = altitude;
+
+	//temporary, just for sprint1 since we don't have any actual data yet
+//	new_vertex.latitude = latitude;
+//	new_vertex.longitude = longitude;
+//	new_vertex.altitude = altitude;
+	new_vertex.latitude = x;
+	new_vertex.longitude = y;
+	new_vertex.altitude = 0;
+
 	new_vertex.name = name;
 	new_vertex.x = x;
 	new_vertex.y = y;
