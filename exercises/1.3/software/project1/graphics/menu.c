@@ -14,11 +14,8 @@
 #include <graphics.h>
 #include <altera_up_sd_card_avalon_interface.h>
 
-<<<<<<< HEAD
+
 #define BMPHEIGHT 480
-=======
-#define BMPHEIGHT 459
->>>>>>> 3cb93a7d300f932ae50583a4e7949a882833929d
 #define BMPWIDTH 500
 
 void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
@@ -43,10 +40,8 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 						printf("FAT16 file system detected.\n");
 
 						char * name = "A";
-<<<<<<< HEAD
-=======
 						char * image = "test.bmp";
->>>>>>> 3cb93a7d300f932ae50583a4e7949a882833929d
+
 						char header;
 
 						if (alt_up_sd_card_find_first("/", name) == 0){
@@ -133,20 +128,11 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 												for (int i = 0; i < BMPWIDTH; i++){
 														data = alt_up_sd_card_read(file);
 														B[j][i] = (char)data;
-<<<<<<< HEAD
-														//printf("%hhx ", data & 0xff);
-														data = alt_up_sd_card_read(file);
-														G[j][i] = (char)data;
-														//printf("%hhx ", data & 0xff);
-														data = alt_up_sd_card_read(file);
-														R[j][i] = (char)data;
-														//printf("%hhx ", data & 0xff);
-=======
 														data = alt_up_sd_card_read(file);
 														G[j][i] = (char)data;
 														data = alt_up_sd_card_read(file);
 														R[j][i] = (char)data;
->>>>>>> 3cb93a7d300f932ae50583a4e7949a882833929d
+
 														pixel[j][i][0] = R[j][i];
 														pixel[j][i][1] = G[j][i];
 														pixel[j][i][2] = B[j][i];
