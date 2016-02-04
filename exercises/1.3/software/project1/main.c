@@ -6,13 +6,28 @@
 #include "touchscreen.h"
 #include "control.h"
 
+graph* draw_test_graph(void);
+
 int main(void) {
 	printf("start\n\n");
 	clear_screen(BLACK);
 
+	graph* graph = draw_test_graph();
+
+//	path_points* path = get_path_points(graph, v0id, v3id);
+//	for(int i = 0; i < path->actual_size; i++){
+//		printf("x: %d  y:  %d\n", path->ordered_point_arr[i].x, path->ordered_point_arr[i].y);
+//	}
+//	destroy_path_points(path);
+
+	printf("\n\nend\n");
+
+	return 0;
+}
+
+graph* draw_test_graph(void){
 	cost default_cost = {0};
 	graph* graph = init_graph(30);
-
 
 	int v0id = add_vertex(graph, init_vertex(5, 5, 0, "v0", 4, 425));
 	int v1id = add_vertex(graph, init_vertex(50, 400, 0, "v1", 6, 260));
@@ -87,13 +102,10 @@ int main(void) {
 		}
 	}
 
-//	path_points* path = get_path_points(graph, v0id, v3id);
-//	for(int i = 0; i < path->actual_size; i++){
-//		printf("x: %d  y:  %d\n", path->ordered_point_arr[i].x, path->ordered_point_arr[i].y);
-//	}
-//	destroy_path_points(path);
+	for(int i = 0; i<graph->num_vertices; i++) {
+		vertex* v = get_vertex(graph, i);
+		WriteAPixel(v->x, v->y, YELLOW);
+	}
 
-	printf("\n\nend\n");
-
-	return 0;
+	return graph;
 }
