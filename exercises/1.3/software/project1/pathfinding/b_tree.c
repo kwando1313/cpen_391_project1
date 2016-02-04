@@ -19,9 +19,9 @@ bnode* insert_bnode(bnode* root, int key, void* data){
 		return create_new_bnode(key, data);
 	}
 	if (key >= root->key) {
-		root = insert_bnode(root->right, key, data);
+		root->right = insert_bnode(root->right, key, data);
 	} else {
-		root = insert_bnode(root->left, key, data);
+		root->left = insert_bnode(root->left, key, data);
 	}
 
 	return root;

@@ -24,8 +24,10 @@ int main(void) {
 	add_edge(graph, v3id, v4id, default_cost);
 	add_edge(graph, v1id, v4id, default_cost);
 
-	print_path(graph, v0id, v3id);
-//	print_path(graph, v3id, v0id);
+//	print_path(graph, v0id, v3id);
+//	print_path(graph, v0id, v2id);
+//	print_path(graph, v0id, v3id);
+	print_path(graph, v3id, v1id);
 
 	printf("\n\nend\n");
 	return 0;
