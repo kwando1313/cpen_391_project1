@@ -3,6 +3,7 @@
 #include "hashmap.h"
 #include "misc_helpers.h"
 #include <math.h>
+#include <assert.h>
 
 #define DEFAULT_PATH_SIZE 10
 
@@ -12,6 +13,7 @@ int get_cost(graph* graph, int curr, int neighbour);
 astar_node* pop_smallest(bnode** root);
 int* reconstruct_path(hashmap* path_map, int start, int current_id);
 int append_to_array(int** arr, int i, int arr_size, int to_add);
+void append_to_path_points_array(path_points* path, int i, Point to_add);
 
 /*
  * Notes on datastructures chosen
@@ -175,7 +177,7 @@ int get_cost(graph* graph, int curr, int neighbour){
 	return INT_MAX;
 }
 
-void print_path(graph* graph, int start, int goal){
+void print_path_console(graph* graph, int start, int goal){
 	int* path = a_star(graph, start, goal);
 	if (path == NULL) {
 		return;
@@ -188,4 +190,39 @@ void print_path(graph* graph, int start, int goal){
 	}
 	printf("step: %d, vid: %d\n\n", curr, path[curr]);
 	free(path);
+}
+
+path_points* get_path_points(graph* graph, int start, int goal){
+	int* path_ids = a_star(graph, start, goal);
+	assert(path_ids != NULL);
+	int curr = 0;
+
+	path_points* path = malloc(sizeof(path_points));
+	path->ordered_point_arr = malloc(DEFAULT_PATH_SIZE*sizeof(Point));
+	path->size = DEFAULT_PATH_SIZE;
+	path->actual_size = 0;
+
+	while(1) {
+		vertex* v = get_vertex(graph, path_ids[curr]);
+		Point to_add;
+		to_add.x = v->x;
+		to_add.y = v->y;
+		append_to_path_points_array(path, curr, to_add);
+		if (path_ids[curr] == start) {
+			break;
+		}
+		curr++;
+	}
+
+	free(path_ids);
+	return path;
+}
+
+void append_to_path_points_array(path_points* path, int i, Point to_add){
+	if (i == path->size) {
+		path->size *= 2;
+		path->ordered_point_arr = realloc(path->ordered_point_arr, path->size);
+	}
+	path->actual_size++;
+	path->ordered_point_arr[i] = to_add;
 }

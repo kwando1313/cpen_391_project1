@@ -3,9 +3,16 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include "misc_helpers.h"
 
 #define DEFAULT_NUM_NEIGHBOURS 2
 #define DOUBLE_TO_INT_MULTIPLIER 100
+
+typedef struct __path_points{
+	Point* ordered_point_arr;
+	int size; //Better way to do this?
+	int actual_size; //Better way to do this?
+} path_points;
 
 typedef struct __astar_node{
 	int v_id;
@@ -62,6 +69,7 @@ bool vertex_has_edge(vertex* v, int v1_id);
 bool graph_has_edge(graph* graph, int v0_id, int v1_id);
 
 int* a_star(graph* graph, int start, int goal);
-void print_path(graph* graph, int start, int goal);
+void print_path_console(graph* graph, int start, int goal);
+path_points* get_path_points(graph* graph, int start, int goal);
 
 #endif
