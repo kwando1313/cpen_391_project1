@@ -152,19 +152,17 @@ C_SRCS += touchscreen/touchscreen.c
 C_SRCS += graphics/fill.c
 C_SRCS += graphics/draw_font.c
 C_SRCS += pathfinding/graph.c
-<<<<<<< HEAD
 C_SRCS += pathfinding/min_heap.c
 C_SRCS += graphics/menu.c
-=======
 C_SRCS += pathfinding/a_star.c
 C_SRCS += misc/hashmap.c
-C_SRCS += pathfinding/min_heap.c
-C_SRCS += graphics/menu.c
 C_SRCS += pathfinding/b_tree.c
 C_SRCS += control/control.c
->>>>>>> 4e2bfd0640e5edb01c50846be3f58a63c6ff049e
 CXX_SRCS :=
 ASM_SRCS :=
+<<<<<<< HEAD
+=======
+>>>>>>> 4e2bfd0640e5edb01c50846be3f58a63c6ff049e
 
 
 # Path to root of object file tree.
@@ -207,10 +205,9 @@ APP_INCLUDE_DIRS += touchscreen
 APP_INCLUDE_DIRS += bluetooth
 APP_INCLUDE_DIRS += gps
 APP_INCLUDE_DIRS += pathfinding
+APP_INCLUDE_DIRS += control
 <<<<<<< HEAD
 =======
-APP_INCLUDE_DIRS += touchscreen
-APP_INCLUDE_DIRS += control
 >>>>>>> 4e2bfd0640e5edb01c50846be3f58a63c6ff049e
 APP_LIBRARY_DIRS :=
 APP_LIBRARY_NAMES :=
