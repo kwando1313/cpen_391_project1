@@ -1,7 +1,12 @@
 #include "misc_helpers.h"
+#include <math.h>
 
 double convert_to_radians(double angle){
 	return (angle*M_PI/180);
+}
+
+float sub_and_sqre(int x, int y){
+	return pow(x-y, 2);
 }
 
 //includes == case

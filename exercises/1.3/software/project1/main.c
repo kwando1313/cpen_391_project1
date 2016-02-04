@@ -5,38 +5,32 @@
 #include "graphics.h"
 
 int main(void) {
-	printf("start\n");
-	test_graphics();
-	//test_rs232();
-/*
-	clear_screen(WHITE);
+	printf("start\n\n");
 
-	Point point4 = {100,0};
+	cost default_cost = {1};
+	graph* graph = init_graph(5);
 
-	Point point5 = {50, 300};
+	vertex v0 = init_vertex(5, 5, 0, "v0", 5, 5);
+	vertex v1 = init_vertex(50, 400, 0, "v1", 50, 400);
+	vertex v2 = init_vertex(100, 100, 0, "v2", 100, 100);
+	vertex v3 = init_vertex(200, 200, 0, "v3", 200, 200);
+	vertex v4 = init_vertex(300, 300, 0, "v4", 300, 300);
+	int v0id = add_vertex(graph, v0);
+	int v1id = add_vertex(graph, v1);
+	int v2id = add_vertex(graph, v2);
+	int v3id = add_vertex(graph, v3);
+	int v4id = add_vertex(graph, v4);
 
-	draw_button(point4, 300, 100, 1, BLACK, LIME, BLACK, "Longer text", SMALL);
-	draw_button(point5, 200, 100, 1, BLACK, BLUE, RED, "What happens when I have text overflow?", MEDIUM);
+	add_edge(graph, v0id, v2id, default_cost);
+	add_edge(graph, v2id, v3id, default_cost);
+	add_edge(graph, v3id, v4id, default_cost);
+	add_edge(graph, v1id, v4id, default_cost);
 
-	clear_screen(WHITE);
+//	print_path(graph, v0id, v3id);
+//	print_path(graph, v0id, v2id);
+//	print_path(graph, v0id, v3id);
+	print_path(graph, v3id, v1id);
 
-	Point point6 = {400, 330};
-	Point point7 = {600, 330}; //Adjust these to fit within the margins...
-	Point point8 = {400, 0};
-	Point point9 = {400, 330};
-	Point point10 = {800, 0};
-	Point point11 = {800, 330};
-
-	char* firstTextArray[] = {"Info", "Photo", NULL};
-	char* secondTextArray[] = {"Directions", "Back", NULL};
-
-	draw_text_box(point8, 400, 330,1, BLACK, WHITE, BLACK, "Information about the building will go here...");
-
-	draw_menu(point6, 200, 75, 1, BLACK, WHITE, BLACK, SMALL, firstTextArray);
-
-	draw_menu(point7, 200, 75, 1, BLACK, WHITE, BLACK, SMALL, secondTextArray);
-
-*/
-	printf("end\n");
+	printf("\n\nend\n");
 	return 0;
 }

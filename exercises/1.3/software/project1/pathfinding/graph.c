@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
@@ -18,11 +17,17 @@ graph* init_graph(int inital_max_vertices){
 	return new_graph;
 }
 
-//TODO - should all things be initialized here?
-vertex init_vertex(int id){
+vertex init_vertex(int latitude, int longitude, int altitude, char* name,
+		int x, int y){
 	vertex new_vertex;
-	new_vertex.id = id;
+	new_vertex.id = -1;
 	new_vertex.adjList = init_adjList();
+	new_vertex.latitude = latitude;
+	new_vertex.longitude = longitude;
+	new_vertex.altitude = altitude;
+	new_vertex.name = name;
+	new_vertex.x = x;
+	new_vertex.y = y;
 	return new_vertex;
 }
 
@@ -35,14 +40,15 @@ adjacencyList* init_adjList(void){
 	return adjList;
 }
 
-int add_vertex(graph* graph){
+int add_vertex(graph* graph, vertex v){
 	int num_vertices = graph->num_vertices;
 	if (num_vertices == graph->max_vertices) {
 		//TODO better value for this? realloc is expensive, but NIOS II is shit
 		graph->max_vertices *= 1.5;
 		graph->vertices = realloc(graph->vertices, graph->max_vertices);
 	}
-	graph->vertices[num_vertices] = init_vertex(num_vertices);
+	v.id = num_vertices;
+	graph->vertices[num_vertices] = v;
 	graph->num_vertices++;
 	return num_vertices;
 }
