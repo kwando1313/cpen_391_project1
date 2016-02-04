@@ -14,7 +14,8 @@
 #include <graphics.h>
 #include <altera_up_sd_card_avalon_interface.h>
 
-#define BMPHEIGHT 459
+
+#define BMPHEIGHT 480
 #define BMPWIDTH 500
 
 void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
@@ -40,6 +41,7 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 
 						char * name = "A";
 						char * image = "test.bmp";
+
 						char header;
 
 						if (alt_up_sd_card_find_first("/", name) == 0){
@@ -130,6 +132,7 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 														G[j][i] = (char)data;
 														data = alt_up_sd_card_read(file);
 														R[j][i] = (char)data;
+
 														pixel[j][i][0] = R[j][i];
 														pixel[j][i][1] = G[j][i];
 														pixel[j][i][2] = B[j][i];
@@ -343,7 +346,8 @@ int check_colour(char* pixel){
 	if (pixel[0] ==  ((char)0xff) && pixel[1] == (char) 0x0 && pixel[2] == (char) 0x00){
 		return RED;
 	}
-	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0xff && pixel[2] == (char) 0x00){
+
+	else if (pixel[0] ==  ((char)0xB5) && pixel[1] == (char) 0xE6 && pixel[2] == (char) 0x1D){
 		return LIME;
 	}
 	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0xff){
@@ -355,25 +359,29 @@ int check_colour(char* pixel){
 	else if (pixel[0] ==  ((char)0xff) && pixel[1] == (char) 0xff && pixel[2] == (char) 0x00){
 		return YELLOW;
 	}
-	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0xff && pixel[2] == (char) 0xff){
+
+	else if (pixel[0] ==  ((char)0x99) && pixel[1] == (char) 0xD9 && pixel[2] == (char) 0xEA){
 		return CYAN;
 	}
 	else if (pixel[0] ==  ((char)0xc0) && pixel[1] == (char) 0xc0 && pixel[2] == (char) 0xc){
 		return SILVER;
 	}
 	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x80){
+		return GRAY;
+	}
+	else if (pixel[0] ==  ((char)0xED) && pixel[1] == (char) 0x1C && pixel[2] == (char) 0x24){
 		return MAROON;
 	}
 	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x00){
 		return OLIVE;
 	}
-	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x00){
+	else if (pixel[0] ==  ((char)0x22) && pixel[1] == (char) 0xB1 && pixel[2] == (char) 0x4C){
 		return GREEN;
 	}
-	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x80){
+	else if (pixel[0] ==  ((char)0x3F) && pixel[1] == (char) 0x48 && pixel[2] == (char) 0xCC){
 		return PURPLE;
 	}
-	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x80){
+	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0xA2 && pixel[2] == (char) 0xE8){
 		return TEAL;
 	}
 	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x80){
