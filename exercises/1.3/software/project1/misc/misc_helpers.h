@@ -3,6 +3,12 @@
 
 #define M_PI 3.14159265358979323846264338327
 
+#define NO_RESPONSE 0
+#define INFO 1
+#define DIR 2
+#define PHOTO 3
+#define ABOUT 4
+
 typedef struct{int x, y; } Point;
 
 double convert_to_radians(double angle);

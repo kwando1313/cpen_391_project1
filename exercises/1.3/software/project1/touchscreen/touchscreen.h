@@ -14,8 +14,6 @@
 ***
 **  Initialise touch screen controller
 *****************************************************************************/
-void wait();
-
 void putChar_touch(char c);
 
 char getChar_touch();
