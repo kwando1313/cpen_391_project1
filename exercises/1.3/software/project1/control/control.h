@@ -7,7 +7,7 @@ void listen();
 
 void do_info();
 
-void do_dir();
+void do_dir(graph* graph);
 
 void do_photo();
 
@@ -15,6 +15,9 @@ void do_about();
 
 int get_button();
 
-vertex get_node();
+int get_node();
+
+//TODO: remove after sprint 1
+graph* draw_test_graph(void);
 
 #endif /* CONTROL_H_ */
