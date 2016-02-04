@@ -71,5 +71,6 @@ bool graph_has_edge(graph* graph, int v0_id, int v1_id);
 int* a_star(graph* graph, int start, int goal);
 void print_path_console(graph* graph, int start, int goal);
 path_points* get_path_points(graph* graph, int start, int goal);
+void destroy_path_points(path_points* path);
 
 #endif

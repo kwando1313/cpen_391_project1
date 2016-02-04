@@ -148,4 +148,8 @@ void destroy_graph(graph* graph){
 	free(graph);
 }
 
+void destroy_path_points(path_points* path){
+	free(path->ordered_point_arr);
+	free(path);
+}
 

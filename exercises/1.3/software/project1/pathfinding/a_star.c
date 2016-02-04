@@ -109,13 +109,11 @@ int* reconstruct_path(hashmap* path_map, int start, int current_id){
 	int array_index = 0;
 	int* total_path = malloc(path_size*sizeof(int));
 	total_path[array_index] = current_id;
-	printf("current_id: %d\n", current_id);
 
 	while(hashmapGet(path_map, current_id) != HASHMAP_ERROR && current_id != start) {
 		astar_node* v = (astar_node*)hashmapGet(path_map, current_id);
 		current_id = v->v_id;
 		array_index++;
-		printf("current_id: %d\n", current_id);
 		append_to_array(&total_path, array_index, path_size, current_id);
 	}
 
@@ -174,6 +172,7 @@ int get_cost(graph* graph, int curr, int neighbour){
 		}
 	}
 	//TODO: could this cause an overflow?
+	printf("couldn't get the cost");
 	return INT_MAX;
 }
 
