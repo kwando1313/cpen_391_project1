@@ -15,6 +15,6 @@ void do_about();
 
 int get_button();
 
-int get_node();
+vertex get_node();
 
 #endif /* CONTROL_H_ */
