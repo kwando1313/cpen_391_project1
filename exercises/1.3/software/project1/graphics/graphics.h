@@ -53,6 +53,8 @@ void draw_filled_circle(Point centre, int radius, int colour);
 void draw_filled_circle_border(Point centre, int radius, int colour, int borderColour);
 void draw_arc(Point centre, int radius, int colour, double angleStart, double angleEnd);
 
+void draw_path(Point points[], int num_points, int colour);
+
 /**************************** Core Functionality *******************************/
 void ProgramPalette(int PaletteNumber, int RGB);
 void WriteAPixel(int x, int y, int Colour);

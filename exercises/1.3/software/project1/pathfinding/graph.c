@@ -22,9 +22,15 @@ vertex init_vertex(int latitude, int longitude, int altitude, char* name,
 	vertex new_vertex;
 	new_vertex.id = -1;
 	new_vertex.adjList = init_adjList();
-	new_vertex.latitude = latitude;
-	new_vertex.longitude = longitude;
-	new_vertex.altitude = altitude;
+
+	//temporary, just for sprint1 since we don't have any actual data yet
+//	new_vertex.latitude = latitude;
+//	new_vertex.longitude = longitude;
+//	new_vertex.altitude = altitude;
+	new_vertex.latitude = x;
+	new_vertex.longitude = y;
+	new_vertex.altitude = 0;
+
 	new_vertex.name = name;
 	new_vertex.x = x;
 	new_vertex.y = y;
@@ -56,6 +62,11 @@ int add_vertex(graph* graph, vertex v){
 void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes){
 	// v0, v1 should exist in the graph
 	assert(v0_id < graph->num_vertices && v1_id < graph->num_vertices);
+
+	if (v0_id == v1_id) {
+		printf("ERROR: trying add connect node to itself. Exiting.");
+		return;
+	}
 
 	vertex* v0 = get_vertex(graph, v0_id);
 	vertex* v1 = get_vertex(graph, v1_id);
@@ -153,3 +164,20 @@ void destroy_path_points(path_points* path){
 	free(path);
 }
 
+void draw_graph(graph* graph, int v_colour, int edge_colour){
+
+	for(int i = 0; i<graph->num_vertices; i++) {
+		vertex* v = get_vertex(graph, i);
+		adjacencyList* adjList = v->adjList;
+		int num_edges = adjList->num_neighbours;
+		for (int j = 0; j<num_edges; j++) {
+			vertex* w = get_vertex(graph, adjList->neighbours[j]);
+			Line(v->x, v->y, w->x, w->y, edge_colour);
+		}
+	}
+
+	for(int i = 0; i<graph->num_vertices; i++) {
+		vertex* v = get_vertex(graph, i);
+		WriteAPixel(v->x, v->y, v_colour);
+	}
+}

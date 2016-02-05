@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "misc_helpers.h"
 
-#define DEFAULT_NUM_NEIGHBOURS 2
+#define DEFAULT_NUM_NEIGHBOURS 10
 #define DOUBLE_TO_INT_MULTIPLIER 100
 
 typedef struct __path_points{
@@ -72,5 +72,6 @@ int* a_star(graph* graph, int start, int goal);
 void print_path_console(graph* graph, int start, int goal);
 path_points* get_path_points(graph* graph, int start, int goal);
 void destroy_path_points(path_points* path);
+void draw_graph(graph* graph, int v_colour, int edge_colour);
 
 #endif
