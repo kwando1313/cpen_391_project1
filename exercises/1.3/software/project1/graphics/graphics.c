@@ -1,19 +1,11 @@
 #include "misc_helpers.h"
 #include "graphics.h"
 #include <stdio.h>
-<<<<<<< HEAD
-<<<<<<< 77d1a581d9f775a054167227816886464144d49a
-#include <string.h>
-=======
-#include <stdlib.h>
-#include <math.h>
->>>>>>> cleaned up graphics dir - ....sorry, wrong branch >_>
-=======
+
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
 
->>>>>>> 4e2bfd0640e5edb01c50846be3f58a63c6ff049e
 
 #define GraphicsCommandReg   		(*(volatile unsigned short int *)(0x84000000))
 #define GraphicsStatusReg   		(*(volatile unsigned short int *)(0x84000000))

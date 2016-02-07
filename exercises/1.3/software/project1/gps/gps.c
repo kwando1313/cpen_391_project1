@@ -115,13 +115,9 @@ void test_read_gps(void){
 
 	/*	This is for printing onto the lcd
 	 */
-<<<<<<< HEAD
-	while (1){
-		int old_button;
-=======
+
 	int old_button = -1;
 	while (1){
->>>>>>> 4e2bfd0640e5edb01c50846be3f58a63c6ff049e
 		int button_value = *(push_buttons123); // get button value
 
 		if (button_value != old_button){

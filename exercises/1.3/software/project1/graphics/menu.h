@@ -3,6 +3,25 @@
 
 #include "graphics.h"
 
+#define IL 500
+#define IR 650
+#define IU 330
+#define ID 405
+
+#define DL 650
+#define DR 800
+#define DU 330
+#define DD 405
+
+#define PL 500
+#define PR 650
+#define PU 405
+#define PD 480
+
+#define AL 650
+#define AR 800
+#define AU 405
+#define AD 480
 
 void load_image(Point bottomLeft, char* filename);//, int bmpheight, int bmpwidth);
 

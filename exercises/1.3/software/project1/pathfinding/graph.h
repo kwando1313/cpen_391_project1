@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "misc_helpers.h"
 
-#define DEFAULT_NUM_NEIGHBOURS 2
+#define DEFAULT_NUM_NEIGHBOURS 10
 #define DOUBLE_TO_INT_MULTIPLIER 100
 
 typedef struct __path_points{
@@ -67,6 +67,8 @@ void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes);
 bool remove_edge(graph* graph, int v0_id, int v1_id);
 bool vertex_has_edge(vertex* v, int v1_id);
 bool graph_has_edge(graph* graph, int v0_id, int v1_id);
+
+//int find_vertex(graph* graph, char* name);
 
 int* a_star(graph* graph, int start, int goal);
 void print_path_console(graph* graph, int start, int goal);

@@ -8,6 +8,7 @@
 #define DIR 2
 #define PHOTO 3
 #define ABOUT 4
+#define RADIUS 50
 
 typedef struct{int x, y; } Point;
 
