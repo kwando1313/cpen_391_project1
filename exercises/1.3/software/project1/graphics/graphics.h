@@ -24,6 +24,7 @@
 //#define	CYAN			6
 //#define	MAGENTA			7
 
+
 // should redo these for the touchscreen -> these numbers are for the lab's monitors
 #define XRES 800
 #define YRES 479

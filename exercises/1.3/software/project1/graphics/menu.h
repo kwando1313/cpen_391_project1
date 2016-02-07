@@ -24,8 +24,8 @@
 #define AU 405
 #define AD 480
 
-void load_image(Point bottomLeft, char* filename);//, char* filename, int bmpheight, int bmpwidth);
 
+void load_image(Point bottomLeft, char* filename);//, char* filename, int bmpheight, int bmpwidth);
 
 void draw_button(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize);
 void draw_menu(Point leftCorner, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, int fontSize, char* menuText[]);
@@ -37,5 +37,4 @@ void info_screen();
 void directions_screen();
 void photo_screen();
 void init_screen();
-
 #endif /* MENU_H_ */

@@ -25,13 +25,10 @@
 #define HEADERSIZE 54
 #define COLOURTABLESIZE 1024
 
-/*	Load image from SD Card.
- * 	SD Card must be formatted in FAT16 to work with DE2.
- * 	Length of filenames cannot be longer than 12 characters.
- * 	including file extension (i.e. "abcdefghi.bmp" is invalid.
- */
 void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 	alt_up_sd_card_dev* device_reference = NULL;
+		//Init_Touch();
+		//clear_screen(WHITE);
 		int connected = 0;
 		printf("Opening SDCard\n");
 		if ((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL){
@@ -49,8 +46,9 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 					if(alt_up_sd_card_is_FAT16()) {
 						printf("FAT16 file system detected.\n");
 
-						char * name = "A"; 	// "A" for initialization to get the proper name
-						char header;		// Header information of BMP file.
+						char * name = "A";
+						char * image = "test.bmp";
+						char header;
 
 						if (alt_up_sd_card_find_first("/", name) == 0){
 
@@ -62,6 +60,7 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 								printf("This file is already opened.\n");
 							}
 							else {
+
 								/*	Read BMP pixels, starting from the bottom left corner.
 								 */
 								int pixel[BMPHEIGHT][BMPWIDTH];
@@ -76,6 +75,7 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 									(unsigned char)alt_up_sd_card_read(file);
 								}
 								printf("\n");
+
 								printf("Current file: %s\n", name);
 								printf("My name: %s\n", filename);
 								if (strcmp(name, filename)== 0){
@@ -89,6 +89,7 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 										for (int x = 0; x < BMPWIDTH; x++){
 											int colour = pixel[y][x];
 											WriteAPixel(topLeft.x + x, topLeft.y + BMPHEIGHT-y, colour);
+
 										}
 									}
 									printf("Finished reading file!!!!\n");
@@ -118,6 +119,7 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 											(unsigned char)alt_up_sd_card_read(file);
 										}
 										printf("\n");
+
 										printf("NAME: %s\n", name);
 										printf("FILENAME: %s\n", filename);
 										if (strcmp(name, filename)== 0){
@@ -133,6 +135,7 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 												}
 											}
 											printf("Finished reading file!!!!\n");
+
 										}
 										else {
 											printf("Finished reading file!\n");
