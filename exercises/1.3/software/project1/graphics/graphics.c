@@ -395,7 +395,7 @@ void clear_screenSW(int colour){
 		}
 	}
 }
-
+/*
 void test_graphics(void){
 	clear_screen(WHITE);
 
@@ -479,3 +479,4 @@ void rand_line(int min_x, int max_x, int min_y, int max_y, int colour){
 	int y2 = (rand() % (max_y + 1 - min_y)) + min_y;
 	Line(x1,y1,x2,y2,colour);
 }
+*/

@@ -20,264 +20,262 @@
 // Note that ~half of the values in this array are repeats. The start of this is marked below
 
 const unsigned int ColourPalletteData[256] = {
-0x00000000, // Black
-0x00FFFFFF, // White
-0x00FF0000, // Red
-0x0000FF00, // Green/Lime
-0x000000FF, // Blue
-0x00FFFF00, // Yellow
-0x0000FFFF, // Cyan
-0x00FF00FF, // Magenta
-0x00C0C0C0, // Silver
-0x00808080, // Gray
-0x00800000, // Maroon
-0x00808000, // Olive
-0x00008000, // DarkGreen
-0x00800080, // Purple
-0x00008080, // Teal
-0x00000080, // Navy
-0x008B0000, // Dark Red
-0x00A52A2A, // Brown
-0x00B22222, // FireBrick
-0x00DC143C, // Crimson
-0x00FF6347, // Tomato
-0x00FF7F50, // Coral
-0x00Cd5C5C, // Indian Red
-0x00F08080, // Light Coral
-0x00E9967A, // Dark Salmon
-0x00FA8072, // Salmon
-0x00FFA07A, // Light Salmon
-0x00FF4500, // Orange Red
-0x00FF8C00, // Dark Orange
-0x00FFA500, // Orange
-0x00FFD700, // Gold
-0x00B8860B, // Dark Golden Rod
-0x00DAA520, // Golden Rod
-0x00EEE8AA, // Pale Golden Rod
-0x00BDB76B, // Dark Kharki
-0x00F0E68C, // Khaki
-0x00808000, // Olive
-0x00FFFF00, // Yellow
-0x009ACD32, // Yellow Green
-0x00556B2F, // Dark Olive Green
-0x006B8E23, // Olive Drab
-0x007CFC00, // Lawn Green
-0x007FFF00, // Chart Reuse
-0x00ADFF2F, // Green Yellow
-0x00006400, // Dark Green
-0x00008000, // Green
-0x00228B22, // Forest Green
-0x0000FF00, // Green/Lime
-0x0032CD32, // Lime Green
-0x0090EE90, // Light Green
-0x0098FB98, // Pale Green
-0x008FBC8F, // Dark See Green
-0x0000FA9A, // Medium Spring Green
-0x0000FF7F, // Spring Green
-0x002E8B57, // Sea Green
-0x0066CDAA, // Medium Aqua Marine
-0x003CB371, // Medium Sea Green
-0x0020B2AA, // Light Sea Green
-0x002F4F4F, // Dark Slate Gray
-0x00008080, // Teal
-0x00008B8B, // Dark Cyan
-0x0000FFFF, // Aqua/Cyan
-0x00E0FFFF, // Light Cyan
-0x0000CED1, // Dark Turquise
-0x0040E0D0, // Turquoise
-0x0048D1CC, // Medium Turquoise
-0x00AFEEEE, // Pale Turquoise
-0x007FFFD4, // Aqua Marine
-0x00B0E0E6, // Powder Blue
-0x005F9EA0, // Cadet Blue
-0x004682B4, // Steel Blue
-0x006495ED, // Corn Flower Blue
-0x0000BFFF, // Deep Sky Blue
-0x001E90FF, // Dodger Blue
-0x00ADD8E6, // Light Blue
-0x0087CEEB, // Sky Blue
-0x0087CEFA, // Light Sky Blue
-0x00191970, // Midnight Blue
-0x00000080, // Navy
-0x0000008B, // Bark Blue
-0x000000CD, // Medium Blue
-0x000000FF, // Blue
-0x004169E1, // Royal Blue
-0x008A2BE2, // Blue Violet
-0x004B0082, // Indigo
-0x00483D8B, // Dark Slate Blue
-0x006A5ACD, // Slate Blue
-0x007B68EE, // Medium Slate Blue
-0x009370DB, // Medium Purple
-0x008B008B, // Dark Magenta
-0x009400D3, // Dark Violet
-0x009932CC, // Dark Orchid"
-0x00BA55D3, // Medium Orchid
-0x00800080, // Purple
-0x00D8BFD8, // Thistle
-0x00DDA0DD, // Plum
-0x00EE82EE, // Violet
-0x00FF00FF, // Magenta/Fuchia
-0x00DA70D6, // Orchid
-0x00C71585, // Medium Violet Red
-0x00DB7093, // Pale Violet Red
-0x00FF1493, // Deep Pink
-0x00FF69B4, // Hot Pink
-0x00ffB6C1, // Light Pink
-0x00FFC0CB, // Pink
-0x00FAEBD7, // Antique White
-0x00F5F5DC, // Beige
-0x00FFE4C4, // Bisque
-0x00FFEBCD, // Blanched Almond
-0x00F5DEB3, // Wheat
-0x00FFF8DC, // Corn Silk
-0x00FFFACD, // Lemon Chiffon
-0x00FAFAD2, // Light Golden Rod Yellow
-0x00FFFFE0, // Light Yellow
-0x008B4513, // Saddle Brown
-0x00A0522D, // Sienna
-0x00D2691E, // Chocolate
-0x00CD853F, // Peru
-0x00F4A460, // Sandy Brown
-0x00DEB887, // Burley Wood
-0x00D2B48C, // Tan
-0x00BC8F8F, // Rosy Tan
-0x00FFE4B5, // Moccasin
-0x00FFDEAD, // Navajo White
-0x00FFDAB9, // Peach Puff
-0x00FFE4E1, // Misty Rose
-0x00FFF0F5, // Lavendar Blush
-0x00FAF0E6, // Linen
-0x00FDF5E6, // Old Lace
-0x00FFEFD5, // Papaya Whip
-0x00FFF5EE, // Sea Shell
-0x00F5FFFA, // Mint Cream
-0x00708090, // Slate Gray
-0x00778899, // Light Slate Gray
-0x00B0C4DE, // Light Steel Blue
-0x00E6E6FA, // Lavender
-0x00FFFAF0, // Floral White
-0x00F0F8FF, // Alice Blue
-0x00F8F8FF, // Ghost White
-0x00F0FFF0, // Honey Dew
-0x00FFFFF0, // Ivory
-0x00F0FFFF, // Azure
-0x00FFFAFA, // Snow
-0x00000000, // Black
-0x00696969, // Dim Gray
-0x00808080, // Gray
-0x00A9A9A9, // Dark Gray
-0x00D3D3D3, // Light Gray
-0x00DCDCDC, // GainsBoro
-0x00F5F5F5, // White Smoke
-0x00FFFFFF, // White
-
-// start of repeats - these can be changed
-0x00000000, // Black
-0x00FFFFFF, // White
-0x00FF0000, // Red
-0x0000FF00, // Green/Lime
-0x000000FF, // Blue
-0x00FFFF00, // Yellow
-0x0000FFFF, // Cyan
-0x00FF00FF, // Magenta
-0x00C0C0C0, // Silver
-0x00808080, // Gray
-0x00800000, // Maroon
-0x00808000, // Olive
-0x00008000, // DarkGreen
-0x00800080, // Purple
-0x00008080, // Teal
-0x00000080, // Navy
-0x008B0000, // Dark Red
-0x00A52A2A, // Brown
-0x00B22222, // FireBrick
-0x00DC143C, // Crimson
-0x00FF6347, // Tomato
-0x00FF7F50, // Coral
-0x00Cd5C5C, // Indian Red
-0x00F08080, // Light Coral
-0x00E9967A, // Dark Salmon
-0x00FA8072, // Salmon
-0x00FFA07A, // Light Salmon
-0x00FF4500, // Orange Red
-0x00FF8C00, // Dark Orange
-0x00FFA500, // Orange
-0x00FFD700, // Gold
-0x00B8860B, // Dark Golden Rod
-0x00DAA520, // Golden Rod
-0x00EEE8AA, // Pale Golden Rod
-0x00BDB76B, // Dark Kharki
-0x00F0E68C, // Khaki
-0x00808000, // Olive
-0x00FFFF00, // Yellow
-0x009ACD32, // Yellow Green
-0x00556B2F, // Dark Olive Green
-0x006B8E23, // Olive Drab
-0x007CFC00, // Lawn Green
-0x007FFF00, // Chart Reuse
-0x00ADFF2F, // Green Yellow
-0x00006400, // Dark Green
-0x00008000, // Green
-0x00228B22, // Forest Green
-0x0000FF00, // Green/Lime
-0x0032CD32, // Lime Green
-0x0090EE90, // Light Green
-0x0098FB98, // Pale Green
-0x008FBC8F, // Dark See Green
-0x0000FA9A, // Medium Spring Green
-0x0000FF7F, // Spring Green
-0x002E8B57, // Sea Green
-0x0066CDAA, // Medium Aqua Marine
-0x003CB371, // Medium Sea Green
-0x0020B2AA, // Light Sea Green
-0x002F4F4F, // Dark Slate Gray
-0x00008080, // Teal
-0x00008B8B, // Dark Cyan
-0x0000FFFF, // Aqua/Cyan
-0x00E0FFFF, // Light Cyan
-0x0000CED1, // Dark Turquise
-0x0040E0D0, // Turquoise
-0x0048D1CC, // Medium Turquoise
-0x00AFEEEE, // Pale Turquoise
-0x007FFFD4, // Aqua Marine
-0x00B0E0E6, // Powder Blue
-0x005F9EA0, // Cadet Blue
-0x004682B4, // Steel Blue
-0x006495ED, // Corn Flower Blue
-0x0000BFFF, // Deep Sky Blue
-0x001E90FF, // Dodger Blue
-0x00ADD8E6, // Light Blue
-0x0087CEEB, // Sky Blue
-0x0087CEFA, // Light Sky Blue
-0x00191970, // Midnight Blue
-0x00000080, // Navy
-0x0000008B, // Bark Blue
-0x000000CD, // Medium Blue
-0x000000FF, // Blue
-0x004169E1, // Royal Blue
-0x008A2BE2, // Blue Violet
-0x004B0082, // Indigo
-0x00483D8B, // Dark Slate Blue
-0x006A5ACD, // Slate Blue
-0x007B68EE, // Medium Slate Blue
-0x009370DB, // Medium Purple
-0x008B008B, // Dark Magenta
-0x009400D3, // Dark Violet
-0x009932CC, // Dark Orchid
-0x00BA55D3, // Medium Orchid
-0x00800080, // Purple
-0x00D8BFD8, // Thistle
-0x00DDA0DD, // Plum
-0x00EE82EE, // Violet
-0x00FF00FF, // Magenta/Fuchia
-0x00DA70D6, // Orchid
-0x00C71585, // Medium Violet Red
-0x00DB7093, // Pale Violet Red
-0x00FF1493, // Deep Pink
-0x00FF69B4, // Hot Pink
-0x00ffB6C1, // Light Pink
-0x00FFC0CB // Pink
+		0x00000000,
+		0x00800000,
+		0x00008000,
+		0x00808000,
+		0x00000080,
+		0x00800080,
+		0x00008080,
+		0x00C0C0C0,
+		0x00C0DCC0,
+		0x00A6CAF0,
+		0x00402000,
+		0x00602000,
+		0x00802000,
+		0x00A02000,
+		0x00C02000,
+		0x00E02000,
+		0x00004000,
+		0x00204000,
+		0x00404000,
+		0x00604000,
+		0x00804000,
+		0x00A04000,
+		0x00C04000,
+		0x00E04000,
+		0x00006000,
+		0x00206000,
+		0x00406000,
+		0x00606000,
+		0x00806000,
+		0x00A06000,
+		0x00C06000,
+		0x00E06000,
+		0x00008000,
+		0x00208000,
+		0x00408000,
+		0x00608000,
+		0x00808000,
+		0x00A08000,
+		0x00C08000,
+		0x00E08000,
+		0x0000A000,
+		0x0020A000,
+		0x0040A000,
+		0x0060A000,
+		0x0080A000,
+		0x00A0A000,
+		0x00C0A000,
+		0x00E0A000,
+		0x0000C000,
+		0x0020C000,
+		0x0040C000,
+		0x0060C000,
+		0x0080C000,
+		0x00A0C000,
+		0x00C0C000,
+		0x00E0C000,
+		0x0000E000,
+		0x0020E000,
+		0x0040E000,
+		0x0060E000,
+		0x0080E000,
+		0x00A0E000,
+		0x00C0E000,
+		0x00E0E000,
+		0x00000040,
+		0x00200040,
+		0x00400040,
+		0x00600040,
+		0x00800040,
+		0x00A00040,
+		0x00C00040,
+		0x00E00040,
+		0x00002040,
+		0x00202040,
+		0x00402040,
+		0x00602040,
+		0x00802040,
+		0x00A02040,
+		0x00C02040,
+		0x00E02040,
+		0x00004040,
+		0x00204040,
+		0x00404040,
+		0x00604040,
+		0x00804040,
+		0x00A04040,
+		0x00C04040,
+		0x00E04040,
+		0x00006040,
+		0x00206040,
+		0x00406040,
+		0x00606040,
+		0x00806040,
+		0x00A06040,
+		0x00C06040,
+		0x00E06040,
+		0x00008040,
+		0x00208040,
+		0x00408040,
+		0x00608040,
+		0x00808040,
+		0x00A08040,
+		0x00C08040,
+		0x00E08040,
+		0x0000A040,
+		0x0020A040,
+		0x0040A040,
+		0x0060A040,
+		0x0080A040,
+		0x00A0A040,
+		0x00C0A040,
+		0x00E0A040,
+		0x0000C040,
+		0x0020C040,
+		0x0040C040,
+		0x0060C040,
+		0x0080C040,
+		0x00A0C040,
+		0x00C0C040,
+		0x00E0C040,
+		0x0000E040,
+		0x0020E040,
+		0x0040E040,
+		0x0060E040,
+		0x0080E040,
+		0x00A0E040,
+		0x00C0E040,
+		0x00E0E040,
+		0x00000080,
+		0x00200080,
+		0x00400080,
+		0x00600080,
+		0x00800080,
+		0x00A00080,
+		0x00C00080,
+		0x00E00080,
+		0x00002080,
+		0x00202080,
+		0x00402080,
+		0x00602080,
+		0x00802080,
+		0x00A02080,
+		0x00C02080,
+		0x00E02080,
+		0x00004080,
+		0x00204080,
+		0x00404080,
+		0x00604080,
+		0x00804080,
+		0x00A04080,
+		0x00C04080,
+		0x00E04080,
+		0x00006080,
+		0x00206080,
+		0x00406080,
+		0x00606080,
+		0x00806080,
+		0x00A06080,
+		0x00C06080,
+		0x00E06080,
+		0x00008080,
+		0x00208080,
+		0x00408080,
+		0x00608080,
+		0x00808080,
+		0x00A08080,
+		0x00C08080,
+		0x00E08080,
+		0x0000A080,
+		0x0020A080,
+		0x0040A080,
+		0x0060A080,
+		0x0080A080,
+		0x00A0A080,
+		0x00C0A080,
+		0x00E0A080,
+		0x0000C080,
+		0x0020C080,
+		0x0040C080,
+		0x0060C080,
+		0x0080C080,
+		0x00A0C080,
+		0x00C0C080,
+		0x00E0C080,
+		0x0000E080,
+		0x0020E080,
+		0x0040E080,
+		0x0060E080,
+		0x0080E080,
+		0x00A0E080,
+		0x00C0E080,
+		0x00E0E080,
+		0x000000C0,
+		0x002000C0,
+		0x004000C0,
+		0x006000C0,
+		0x008000C0,
+		0x00A000C0,
+		0x00C000C0,
+		0x00E000C0,
+		0x000020C0,
+		0x002020C0,
+		0x004020C0,
+		0x006020C0,
+		0x008020C0,
+		0x00A020C0,
+		0x00C020C0,
+		0x00E020C0,
+		0x000040C0,
+		0x002040C0,
+		0x004040C0,
+		0x006040C0,
+		0x008040C0,
+		0x00A040C0,
+		0x00C040C0,
+		0x00E040C0,
+		0x000060C0,
+		0x002060C0,
+		0x004060C0,
+		0x006060C0,
+		0x008060C0,
+		0x00A060C0,
+		0x00C060C0,
+		0x00E060C0,
+		0x000080C0,
+		0x002080C0,
+		0x004080C0,
+		0x006080C0,
+		0x008080C0,
+		0x00A080C0,
+		0x00C080C0,
+		0x00E080C0,
+		0x0000A0C0,
+		0x0020A0C0,
+		0x0040A0C0,
+		0x0060A0C0,
+		0x0080A0C0,
+		0x00A0A0C0,
+		0x00C0A0C0,
+		0x00E0A0C0,
+		0x0000C0C0,
+		0x0020C0C0,
+		0x0040C0C0,
+		0x0060C0C0,
+		0x0080C0C0,
+		0x00A0C0C0,
+		0x00FFFBF0,
+		0x00A0A0A4,
+		0x00808080,
+		0x00FF0000,
+		0x0000FF00,
+		0x00FFFF00,
+		0x000000FF,	// blue
+		0x00FF00FF,	// magenta
+		0x0000FFFF,	// cyan
+		0x00FFFFFF	// white
 };
 
 
