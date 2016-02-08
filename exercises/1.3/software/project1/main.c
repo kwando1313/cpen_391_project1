@@ -11,7 +11,9 @@
 int main(void) {
 	printf("start\n\n");
 	clear_screen(BLACK);
-	test_graphics();
+	Point p = {0, 0};
+	load_image(p, "WTF.BMP", 300, 300);
+	//test_graphics();
 	//load_graph("SAMPLE.TXT");
 
 	printf("\n\nend\n");
