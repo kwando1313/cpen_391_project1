@@ -71,6 +71,7 @@ void load_image(Point topLeft, char* filename, int bmpWidth, int bmpHeight){
 		int connected = 0;
 		printf("Opening SDCard\n");
 
+
 		device_reference = get_device_reference();
 
 		if (device_reference == NULL){
@@ -101,6 +102,7 @@ void load_image(Point topLeft, char* filename, int bmpWidth, int bmpHeight){
 					}
 					while(alt_up_sd_card_find_next(name) == 0){
 						if (strcmp(name, filename) == 0){
+
 							short int file = alt_up_sd_card_fopen(name, false);
 							if (file == -1){
 								printf("This file could not be opened.\n");
@@ -109,6 +111,7 @@ void load_image(Point topLeft, char* filename, int bmpWidth, int bmpHeight){
 								printf("This file is already opened.\n");
 							}
 							else {
+
 								draw_image(topLeft, file, bmpHeight, bmpWidth);
 							}
 							alt_up_sd_card_fclose(file);
@@ -135,6 +138,7 @@ void load_image(Point topLeft, char* filename, int bmpWidth, int bmpHeight){
 		} else if((connected == 1) && (alt_up_sd_card_is_Present() == 0)){
 			printf("Card disconnected.\n");
 			connected =0;
+
 		}
 		return;
 }
@@ -249,7 +253,6 @@ void draw_button(Point topLeft, int width, int height, int borderWidth, int bord
 	}
 }
 
-
 //menu is buttons from top down
 void draw_menu(Point leftCorner, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, int fontSize, char** menuText){
 	int x = 0;
@@ -259,7 +262,6 @@ void draw_menu(Point leftCorner, int width, int height, int borderWidth, int bor
 		x++;
 	}
 }
-
 
 
 void init_screen(){
@@ -301,7 +303,7 @@ int check_colour(char* pixel){
 	if (pixel[0] ==  ((char)0xff) && pixel[1] == (char) 0x0 && pixel[2] == (char) 0x00){
 		return RED;
 	}
-	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0xff && pixel[2] == (char) 0x00){
+	else if (pixel[0] ==  ((char)0xB5) && pixel[1] == (char) 0xE6 && pixel[2] == (char) 0x1D){
 		return LIME;
 	}
 	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0xff){
@@ -313,13 +315,16 @@ int check_colour(char* pixel){
 	else if (pixel[0] ==  ((char)0xff) && pixel[1] == (char) 0xff && pixel[2] == (char) 0x00){
 		return YELLOW;
 	}
-	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0xff && pixel[2] == (char) 0xff){
+	else if (pixel[0] ==  ((char)0x99) && pixel[1] == (char) 0xD9 && pixel[2] == (char) 0xEA){
 		return CYAN;
 	}
 	else if (pixel[0] ==  ((char)0xc0) && pixel[1] == (char) 0xc0 && pixel[2] == (char) 0xc){
 		return SILVER;
 	}
 	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x80){
+		return GRAY;
+	}
+	else if (pixel[0] ==  ((char)0xED) && pixel[1] == (char) 0x1C && pixel[2] == (char) 0x24){
 		return MAROON;
 	}
 	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x00){
@@ -331,7 +336,13 @@ int check_colour(char* pixel){
 	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x80){
 		return PURPLE;
 	}
-	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x80){
+	else if (pixel[0] ==  ((char)0x22) && pixel[1] == (char) 0xB1 && pixel[2] == (char) 0x4C){
+		return GREEN;
+	}
+	else if (pixel[0] ==  ((char)0x3F) && pixel[1] == (char) 0x48 && pixel[2] == (char) 0xCC){
+		return PURPLE;
+	}
+	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0xA2 && pixel[2] == (char) 0xE8){
 		return TEAL;
 	}
 	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x80){

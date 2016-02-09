@@ -54,10 +54,10 @@ int* a_star(graph* graph, int start, int goal){
 		astar_node* next_node;
 
 		if (curr_node->v_id == goal) {
-			free_tree(closed_set, true);
-			free_tree(open_set, true);
-			free_tree(vid_to_astar_node, true);
-			free(curr_node);
+//			free_tree(closed_set, true);
+//			free_tree(open_set, true);
+//			free_tree(vid_to_astar_node, true);
+//			free(curr_node);
 			return reconstruct_path(path, start, goal);
 		}
 
@@ -164,16 +164,17 @@ int get_distance_heuristic(graph* graph, int start, int goal){
 }
 
 int get_cost(graph* graph, int curr, int neighbour){
-	vertex* v_c = get_vertex(graph, curr);
-	adjacencyList* adjList = v_c->adjList;
-	for (int i = 0; i<adjList->num_neighbours; i++) {
-		if (adjList->neighbours[i] == neighbour) {
-			return adjList->costs[i].distance_cost;
-		}
-	}
-	//TODO: could this cause an overflow?
-	printf("couldn't get the cost");
-	return INT_MAX;
+//	vertex* v_c = get_vertex(graph, curr);
+//	adjacencyList* adjList = v_c->adjList;
+//	for (int i = 0; i<adjList->num_neighbours; i++) {
+//		if (adjList->neighbours[i] == neighbour) {
+//			return adjList->costs[i].distance_cost;
+//		}
+//	}
+//	//TODO: could this cause an overflow?
+//	printf("couldn't get the cost");
+//	return INT_MAX;
+	return 0;
 }
 
 void print_path_console(graph* graph, int start, int goal){

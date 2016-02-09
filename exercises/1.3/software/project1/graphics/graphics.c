@@ -189,10 +189,14 @@ void draw_filled_triangle_border(Point a, Point b, Point c, int colour, int bord
  * we should probably write a new function for that shape in particular
 */
 void draw_shape(Point points[], int num_points, int colour){
+	draw_path(points, num_points, colour);
+	Line(points[0].x, points[0].y, points[num_points-1].x, points[num_points-1].y, colour);
+}
+
+void draw_path(Point points[], int num_points, int colour){
 	for(int i = 1; i<num_points; i++){
 		Line(points[i-1].x, points[i-1].y, points[i].x, points[i].y, colour);
 	}
-	Line(points[0].x, points[0].y, points[num_points-1].x, points[num_points-1].y, colour);
 }
 
 // see notes for draw_shape

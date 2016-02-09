@@ -3,6 +3,7 @@
 
 #include "graphics.h"
 
+
 #define IL 500
 #define IR 650
 #define IU 330
@@ -23,8 +24,10 @@
 #define AU 405
 #define AD 480
 
+
 void draw_image(Point topLeft, short file, int bmpWidth, int bmpHeight);
 void load_image(Point bottomLeft, char* filename, int bmpWidth, int bmpHeight);
+
 
 void draw_button(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize);
 void draw_menu(Point leftCorner, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, int fontSize, char* menuText[]);
