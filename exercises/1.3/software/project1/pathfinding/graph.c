@@ -30,8 +30,8 @@ vertex init_vertex(int latitude, int longitude, int altitude, char* name,
 	new_vertex.latitude = x;
 	new_vertex.longitude = y;
 	new_vertex.altitude = 0;
-
-	new_vertex.name = name;
+	new_vertex.name = malloc(sizeof(char)*strlen(name));
+	strcpy(new_vertex.name, name);
 	new_vertex.x = x;
 	new_vertex.y = y;
 	return new_vertex;
