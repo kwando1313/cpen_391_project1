@@ -26,6 +26,7 @@
 
 
 void load_image(Point bottomLeft, char* filename);//, char* filename, int bmpheight, int bmpwidth);
+void draw_keyboard(Point leftCorner, int size);
 
 void draw_button(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize);
 void draw_menu(Point leftCorner, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, int fontSize, char* menuText[]);

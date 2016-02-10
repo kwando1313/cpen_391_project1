@@ -7,14 +7,15 @@
 #include "control.h"
 int main(void) {
 	printf("start\n\n");
-
-
-	for(int i = 0; i<50; i++){
-		graph* graph = create_test_graph();
-		printf("created graph\n");
-		destroy_graph(graph);
-		printf("destroyed graph\n");
-	}
+	clear_screen(WHITE);
+	Point point1 = {100, 100};
+	draw_keyboard(point1, 20);
+//	for(int i = 0; i<50; i++){
+//		graph* graph = create_test_graph();
+//		printf("created graph\n");
+//		destroy_graph(graph);
+//		printf("destroyed graph\n");
+//	}
 
 	printf("\n\nend\n");
 
