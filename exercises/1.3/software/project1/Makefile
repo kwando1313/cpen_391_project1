@@ -202,7 +202,6 @@ APP_INCLUDE_DIRS += touchscreen
 APP_INCLUDE_DIRS += bluetooth
 APP_INCLUDE_DIRS += gps
 APP_INCLUDE_DIRS += pathfinding
-APP_INCLUDE_DIRS += touchscreen
 APP_INCLUDE_DIRS += control
 APP_LIBRARY_DIRS :=
 APP_LIBRARY_NAMES :=

@@ -8,6 +8,7 @@
 #include "misc_helpers.h"
 #include "graphics.h"
 #include "FontSize.h"
+#include "menu.h"
 #include <stdio.h>
 #include <string.h>
 #include <touchscreen.h>
@@ -15,21 +16,34 @@
 #include <altera_up_sd_card_avalon_interface.h>
 
 
-/*	BMPHEIGHT = y pixels
- * 	BMPWIDTH = x pixels
+/*	IMGHEIGHT 	: Full height of our BMP
+ * 	IMGWIDTH 	: Full width of our BMP
+ * 	BOXHEIGHT 	: Height of the box we print our image.
+ * 	BOXWIDTH 	: Width of the box we print our image.
  * 	HEADERSIZE changes with type of BMP file
  * 	COLOURTABLESIZE = size of colour table containing 256 colours (with BGRA fields)
  */
-#define BMPHEIGHT 480
-#define BMPWIDTH 500
-#define HEADERSIZE 54
+#define IMGHEIGHT 	1050
+#define IMGWIDTH 	500
+#define BOXHEIGHT	480
+#define BOXWIDTH 	500
+#define HEADERSIZE 	54
 #define COLOURTABLESIZE 1024
 
-void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
+// Store the integer values of the colours for each pixel.
+int pixel[IMGHEIGHT][IMGWIDTH];
+
+/*	Load image from SD Card.
+ * 	SD Card must be formatted in FAT16 to work with DE2.
+ * 	Length of filenames cannot be longer than 12 characters.
+ * 	including file extension (i.e. "abcdefghi.bmp" is invalid.
+ */
+void load_image(Point topLeft, char* filename){
 	alt_up_sd_card_dev* device_reference = NULL;
-		//Init_Touch();
-		//clear_screen(WHITE);
 		int connected = 0;
+		int ystart = 20;	// where we want to start the y pixels. Prints up from this row.
+		int xstart = 0; 	// where we want to start the x pixels. Prints to the right from this column.
+
 		printf("Opening SDCard\n");
 		if ((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL){
 			printf("SDCard Open FAILED\n");
@@ -46,9 +60,7 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 					if(alt_up_sd_card_is_FAT16()) {
 						printf("FAT16 file system detected.\n");
 
-						char * name = "A";
-						char * image = "test.bmp";
-						char header;
+						char * name = "A"; 	// "A" for initialization to get the proper name
 
 						if (alt_up_sd_card_find_first("/", name) == 0){
 
@@ -60,38 +72,14 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 								printf("This file is already opened.\n");
 							}
 							else {
-
-								/*	Read BMP pixels, starting from the bottom left corner.
-								 */
-								int pixel[BMPHEIGHT][BMPWIDTH];
-
 								printf("Reading file...\n");
-								// Read header info.
-								for(int x=0 ; x < HEADERSIZE ; x++){
-									header =(unsigned char)(alt_up_sd_card_read(file));
-									printf ("%hhx ",header & 0xff);
-								}
-								for (int i = 0; i < COLOURTABLESIZE; i++){
-									(unsigned char)alt_up_sd_card_read(file);
-								}
+								get_header(file);
 								printf("\n");
-
 								printf("Current file: %s\n", name);
 								printf("My name: %s\n", filename);
 								if (strcmp(name, filename)== 0){
-									for (int j = 0; j < BMPHEIGHT; j++){
-										for (int i = 0; i < BMPWIDTH; i++){		// store pixel data
-												pixel[j][i] = alt_up_sd_card_read(file);
-										}
-									}
-
-									for (int y = 0; y < BMPHEIGHT; y++){
-										for (int x = 0; x < BMPWIDTH; x++){
-											int colour = pixel[y][x];
-											WriteAPixel(topLeft.x + x, topLeft.y + BMPHEIGHT-y, colour);
-
-										}
-									}
+									get_pixels(file);
+									draw_img(topLeft, file, 0, ystart);
 									printf("Finished reading file!!!!\n");
 								}
 								alt_up_sd_card_fclose(file);
@@ -107,35 +95,16 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 										printf("This file is already opened.\n");
 									}
 									else {
-
-										int pixel[BMPHEIGHT][BMPWIDTH];
-
 										printf("Reading file...\n");
-										for(int x=0 ; x < HEADERSIZE ; x++){
-											header=(unsigned char)(alt_up_sd_card_read(file));
-											printf ("%hhx ",header & 0xff);
-										}
-										for (int i = 0; i < COLOURTABLESIZE; i++){
-											(unsigned char)alt_up_sd_card_read(file);
-										}
-										printf("\n");
+										get_header (file);
 
+										printf("\n");
 										printf("NAME: %s\n", name);
 										printf("FILENAME: %s\n", filename);
 										if (strcmp(name, filename)== 0){
-											for (int j = 0; j < BMPHEIGHT; j++){
-												for (int i = 0; i < BMPWIDTH; i++){
-													pixel[j][i] = alt_up_sd_card_read(file);												}
-											}
-
-											for (int y = 0; y < BMPHEIGHT; y++){
-												for (int x = 0; x < BMPWIDTH; x++){
-													int colour = pixel[y][x];
-													WriteAPixel(topLeft.x + x, topLeft.y + BMPHEIGHT-y, colour);
-												}
-											}
+											get_pixels(file);
+											draw_img(topLeft, file, 0, ystart);
 											printf("Finished reading file!!!!\n");
-
 										}
 										else {
 											printf("Finished reading file!\n");
@@ -167,6 +136,41 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 			printf("Can't open device\n");
 		}
 		return;
+}
+/* Get header information.
+ * Iterate and print bitmap file header + Windows Bitmap Info Header.
+ * Iterate and do not print the colour table.
+ */
+void get_header (short file){
+	char header;
+	for(int x=0 ; x < HEADERSIZE ; x++){
+		header=(unsigned char)(alt_up_sd_card_read(file));
+		printf ("%hhx ",header & 0xff);
+	}
+	for (int i = 0; i < COLOURTABLESIZE; i++){
+		alt_up_sd_card_read(file);
+	}
+}
+/* Store pixel colours in 2-D array.
+ */
+void get_pixels (short file){
+	for (int j = 0; j < IMGHEIGHT; j++){
+		for (int i = 0; i < IMGWIDTH; i++){
+			pixel[j][i] = alt_up_sd_card_read(file);												}
+	}
+}
+
+/* Draw the pictures in the range we want.
+ * We're picking the top left point to start from
+ * but actually draw from the bottom left first.
+ */
+void draw_img (Point topLeft, short file, int xstart, int ystart){
+	for (int y = 0; y < BOXHEIGHT; y++){
+		for (int x = 0; x < BOXWIDTH; x++){
+			int colour = pixel[ystart + y][xstart + x];
+			WriteAPixel(topLeft.x + x, topLeft.y + BOXHEIGHT-y, colour);
+		}
+	}
 }
 
 //Text box is left aligned and has text wrapping
@@ -233,7 +237,7 @@ void draw_information_box(char* text){
 
 	point8.x = 500;
 	point8.y = 0;
-	draw_text_box(point8, 300, 330,2, BLACK, 255, BLACK, text, SMALL);
+	draw_text_box(point8, 300, 330,2, BLACK, WHITE, BLACK, text, SMALL);
 
 }
 
