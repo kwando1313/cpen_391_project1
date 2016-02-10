@@ -158,6 +158,7 @@ C_SRCS += pathfinding/min_heap.c
 C_SRCS += graphics/menu.c
 C_SRCS += pathfinding/b_tree.c
 C_SRCS += control/control.c
+C_SRCS += pathfinding/load_node.c
 CXX_SRCS :=
 ASM_SRCS :=
 
@@ -202,7 +203,6 @@ APP_INCLUDE_DIRS += touchscreen
 APP_INCLUDE_DIRS += bluetooth
 APP_INCLUDE_DIRS += gps
 APP_INCLUDE_DIRS += pathfinding
-APP_INCLUDE_DIRS += touchscreen
 APP_INCLUDE_DIRS += control
 APP_LIBRARY_DIRS :=
 APP_LIBRARY_NAMES :=

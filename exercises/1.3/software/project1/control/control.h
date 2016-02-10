@@ -1,6 +1,8 @@
 #ifndef CONTROL_H_
 #define CONTROL_H_
 
+#include "graph.h"
+
 void init_control();
 
 void listen();

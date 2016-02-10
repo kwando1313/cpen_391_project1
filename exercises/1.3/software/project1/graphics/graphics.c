@@ -395,7 +395,7 @@ void clear_screenSW(int colour){
 		}
 	}
 }
-/*
+
 void test_graphics(void){
 	clear_screen(WHITE);
 
@@ -424,8 +424,8 @@ void test_graphics(void){
 	draw_filled_triangle_border(tri_a, tri_b, tri_c, YELLOW, BLUE);
 
 	Point circ0 = {500, 40};
-	draw_filled_circle_border(circ0, 40, LIGHT_GREEN, PURPLE);
-	draw_arc(circ0, 40, CORAL, 0, 120);
+	draw_filled_circle_border(circ0, 40, 23, PURPLE);
+	draw_arc(circ0, 40, 25, 0, 120);
 
 	char str0[] = "Horizontal Lines";
 	for (int i = 0; i<strlen(str0); i++) {
@@ -479,4 +479,4 @@ void rand_line(int min_x, int max_x, int min_y, int max_y, int colour){
 	int y2 = (rand() % (max_y + 1 - min_y)) + min_y;
 	Line(x1,y1,x2,y2,colour);
 }
-*/
+
