@@ -107,9 +107,9 @@ int get_node(graph* graph){
 int get_valid_vertex(graph* graph, Point p){
 	printf("started valid vertex\n");
 	for(int i = 0; i<graph->num_vertices; i++) {
-		vertex v = graph->vertices[i];
-		if ((abs(v.x-p.x) < ACCEPTABLE_DISTANCE) && (abs(v.y-p.y) < ACCEPTABLE_DISTANCE) ){
-			return v.id;
+		vertex* v = graph->vertices[i];
+		if ((abs(v->x-p.x) < ACCEPTABLE_DISTANCE) && (abs(v->y-p.y) < ACCEPTABLE_DISTANCE) ){
+			return v->id;
 		}
 	}
 	return -1;
@@ -188,7 +188,7 @@ void listen(){
 //TODO: remove after sprint 1
 graph* create_test_graph(){
 	cost default_cost = {0};
-	graph* graph = init_graph(30);
+	graph* graph = init_graph(DEFAULT_GRAPH_SIZE);
 
 	int v0id = add_vertex(graph, init_vertex(5, 5, 0, "v0", 3, 460));
 	int v1id = add_vertex(graph, init_vertex(50, 400, 0, "v1", 10, 285));

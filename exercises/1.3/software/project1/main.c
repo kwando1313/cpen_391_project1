@@ -8,16 +8,13 @@
 int main(void) {
 	printf("start\n\n");
 
-//	Point topLeft = {0,0};
-//	clear_screen(WHITE);
-//	char* name = "UBC.BMP";
-//	load_image(topLeft, name);//, name, 459, 500);
-//
-//	init_screen();
-//	init_control();
-//	listen();
-	clear_screen(255);
-	test_graphics();
+
+	for(int i = 0; i<50; i++){
+		graph* graph = create_test_graph();
+		printf("created graph\n");
+		destroy_graph(graph);
+		printf("destroyed graph\n");
+	}
 
 	printf("\n\nend\n");
 
