@@ -12,15 +12,16 @@ int main(void) {
 	printf("start\n\n");
 	clear_screen(BLACK);
 	Point p = {0, 0};
-	load_image(p, "WTF.BMP", 300, 300);
+	load_image(p, "UBC.BMP");//, 300, 300);
+	//load_graph("SAMPLE.TXT");
 	//test_graphics();
 	//load_graph("SAMPLE.TXT");
 
 
 
 	init_screen();
-	init_control();
-	listen();
+	//init_control();
+	//listen();
 //	clear_screen(BLACK);
 //	for(int i = 0; i<50; i++){
 //		graph* graph = create_test_graph();

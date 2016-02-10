@@ -17,21 +17,34 @@
 #define BMPHEIGHT 459
 #define BMPWIDTH 500
 
+void read_bytes(char* str, int len, short file);
 
-void draw_image(Point topLeft, short file, int bmpWidth, int bmpHeight){
+void draw_image(Point topLeft, short file){
+
+	char header;
+	unsigned char height[4];
+	unsigned char width[4];
+	unsigned char buf[200];
+
+	printf("Reading file...\n");
+	//54
+
+	read_bytes(buf, 18, file);
+	read_bytes(width, 4, file);
+	read_bytes(height, 4, file);
+	read_bytes(buf, 28, file);
+
+	int bmpWidth = *(int *) width;
+	int bmpHeight = *(int *) height;
+	//printf("%d", test);
+
+	printf("\n");
+	short data =0;
+
 	char pixel[bmpHeight][bmpWidth][3];
 	char B[bmpHeight][bmpWidth];
 	char G[bmpHeight][bmpWidth];
 	char R[bmpHeight][bmpWidth];
-	char header;
-
-	printf("Reading file...\n");
-	for(int x=0 ; x<54 ; x++){
-		header=(unsigned char)(alt_up_sd_card_read(file));
-		printf ("%hhx ",header & 0xff);
-	}
-	printf("\n");
-	short data =0;
 
 	for (int j = 0; j < bmpHeight; j++){
 		for (int i = 0; i < bmpWidth; i++){
@@ -64,7 +77,13 @@ void draw_image(Point topLeft, short file, int bmpWidth, int bmpHeight){
 	return;
 }
 
-void load_image(Point topLeft, char* filename, int bmpWidth, int bmpHeight){
+void read_bytes(char* str, int len, short file){
+	for(int x=0 ; x<len ; x++){
+		str[x]=(unsigned char)(alt_up_sd_card_read(file));
+	}
+}
+
+void load_image(Point topLeft, char* filename){//, int bmpWidth, int bmpHeight){
 	alt_up_sd_card_dev* device_reference = NULL;
 		//Init_Touch();
 		//clear_screen(WHITE);
@@ -96,7 +115,7 @@ void load_image(Point topLeft, char* filename, int bmpWidth, int bmpHeight){
 					}
 					else {
 						if (strcmp(name, filename)== 0){
-							draw_image(topLeft, file, bmpHeight, bmpWidth);
+							draw_image(topLeft, file);//, bmpHeight, bmpWidth);
 						}
 						alt_up_sd_card_fclose(file);
 					}
@@ -112,7 +131,7 @@ void load_image(Point topLeft, char* filename, int bmpWidth, int bmpHeight){
 							}
 							else {
 
-								draw_image(topLeft, file, bmpHeight, bmpWidth);
+								draw_image(topLeft, file);//, bmpHeight, bmpWidth);
 							}
 							alt_up_sd_card_fclose(file);
 						}
