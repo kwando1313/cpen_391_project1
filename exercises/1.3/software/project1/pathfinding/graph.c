@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <string.h>
 
+#include "graphics.h"
 #include "graph.h"
 
 adjacencyList* init_adjList(void);
@@ -30,7 +31,8 @@ vertex* init_vertex(int latitude, int longitude, int altitude, char* name,
 	new_vertex->latitude = x;
 	new_vertex->longitude = y;
 	new_vertex->altitude = 0;
-	new_vertex->name = strdup(name);
+	new_vertex->name = malloc(strlen(name));
+	strcpy(new_vertex->name, name);
 	new_vertex->x = x;
 	new_vertex->y = y;
 	return new_vertex;
@@ -48,7 +50,6 @@ adjacencyList* init_adjList(void){
 int add_vertex(graph* graph, vertex* v){
 	int num_vertices = graph->num_vertices;
 	if (num_vertices == graph->max_vertices) {
-		//TODO better value for this? realloc is expensive, but NIOS II is shit
 		graph->max_vertices *= 2;
 		vertex** new_vertices = NULL;
 		new_vertices = realloc(graph->vertices, sizeof(vertex*)*graph->max_vertices);
@@ -63,7 +64,7 @@ int add_vertex(graph* graph, vertex* v){
 void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes){
 	// v0, v1 should exist in the graph
 	assert(v0_id < graph->num_vertices && v1_id < graph->num_vertices);
-	return;
+
 	if (v0_id == v1_id) {
 		printf("ERROR: trying add connect node to itself. Exiting.");
 		return;
@@ -82,7 +83,6 @@ void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes){
 void add_directed_edge(adjacencyList* adjList, int vertex_id, cost cost){
 	if (adjList->num_neighbours == adjList->max_neighbours){
 		adjList->max_neighbours *= 2;
-		printf("expanding neighbours");
 		//wtf? why does eclipse not recognize my typedef...
 		struct __cost* new_costs = realloc(adjList->costs, sizeof(cost)*adjList->max_neighbours);
 		adjList->costs = new_costs;
@@ -116,7 +116,6 @@ bool remove_directed_edge(adjacencyList* adjList, int vertex_id){
 }
 
 bool remove_edge(graph* graph, int v0_id, int v1_id){
-	// v0, v1 should exist in the graph
 	assert(v0_id < graph->num_vertices && v1_id < graph->num_vertices);
 
 	vertex* v0 = get_vertex(graph, v0_id);
@@ -148,7 +147,7 @@ bool graph_has_edge(graph* graph, int v0_id, int v1_id){
 vertex* get_vertex(graph* graph, int id){
 	assert(id < graph->num_vertices);
 
-	vertex* v = &graph->vertices[id];
+	vertex* v = graph->vertices[id];
 	return v;
 }
 
