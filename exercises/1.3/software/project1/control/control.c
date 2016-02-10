@@ -8,8 +8,6 @@
 #include "misc_helpers.h"
 #include "control.h"
 
-#define ACCEPTABLE_DISTANCE 40
-
 int get_valid_vertex(graph* graph, Point p);
 
 
@@ -105,11 +103,14 @@ int get_node(graph* graph){
 	return node_id;
 }
 
+/* Returns the node if we pressed a point sufficiently close to the node. Assumption: Each node has
+   a finite metric in relation to every other node, i.e there is a maximum of one node sufficiently close.*/
 int get_valid_vertex(graph* graph, Point p){
+	//TODO: Sort the graph, implement search algorithm
 	printf("started valid vertex\n");
 	for(int i = 0; i<graph->num_vertices; i++) {
 		vertex v = graph->vertices[i];
-		if ((abs(v.x-p.x) < ACCEPTABLE_DISTANCE) && (abs(v.y-p.y) < ACCEPTABLE_DISTANCE) ){
+		if (sqrt((exp((v.x-p.x),2) + exp((v.y-p.y),2))) <= RADIUS ){
 			return v.id;
 		}
 	}
@@ -119,7 +120,7 @@ int get_valid_vertex(graph* graph, Point p){
 
 // Display info of the next node touched
 void do_info(){
-	// TODO: SPRINT2
+	// TODO: Need to load up some info text for each node.
 	info_screen();
 	//int node = get_node();
 
@@ -143,7 +144,7 @@ void do_dir(graph* graph){
 
 // Display photo of the next node touched
 void do_photo(){
-	// TODO: SPRINT2
+	// TODO: Need to load up a photo for each node
 	photo_screen();
 	//int node = get_node();
 
@@ -151,6 +152,7 @@ void do_photo(){
 
 // Display app about
 void do_about(){
+	// TODO: EASY, decide what to display on the about screen
 	about_screen();
 }
 
@@ -158,6 +160,7 @@ void do_about(){
 void listen(){
 		graph* graph = create_test_graph();
 		draw_graph(graph, YELLOW, RED);
+		draw_nodes(graph);
 
 		while(1){
 			// Wait for button input

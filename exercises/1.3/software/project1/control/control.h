@@ -1,6 +1,12 @@
 #ifndef CONTROL_H_
 #define CONTROL_H_
 
+#define NO_RESPONSE 0
+#define INFO 1
+#define DIR 2
+#define PHOTO 3
+#define ABOUT 4
+
 void init_control();
 
 void listen();
@@ -15,13 +21,9 @@ void do_about();
 
 int get_button();
 
-<<<<<<< HEAD
-vertex get_node();
-=======
 int get_node(graph* graph);
 
 //TODO: remove after sprint 1
 graph* create_test_graph(void);
->>>>>>> ba9b23ebdfbe695602226e4daa5636085ea43ed7
 
 #endif /* CONTROL_H_ */
