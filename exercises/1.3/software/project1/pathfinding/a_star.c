@@ -99,7 +99,7 @@ int* a_star(graph* graph, int start, int goal){
 			hashmapInsert(path, curr_vertex, next_node->v_id);
 		}
 	}
-	printf("couldn't find a path");
+	printf("couldn't find a path %d, %d\n", start, goal);
 	return NULL;
 }
 

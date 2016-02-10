@@ -5,7 +5,8 @@
 #include <stdio.h>
 #include "misc_helpers.h"
 
-#define DEFAULT_NUM_NEIGHBOURS 10
+#define DEFAULT_NUM_NEIGHBOURS 1
+#define DEFAULT_GRAPH_SIZE 1
 #define DOUBLE_TO_INT_MULTIPLIER 100
 
 typedef struct __path_points{
@@ -54,14 +55,14 @@ typedef struct __vertex {
 typedef struct __graph {
 	int max_vertices;
     int num_vertices;
-    vertex* vertices;
+    vertex** vertices;
 } graph;
 
 graph* init_graph(int inital_num_vertices);
 void destroy_graph(graph* graph);
 //returns id of added vertex
-vertex init_vertex(int latitude, int longitude, int altitude, char* name, int x, int y);
-int add_vertex(graph* graph, vertex v);
+vertex* init_vertex(int latitude, int longitude, int altitude, char* name, int x, int y);
+int add_vertex(graph* graph, vertex* v);
 vertex* get_vertex(graph* graph, int id);
 void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes);
 bool remove_edge(graph* graph, int v0_id, int v1_id);

@@ -1,11 +1,15 @@
 #ifndef CONTROL_H_
 #define CONTROL_H_
 
+
 #define NO_RESPONSE 0
 #define INFO 1
 #define DIR 2
 #define PHOTO 3
 #define ABOUT 4
+
+#include "graph.h"
+
 
 void init_control();
 
