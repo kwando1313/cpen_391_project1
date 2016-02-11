@@ -54,10 +54,10 @@ int* a_star(graph* graph, int start, int goal){
 		astar_node* next_node;
 
 		if (curr_node->v_id == goal) {
-//			free_tree(closed_set, true);
-//			free_tree(open_set, true);
-//			free_tree(vid_to_astar_node, true);
-//			free(curr_node);
+			free_tree(closed_set, true);
+			//free_tree(open_set, true);
+			free_tree(vid_to_astar_node, true);
+			free(curr_node);
 			return reconstruct_path(path, start, goal);
 		}
 
@@ -130,7 +130,8 @@ int* reconstruct_path(hashmap* path_map, int start, int current_id){
 int append_to_array(int** arr, int i, int arr_size, int to_add){
 	if (i == arr_size) {
 		arr_size *= 2;
-		*arr = realloc(*arr, arr_size);
+		int* tmp_arr = realloc(*arr, arr_size*sizeof(int));
+		*arr = tmp_arr;
 	}
 	(*arr)[i] = to_add;
 	return arr_size;
@@ -184,6 +185,7 @@ void print_path_console(graph* graph, int start, int goal){
 	}
 
 	int curr = 0;
+	printf("Going from %d to %d\n", goal, start);
 	while(path[curr] != start) {
 		printf("step: %d, vid: %d\n", curr, path[curr]);
 		curr++;

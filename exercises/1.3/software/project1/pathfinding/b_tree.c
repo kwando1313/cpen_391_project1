@@ -107,22 +107,24 @@ bnode* delete_bnode_with_v_id(bnode* root, int key, int v_id){
 	if (root->key == key) {
 		astar_node* curr = (astar_node*)root->data;
 		if (curr->v_id != v_id) {
+			// didnt find the right node
+			// go right because thats where we put keys that are equal
 			root->right = delete_bnode_with_v_id(root->right, key, v_id);
-		}
-
-		if (root->left == NULL && root->right == NULL) {
-			new_child = NULL;
-		} else if(root->right == NULL){
-			new_child = root->left;
-		} else if(root->left == NULL){
-			new_child = root->right;
 		} else {
-			new_child = root->left;
-			bnode* tmp = root->right;
-			bnode* curr = get_max_bnode(new_child);
-			curr->right = tmp;
+			if (root->left == NULL && root->right == NULL) {
+				new_child = NULL;
+			} else if(root->right == NULL){
+				new_child = root->left;
+			} else if(root->left == NULL){
+				new_child = root->right;
+			} else {
+				new_child = root->left;
+				bnode* tmp = root->right;
+				bnode* curr = get_max_bnode(new_child);
+				curr->right = tmp;
+			}
+			free_bnode(root, false);
 		}
-		free_bnode(root, false);
 	} else if (key >= root->key) {
 		root->right = delete_bnode_with_v_id(root->right, key, v_id);
 	} else {
@@ -133,6 +135,9 @@ bnode* delete_bnode_with_v_id(bnode* root, int key, int v_id){
 }
 
 void free_tree(bnode* root, bool free_data){
+	if (root == NULL) {
+		return;
+	}
 	if (root->left) {
 		free_tree(root->left, free_data);
 	}
@@ -143,6 +148,9 @@ void free_tree(bnode* root, bool free_data){
 }
 
 void free_bnode(bnode* root, bool free_data){
+	if (root == NULL) {
+		return;
+	}
 	if (free_data && root->data){
 		free(root->data);
 	}
