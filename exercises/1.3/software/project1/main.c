@@ -19,6 +19,11 @@ int main(void) {
 	print_path_console(graph, 9, 13);
 	destroy_graph(graph);
 	printf("destroyed graph\n");
+//
+//	clear_screen(WHITE);
+//	Point point1 = {100, 100};
+//	draw_keyboard(point1, 20);
+
 	printf("\n\nend\n");
 
 	return 0;
