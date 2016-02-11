@@ -14,43 +14,116 @@
 #include <graphics.h>
 #include <altera_up_sd_card_avalon_interface.h>
 
-
-/*	BMPHEIGHT = y pixels
- * 	BMPWIDTH = x pixels
- * 	HEADERSIZE changes with type of BMP file
- * 	COLOURTABLESIZE = size of colour table containing 256 colours (with BGRA fields)
- */
-#define BMPHEIGHT 480
+#define BMPHEIGHT 459
 #define BMPWIDTH 500
 #define HEADERSIZE 54
 #define COLOURTABLESIZE 1024
 
-void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
+void read_bytes(char* str, int len, short file);
+
+void draw_image(Point topLeft, short file){
+
+	char header;
+	unsigned char height[4];
+	unsigned char width[4];
+	unsigned char buf[200];
+
+	printf("Reading file...\n");
+	//54
+
+	read_bytes(buf, 18, file);
+	read_bytes(width, 4, file);
+	read_bytes(height, 4, file);
+	read_bytes(buf, 28, file);
+
+	int bmpWidth = *(int *) width;
+	int bmpHeight = *(int *) height;
+	//printf("%d", test);
+
+	printf("\n");
+	short data =0;
+
+	char pixel[bmpHeight][bmpWidth][3];
+	char B[bmpHeight][bmpWidth];
+	char G[bmpHeight][bmpWidth];
+	char R[bmpHeight][bmpWidth];
+
+	for (int j = 0; j < bmpHeight; j++){
+		for (int i = 0; i < bmpWidth; i++){
+			data = alt_up_sd_card_read(file);
+			B[j][i] = (char)data;
+			data = alt_up_sd_card_read(file);
+			G[j][i] = (char)data;
+			data = alt_up_sd_card_read(file);
+			R[j][i] = (char)data;
+			pixel[j][i][0] = R[j][i];
+			pixel[j][i][1] = G[j][i];
+			pixel[j][i][2] = B[j][i];
+		}
+	}
+
+	for (int y = 0; y < bmpHeight; y++){
+		for (int x = 0; x < bmpWidth; x++){
+			int initialX = x;
+			int colour = check_colour(pixel[y][x]);
+			int colour2 = check_colour(pixel[y][x]);
+			while(colour == colour2 && x < bmpWidth){
+				x++;
+				colour2 = check_colour(pixel[y][x]);
+			}
+			HLine(topLeft.x + initialX, topLeft.y + bmpHeight-y, x - initialX, colour);
+			//WriteAPixel(topLeft.x + x, topLeft.y + bmpHeight-y, colour);
+
+		}
+	}
+	return;
+}
+
+void read_bytes(char* str, int len, short file){
+	for(int x=0 ; x<len ; x++){
+		str[x]=(unsigned char)(alt_up_sd_card_read(file));
+	}
+}
+
+void load_image(Point topLeft, char* filename){//, int bmpWidth, int bmpHeight){
 	alt_up_sd_card_dev* device_reference = NULL;
 		//Init_Touch();
 		//clear_screen(WHITE);
 		int connected = 0;
 		printf("Opening SDCard\n");
-		if ((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL){
-			printf("SDCard Open FAILED\n");
+
+
+		device_reference = get_device_reference();
+
+		if (device_reference == NULL){
+			printf("Can't open device\n");
 			return;
 		}
-		else
-			printf("SDCard Open PASSED\n");
 
-		if(device_reference != NULL ) {
-			while(1) {
-				if((connected == 0) && (alt_up_sd_card_is_Present())){
-					printf("Card connected.\n");
+		if((connected == 0) && (alt_up_sd_card_is_Present())){
+			printf("Card connected.\n");
 
-					if(alt_up_sd_card_is_FAT16()) {
-						printf("FAT16 file system detected.\n");
 
-						char * name = "A";
-						char * image = "test.bmp";
-						char header;
+			if(alt_up_sd_card_is_FAT16()) {
+				printf("FAT16 file system detected.\n");
+				char * name = "A";
+				if (alt_up_sd_card_find_first("/", name) == 0){
 
-						if (alt_up_sd_card_find_first("/", name) == 0){
+					short int file = alt_up_sd_card_fopen(name, false);
+					if (file == -1){
+						printf("This file could not be opened.\n");
+					}
+					else if (file == -2){
+						printf("This file is already opened.\n");
+					}
+					else {
+						if (strcmp(name, filename)== 0){
+							draw_image(topLeft, file);//, bmpHeight, bmpWidth);
+						}
+						alt_up_sd_card_fclose(file);
+					}
+					while(alt_up_sd_card_find_next(name) == 0){
+						if (strcmp(name, filename) == 0){
 
 							short int file = alt_up_sd_card_fopen(name, false);
 							if (file == -1){
@@ -60,111 +133,34 @@ void load_image(Point topLeft, char* filename){//, int bmpheight, int bmpwidth){
 								printf("This file is already opened.\n");
 							}
 							else {
-
-								/*	Read BMP pixels, starting from the bottom left corner.
-								 */
-								int pixel[BMPHEIGHT][BMPWIDTH];
-
-								printf("Reading file...\n");
-								// Read header info.
-								for(int x=0 ; x < HEADERSIZE ; x++){
-									header =(unsigned char)(alt_up_sd_card_read(file));
-									printf ("%hhx ",header & 0xff);
-								}
-								for (int i = 0; i < COLOURTABLESIZE; i++){
-									(unsigned char)alt_up_sd_card_read(file);
-								}
-								printf("\n");
-
-								printf("Current file: %s\n", name);
-								printf("My name: %s\n", filename);
-								if (strcmp(name, filename)== 0){
-									for (int j = 0; j < BMPHEIGHT; j++){
-										for (int i = 0; i < BMPWIDTH; i++){		// store pixel data
-												pixel[j][i] = alt_up_sd_card_read(file);
-										}
-									}
-
-									for (int y = 0; y < BMPHEIGHT; y++){
-										for (int x = 0; x < BMPWIDTH; x++){
-											int colour = pixel[y][x];
-											WriteAPixel(topLeft.x + x, topLeft.y + BMPHEIGHT-y, colour);
-
-										}
-									}
-									printf("Finished reading file!!!!\n");
-								}
-								alt_up_sd_card_fclose(file);
+								draw_image(topLeft, file);//, bmpHeight, bmpWidth);
 							}
-							while(alt_up_sd_card_find_next(name) == 0){
-								printf("NOW I FOUND: %s\n", name);
-								if (strcmp(name, filename) == 0){
-									short int file = alt_up_sd_card_fopen(name, false);
-									if (file == -1){
-										printf("This file could not be opened.\n");
-									}
-									else if (file == -2){
-										printf("This file is already opened.\n");
-									}
-									else {
+							alt_up_sd_card_fclose(file);
 
-										int pixel[BMPHEIGHT][BMPWIDTH];
-
-										printf("Reading file...\n");
-										for(int x=0 ; x < HEADERSIZE ; x++){
-											header=(unsigned char)(alt_up_sd_card_read(file));
-											printf ("%hhx ",header & 0xff);
-										}
-										for (int i = 0; i < COLOURTABLESIZE; i++){
-											(unsigned char)alt_up_sd_card_read(file);
-										}
-										printf("\n");
-
-										printf("NAME: %s\n", name);
-										printf("FILENAME: %s\n", filename);
-										if (strcmp(name, filename)== 0){
-											for (int j = 0; j < BMPHEIGHT; j++){
-												for (int i = 0; i < BMPWIDTH; i++){
-													pixel[j][i] = alt_up_sd_card_read(file);												}
-											}
-
-											for (int y = 0; y < BMPHEIGHT; y++){
-												for (int x = 0; x < BMPWIDTH; x++){
-													int colour = pixel[y][x];
-													WriteAPixel(topLeft.x + x, topLeft.y + BMPHEIGHT-y, colour);
-												}
-											}
-											printf("Finished reading file!!!!\n");
-
-										}
-										else {
-											printf("Finished reading file!\n");
-										}
-									}
-									alt_up_sd_card_fclose(file);
-								}
-							}
-							return;
 						}
-						else if (alt_up_sd_card_find_first("/", name) == 1){
-							printf("This is an invalid directory.\n");
-						}
-						else if (alt_up_sd_card_find_first("/", name) == 2){
-							printf("The SD card has either been disconnected, or is NOT a FAT16 type.\n");
+						else {
+							printf("Found a file I'm not looking for...");
 						}
 					}
-					else{
-						printf("Unknown file system.\n");
-					}
-					connected = 1;
-				} else if((connected == 1) && (alt_up_sd_card_is_Present() == 0)){
-					printf("Card disconnected.\n");
-					connected =0;
+					return;
+
+				}
+				else if (alt_up_sd_card_find_first("/", name) == 1){
+					printf("This is an invalid directory.\n");
+				}
+				else if (alt_up_sd_card_find_first("/", name) == 2){
+					printf("The SD card has either been disconnected, or is NOT a FAT16 type.\n");
 				}
 			}
-		}
-		else{
-			printf("Can't open device\n");
+
+			else{
+				printf("Unknown file system.\n");
+			}
+			connected = 1;
+		} else if((connected == 1) && (alt_up_sd_card_is_Present() == 0)){
+			printf("Card disconnected.\n");
+			connected =0;
+
 		}
 		return;
 }
@@ -326,6 +322,7 @@ void draw_keyboard(Point leftCorner, int size){
 
 void init_screen(){
 
+
 		Point point6 = {500, 330};
 		Point point7 = {650, 330}; //Adjust these to fit within the margins...
 
@@ -356,4 +353,61 @@ void photo_screen(){
 //	Point point = {500, 0};
 //	load_image(point, name, 330, 300);
 	draw_information_box("BUILDING PHOTO");
+}
+
+int check_colour(char* pixel){
+	if (pixel[0] ==  ((char)0xff) && pixel[1] == (char) 0x0 && pixel[2] == (char) 0x00){
+		return RED;
+	}
+	else if (pixel[0] ==  ((char)0xB5) && pixel[1] == (char) 0xE6 && pixel[2] == (char) 0x1D){
+		return LIME;
+	}
+	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0xff){
+		return BLUE;
+	}
+	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x00){
+		return BLACK;
+	}
+	else if (pixel[0] ==  ((char)0xff) && pixel[1] == (char) 0xff && pixel[2] == (char) 0x00){
+		return YELLOW;
+	}
+	else if (pixel[0] ==  ((char)0x99) && pixel[1] == (char) 0xD9 && pixel[2] == (char) 0xEA){
+		return CYAN;
+	}
+	else if (pixel[0] ==  ((char)0xc0) && pixel[1] == (char) 0xc0 && pixel[2] == (char) 0xc){
+		return SILVER;
+	}
+	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x80){
+		return GRAY;
+	}
+	else if (pixel[0] ==  ((char)0xED) && pixel[1] == (char) 0x1C && pixel[2] == (char) 0x24){
+		return MAROON;
+	}
+	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x00){
+		return OLIVE;
+	}
+	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x00){
+		return GREEN;
+	}
+	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x80){
+		return PURPLE;
+	}
+	else if (pixel[0] ==  ((char)0x22) && pixel[1] == (char) 0xB1 && pixel[2] == (char) 0x4C){
+		return GREEN;
+	}
+	else if (pixel[0] ==  ((char)0x3F) && pixel[1] == (char) 0x48 && pixel[2] == (char) 0xCC){
+		return PURPLE;
+	}
+	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0xA2 && pixel[2] == (char) 0xE8){
+		return TEAL;
+	}
+	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x80){
+		return NAVY;
+	}
+	else if (pixel[0] ==  ((char)0xa5) && pixel[1] == (char) 0x2a && pixel[2] == (char) 0x2a){
+		return BROWN;
+	}
+	else{
+		return WHITE;
+	}
 }

@@ -1,10 +1,10 @@
-// The following lines are for testing the SD Card, hence why they are commented out for now.
-
 #include <stdio.h>
 #include "menu.h"
 #include "graphics.h"
 #include "touchscreen.h"
 #include "control.h"
+#include "load_node.h"
+
 int main(void) {
 	printf("start\n\n");
 

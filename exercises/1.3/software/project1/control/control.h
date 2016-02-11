@@ -17,6 +17,7 @@ void do_about();
 
 int get_button();
 
+
 int get_node(graph* graph);
 
 //TODO: remove after sprint 1

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "graph.h"
 #include "menu.h"
+#include "control.h"
 #include "graphics.h"
 #include "touchscreen.h"
 #include <math.h>

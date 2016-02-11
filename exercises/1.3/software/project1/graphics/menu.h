@@ -24,6 +24,8 @@
 #define AU 405
 #define AD 480
 
+void draw_image(Point topLeft, short file);//, int bmpWidth, int bmpHeight);
+void load_image(Point bottomLeft, char* filename);//, int bmpWidth, int bmpHeight);
 
 void load_image(Point bottomLeft, char* filename);//, char* filename, int bmpheight, int bmpwidth);
 void draw_keyboard(Point leftCorner, int size);

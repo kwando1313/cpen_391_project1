@@ -69,6 +69,8 @@ bool remove_edge(graph* graph, int v0_id, int v1_id);
 bool vertex_has_edge(vertex* v, int v1_id);
 bool graph_has_edge(graph* graph, int v0_id, int v1_id);
 
+//int find_vertex(graph* graph, char* name);
+
 int* a_star(graph* graph, int start, int goal);
 void print_path_console(graph* graph, int start, int goal);
 path_points* get_path_points(graph* graph, int start, int goal);
