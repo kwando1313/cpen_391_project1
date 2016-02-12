@@ -8,15 +8,12 @@
 #include "misc_helpers.h"
 #include "control.h"
 
-int get_valid_vertex(graph* graph, Point p);
-
 
 // initialize and load up graphics on touchscreen
 void init_control(){
 	init_touch();
 	init_screen();
 }
-
 
 // Display accordingly upon successfully pressing a button and return screen mode
 int get_button(int a, int b){

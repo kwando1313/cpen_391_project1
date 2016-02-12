@@ -159,6 +159,7 @@ C_SRCS += graphics/menu.c
 C_SRCS += pathfinding/b_tree.c
 C_SRCS += control/control.c
 C_SRCS += pathfinding/load_node.c
+C_SRCS += control/button.c
 CXX_SRCS :=
 ASM_SRCS :=
 
