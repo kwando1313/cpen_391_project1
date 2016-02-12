@@ -7,6 +7,7 @@
 #include <math.h>
 #include "misc_helpers.h"
 #include "control.h"
+#include "button.h"
 
 
 // initialize and load up graphics on touchscreen
@@ -15,57 +16,58 @@ void init_control(){
 	init_screen();
 }
 
-// Display accordingly upon successfully pressing a button and return screen mode
-int get_button(int a, int b){
-	// Info Button
-		if(a >= IL && a <= IR && b > IU && b <= ID){
-			Point p_f = GetRelease();
-			int c = p_f.x;
-			int d = p_f.y;
-			printf("Released Coordinates: (%i, %i)\n", c, d);
-
-			if(c >= IL && c <= IR && d > IU && d <= ID){
-				return INFO;
-			}
-		}
-	// Directions Button
-		else if(a > DL && a <= DR && b >= DU && b < DD){
-			Point p_f = GetRelease();
-			int c = p_f.x;
-			int d = p_f.y;
-			printf("Released Coordinates: (%i, %i)\n", c, d);
-
-			if(c > DL && c <= DR && d >= DU && d < DD){
-				return DIR;
-			}
-		}
-
-		// Photo Button
-		else if(a >= PL && a <= PR && b >= PU && b <= PD){
-			Point p_f = GetRelease();
-			int c = p_f.x;
-			int d = p_f.y;
-			printf("Released Coordinates: (%i, %i)\n", c, d);
-
-			if(c >= PL && c <= PR && d >= PU && d <= PD){
-				return PHOTO;
-			}
-		}
-
-		// About Button
-		else if(a > AL && a <= AR && b >= AU && b <= AD){
-			Point p_f = GetRelease();
-			int c = p_f.x;
-			int d = p_f.y;
-			printf("Released Coordinates: (%i, %i)\n", c, d);
-
-			if(c > AL && c <= AR && d >= AU && d <= AD){
-				return ABOUT;
-			}
-		}
-
-		return NO_RESPONSE;
-}
+//  DELETE WHEN BUTTON FCNS WORKS
+//// Display accordingly upon successfully pressing a button and return screen mode
+//int get_button(int a, int b){
+//	// Info Button
+//		if(a >= IL && a <= IR && b > IU && b <= ID){
+//			Point p_f = GetRelease();
+//			int c = p_f.x;
+//			int d = p_f.y;
+//			printf("Released Coordinates: (%i, %i)\n", c, d);
+//
+//			if(c >= IL && c <= IR && d > IU && d <= ID){
+//				return INFO;
+//			}
+//		}
+//	// Directions Button
+//		else if(a > DL && a <= DR && b >= DU && b < DD){
+//			Point p_f = GetRelease();
+//			int c = p_f.x;
+//			int d = p_f.y;
+//			printf("Released Coordinates: (%i, %i)\n", c, d);
+//
+//			if(c > DL && c <= DR && d >= DU && d < DD){
+//				return DIR;
+//			}
+//		}
+//
+//		// Photo Button
+//		else if(a >= PL && a <= PR && b >= PU && b <= PD){
+//			Point p_f = GetRelease();
+//			int c = p_f.x;
+//			int d = p_f.y;
+//			printf("Released Coordinates: (%i, %i)\n", c, d);
+//
+//			if(c >= PL && c <= PR && d >= PU && d <= PD){
+//				return PHOTO;
+//			}
+//		}
+//
+//		// About Button
+//		else if(a > AL && a <= AR && b >= AU && b <= AD){
+//			Point p_f = GetRelease();
+//			int c = p_f.x;
+//			int d = p_f.y;
+//			printf("Released Coordinates: (%i, %i)\n", c, d);
+//
+//			if(c > AL && c <= AR && d >= AU && d <= AD){
+//				return ABOUT;
+//			}
+//		}
+//
+//		return NO_RESPONSE;
+//}
 
 // Get the node from where we pressed
 int get_node(graph* graph){
@@ -149,11 +151,16 @@ void do_photo(){
 
 // Display app about
 void do_about(){
-	// TODO: EASY, decide what to display on the about screen
 	about_screen();
 }
 
-// Listen for button inputs
+// Pop up the keyboard
+void do_pop(){
+	pop_up();
+	// TODO: wait until a search query is entered and then pop_down()
+}
+
+// Listen for button inputs TODO: use button types
 void listen(){
 		graph* graph = create_test_graph();
 		draw_graph(graph, YELLOW, RED);
@@ -162,32 +169,31 @@ void listen(){
 		while(1){
 			// Wait for button input
 			Point p_i = GetPress();
-			int a = p_i.x;
-			int b = p_i.y;
-			printf("Pressed Coordinates: (%i, %i)\n", a, b);
+			printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
 
-			int what_do = get_button(a, b);
+			Button butt = get_button(p_i);
+			butt.p();
 
-			if(what_do == INFO){
-				do_info();
-			}
-			else if(what_do == DIR){
-				draw_graph(graph, YELLOW, RED);
-				do_dir(graph);
-				//destroy_graph(graph);
-				graph = create_test_graph();
-			}
-			else if(what_do == PHOTO){
-				do_photo();
-			}
-			else if(what_do == ABOUT){
-				do_about();
-			}
+//			if(butt == INFO){
+//				do_info();
+//			}
+//			else if(butt == DIR){
+//				draw_graph(graph, YELLOW, RED);
+//				do_dir(graph);
+//				//destroy_graph(graph);
+//				graph = create_test_graph();
+//			}
+//			else if(butt == PHOTO){
+//				do_photo();
+//			}
+//			else if(butt == ABOUT){
+//				do_about();
+//			}
 		}
 }
 
 
-//TODO: remove after sprint 1
+//remove after sprint 1
 graph* create_test_graph(){
 	cost default_cost = {0};
 	graph* graph = init_graph(DEFAULT_GRAPH_SIZE);

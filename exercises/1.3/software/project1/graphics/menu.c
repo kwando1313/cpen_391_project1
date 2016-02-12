@@ -305,7 +305,7 @@ void init_screen(){
 }
 
 void about_screen(){
-	draw_information_box("Pathfinding Map (Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nThis is our project!");
+	draw_information_box("Pathfinding Map (CPEN 391Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nThis is our project!");
 }
 
 void info_screen(){
