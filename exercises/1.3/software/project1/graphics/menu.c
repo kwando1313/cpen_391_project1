@@ -289,34 +289,41 @@ void draw_keyboard(Point leftCorner, int size){
 	//asdfghjkl
 	//zxcvbnm
 
-	char* topRow[] = {"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", ""};
-	char* homeRow[] = {"A", "S", "D", "F", "G", "H", "J", "K", "L", "<-", ""};
-	char* bottomRow[] = {"Z", "X", "C", "V", "B", "N", "M", ""};
+	char topRow[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '\0'};
+	char homeRow[] = {'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '\0'};
+	char bottomRow[] = {'Z', 'X', 'C', 'V', 'B', 'N', 'M', '\0'};
 
 	int x = 0;
 	Point initialLeftCorner = {leftCorner.x, leftCorner.y};
-	while(topRow[x] != ""){
-		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, topRow[x], SMALL);
+	while(topRow[x] != '\0'){
+		char* c = "A";
+		strncpy(c, &topRow[x], 1);
+		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
 		leftCorner.x += size;
 		x++;
 	}
 	x = 0;
 	leftCorner.x = initialLeftCorner.x;
 	leftCorner.y = initialLeftCorner.y + size;
-	while(homeRow[x] != ""){
-		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, homeRow[x], SMALL);
+	while(homeRow[x] != '\0'){
+		char* c = "A";
+		strncpy(c, &homeRow[x], 1);
+		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
 		leftCorner.x += size;
 		x++;
 	}
+	draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, "<-", MEDIUM);
 	leftCorner.x = initialLeftCorner.x;
 	leftCorner.y = initialLeftCorner.y + 2*size;
 	x = 0;
-	while(bottomRow[x] != ""){
-		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, bottomRow[x], SMALL);
+	while(bottomRow[x] != '\0'){
+		char* c = "A";
+		strncpy(c, &bottomRow[x], 1);
+		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
 		leftCorner.x += size;
 		x++;
 	}
-	draw_button(leftCorner, 3*size, size, 1, BLACK, WHITE, BLACK, "SPACE", SMALL);
+	draw_button(leftCorner, 3*size, size, 1, BLACK, WHITE, BLACK, "SPACE", MEDIUM);
 	return;
 }
 
