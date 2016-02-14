@@ -11,12 +11,17 @@ int main(void) {
 	graph* graph = create_test_graph();
 	printf("created graph\n");
 
-	for(int i = 0; i<50; i++){
-		int x = rand() % 22;
-		int y = rand() % 22;
-		print_path_console(graph, x, y);
-	}
-	print_path_console(graph, 9, 13);
+//	for(int i = 0; i<50; i++){
+//		int x = rand() % 22;
+//		int y = rand() % 22;
+//		print_path_console(graph, x, y);
+//	}
+
+	print_path_console(graph, 21, 12);
+	print_path_console(graph, 20, 8);
+	print_path_console(graph, 15, 6);
+
+
 	destroy_graph(graph);
 	printf("destroyed graph\n");
 	load_graph("SAMPLE.TXT");
