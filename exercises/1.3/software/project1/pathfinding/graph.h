@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include "misc_helpers.h"
 
-#define DEFAULT_NUM_NEIGHBOURS 1
-#define DEFAULT_GRAPH_SIZE 1
+#define DEFAULT_NUM_NEIGHBOURS 4
+#define DEFAULT_GRAPH_SIZE 32
 #define DOUBLE_TO_INT_MULTIPLIER 100
 
 typedef struct __path_points{
