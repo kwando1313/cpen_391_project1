@@ -200,7 +200,7 @@ void load_graph(char* filename){
 		if (strcmp(name, filename)== 0){
 			short int file = alt_up_sd_card_fopen(name, false);
 			if (file >= 0){
-				printf("found file %s in SD"\n, filename);
+				printf("found file %s in SD\n", filename);
 				handle_data(file, graph, hashmap);
 				found_file = true; //want to close file, so use this rather than returning
 			}
