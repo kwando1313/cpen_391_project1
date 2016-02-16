@@ -19,6 +19,8 @@ float sub_and_sqre(int x, int y);
 //includes == case
 int falls_between(int item, int edge, int otherEdge);
 
+void to_caps(char* from, char* to);
+
 int avg_val(int x, int y, int z);
 
 void swap_ints(int* x, int* y);

@@ -10,7 +10,6 @@ hashmap* colours_hashmap;
 void setUpPallete(void){
 	colours_hashmap = hashmapCreate(NUM_COLOURS);
 	for (int i = 0; i<NUM_COLOURS; i++){
-		printf("inserting colour: i %d, rgb %x\n", i, (long)getRGB(i));
 		hashmapInsert(colours_hashmap, (void*)i, (long)getRGB(i));
 	}
 }

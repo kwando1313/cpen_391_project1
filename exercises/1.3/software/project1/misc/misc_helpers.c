@@ -5,6 +5,16 @@ double convert_to_radians(double angle){
 	return (angle*M_PI/180);
 }
 
+void to_caps(char* from, char* to){
+	int x = 0;
+ 	while (from[x] != '\0'){
+ 		to[x] = (char) toupper(from[x]);
+ 		x++;
+ 	}
+ 	to[x] = '\0';
+}
+
+
 float sub_and_sqre(int x, int y){
 	return pow(x-y, 2);
 }

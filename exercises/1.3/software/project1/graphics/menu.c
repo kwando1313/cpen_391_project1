@@ -52,23 +52,25 @@ void load_image(Point topLeft, char* filename){
 		return;
 	}
 
-	char name[13];
-	if (alt_up_sd_card_find_first(".", name) != 0){
+	char filename_all_caps[strlen(filename)];
+	to_caps(filename, filename_all_caps);
+	char found_file_name[13];
+	if (alt_up_sd_card_find_first(".", found_file_name) != 0){
 		printf("Couldn't find root dir\n");
 		return;
 	}
 
 	do {
-		if (strcmp(name, filename)== 0){
-			short int file = alt_up_sd_card_fopen(name, false);
+		if (strcmp(found_file_name, filename_all_caps)== 0){
+			short int file = alt_up_sd_card_fopen(found_file_name, false);
 			if (file >= 0){
-				printf("found file %s in SD\n", filename);
+				printf("found file %s in SD\n", filename_all_caps);
 				draw_image_wrapper(topLeft, file, 0, ystart);
 				found_file = true; //want to close file, so use this rather than returning
 			}
 			alt_up_sd_card_fclose(file);
 		}
-	}while(!found_file && alt_up_sd_card_find_next(name) == 0);
+	}while(!found_file && alt_up_sd_card_find_next(found_file_name) == 0);
 }
 
 void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart){
@@ -130,8 +132,10 @@ void draw_image_old(Point topLeft, short file){
 //				x++;
 //				colour2 = check_colour(pixel[y][x]);
 //			}
+			printf("rgb: %x\n", rgb);
 //			HLine(topLeft.x + initialX, topLeft.y + bmpHeight-y, x - initialX, colour);
 			WriteAPixel(topLeft.x + x, topLeft.y + bmpHeight-y, colour);
+			printf("write colour %d\n", colour);
 		}
 	}
 }
