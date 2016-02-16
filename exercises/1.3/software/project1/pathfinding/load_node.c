@@ -182,7 +182,7 @@ alt_up_sd_card_dev* get_device_reference(){
 void load_graph(char* filename){
 	graph* graph = init_graph(DEFAULT_GRAPH_SIZE);
 	hashmap* hashmap = hashmapCreate(DEFAULT_GRAPH_SIZE);
-	bool found_file;
+	bool found_file = false;
 
 	alt_up_sd_card_dev* device_reference = get_device_reference();
 	if (device_reference == NULL || !alt_up_sd_card_is_Present() || !alt_up_sd_card_is_FAT16()){
@@ -200,7 +200,7 @@ void load_graph(char* filename){
 		if (strcmp(name, filename)== 0){
 			short int file = alt_up_sd_card_fopen(name, false);
 			if (file >= 0){
-				found_file = true;
+				printf("found file %s in SD"\n, filename);
 				handle_data(file, graph, hashmap);
 				found_file = true; //want to close file, so use this rather than returning
 			}
