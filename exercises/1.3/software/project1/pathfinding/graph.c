@@ -184,7 +184,7 @@ void draw_graph(graph* graph, int v_colour, int edge_colour){
 }
 
 // Draws a filled-in circle with fixed a radius at a node
-void draw_node(int colour, vertex v){
-	Point p = (v->x, v->y);
+void draw_node(int colour, vertex* v){
+	Point p = {v->x, v->y};
 	draw_filled_circle(p, RADIUS, colour);
 }

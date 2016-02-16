@@ -1,5 +1,5 @@
 #include "misc_helpers.h"
-#include "buttons.h"
+#include "button.h"
 #include <math.h>
 #include <ctype.h>
 

@@ -385,7 +385,7 @@ void photo_screen(){
 }
 
 void pop_screen(){
-	Point p = (0, 0); // left corner of the keyboard
+	Point p = {0, 0}; // left corner of the keyboard
 	int s = 5; // size of the keyboards buttons
 	draw_keyboard(p, 5);
 }

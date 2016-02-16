@@ -38,13 +38,6 @@ Button* keyboard;
 #define S_KEYS 9
 #define ACTIVE 1
 
-const char KEYS[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '-',
-			  	  	'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '+',
-			  	  	'Z', 'X', 'C', 'V', 'B', 'N', 'M', ' ', '<',
-			  	  	'!', '@', '#', '$', '%',
-			  	  	'a', 'd', 'w', 's'};
-
-
 Button init_button(char key, int id, int mode);
 
 // Button availability will be fixed dependent on mode. Unless we don't implement popup keyboard like I assumed.
@@ -57,7 +50,7 @@ void pop_down();
 
 // Gets the button upon input for control
 int falls_inside(Point p, Button b);
-Button get_button(Point p);
+Button* get_button(Point p);
 
 // ptr fcns
 void do_info(void *);

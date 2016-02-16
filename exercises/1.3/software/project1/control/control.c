@@ -127,14 +127,14 @@ void listen(){
 			Point p_i = GetPress();
 			printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
 
-			Button butt;
+			Button* butt;
 			do{
 				butt = get_button(p_i);
 			}
 			while(butt == NULL);
 
 			// TODO: need proper param
-			butt.p(&butt.key);
+			butt->p(NULL);
 
 //			if(butt == INFO){
 //				do_info();

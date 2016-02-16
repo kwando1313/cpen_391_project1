@@ -6,6 +6,12 @@
 #include "menu.h"
 #include "touchscreen.h"
 
+const char KEYS[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '-',
+			  	  	'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '+',
+			  	  	'Z', 'X', 'C', 'V', 'B', 'N', 'M', ' ', '<',
+			  	  	'!', '@', '#', '$', '%',
+			  	  	'a', 'd', 'w', 's'};
+
 Button init_button(char key, int id, int mode){
 	Button button;
 
@@ -106,14 +112,14 @@ int falls_inside(Point p, Button b){
 }
 
 // Returns the button that was pressed. Do we want better search despite fixed small keyboard?
-Button get_button(Point p){
+Button* get_button(Point p){
 	for(int i = 0; i < N_KEYS; i++){
 		if(falls_inside(p, keyboard[i])){
 			Point p_f = GetRelease();
 			printf("Released Coordinates: (%i, %i)\n", p_f.x, p_f.y);
 
 			if(falls_inside(p_f, keyboard[i]))
-				return keyboard[i];
+				return &keyboard[i];
 			else
 				return NULL;
 		}
