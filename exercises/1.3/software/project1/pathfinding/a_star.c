@@ -15,6 +15,8 @@ int* reconstruct_path(hashmap* path_map, int start, int current_id);
 int append_to_array(int** arr, int i, int arr_size, int to_add);
 void append_to_path_points_array(path_points* path, int i, Point to_add);
 
+//debugging only
+void print_astar_node(astar_node* node);
 /*
  * Notes on datastructures chosen
  *
@@ -46,7 +48,6 @@ int* a_star(graph* graph, int start, int goal){
 	bnode* vid_to_astar_node = NULL;
 	vid_to_astar_node = insert_bnode(vid_to_astar_node, curr_node->v_id, curr_node);
 
-
 	while(open_set != NULL) {
 		curr_node = pop_smallest(&open_set); //pop off the (estimated) best node
 		vid_to_astar_node = delete_bnode_with_key(vid_to_astar_node, curr_node->v_id);
@@ -54,10 +55,10 @@ int* a_star(graph* graph, int start, int goal){
 		astar_node* next_node;
 
 		if (curr_node->v_id == goal) {
-//			free_tree(closed_set, true);
-//			free_tree(open_set, true);
-//			free_tree(vid_to_astar_node, true);
-//			free(curr_node);
+			free_tree(closed_set, true);
+			//free_tree(open_set, true);
+			free_tree(vid_to_astar_node, true);
+			free(curr_node);
 			return reconstruct_path(path, start, goal);
 		}
 
@@ -83,15 +84,19 @@ int* a_star(graph* graph, int start, int goal){
 				vid_to_astar_node = insert_bnode(vid_to_astar_node, neighbour_id, next_node);
 			} else {
 				//get g score of neighbour
-				next_node = (astar_node*) get_data(open_set, neighbour_id);
+				next_node = (astar_node*) get_data(vid_to_astar_node, neighbour_id);
+
 				if (tentative_g >= next_node->g_val) {
 					// this path is not better
 					continue;
 				} else {
 					//found a better path to that node
-					next_node = init_astar_node(neighbour_id, tentative_g, get_distance_heuristic(graph, neighbour_id, goal));
-					open_set = insert_bnode(open_set, next_node->f_val, next_node);
+					open_set = delete_bnode_with_v_id(open_set, next_node->f_val, next_node->v_id);
 					vid_to_astar_node = delete_bnode_with_key(vid_to_astar_node, neighbour_id);
+
+					next_node = init_astar_node(neighbour_id, tentative_g, get_distance_heuristic(graph, neighbour_id, goal));
+
+					open_set = insert_bnode(open_set, next_node->f_val, next_node);
 					vid_to_astar_node = insert_bnode(vid_to_astar_node, neighbour_id, next_node);
 				}
 			}
@@ -104,7 +109,6 @@ int* a_star(graph* graph, int start, int goal){
 }
 
 int* reconstruct_path(hashmap* path_map, int start, int current_id){
-	printf("found the goal\n");
 	int path_size = DEFAULT_PATH_SIZE;
 	int array_index = 0;
 	int* total_path = malloc(path_size*sizeof(int));
@@ -130,7 +134,8 @@ int* reconstruct_path(hashmap* path_map, int start, int current_id){
 int append_to_array(int** arr, int i, int arr_size, int to_add){
 	if (i == arr_size) {
 		arr_size *= 2;
-		*arr = realloc(*arr, arr_size);
+		int* tmp_arr = realloc(*arr, arr_size*sizeof(int));
+		*arr = tmp_arr;
 	}
 	(*arr)[i] = to_add;
 	return arr_size;
@@ -164,17 +169,7 @@ int get_distance_heuristic(graph* graph, int start, int goal){
 }
 
 int get_cost(graph* graph, int curr, int neighbour){
-//	vertex* v_c = get_vertex(graph, curr);
-//	adjacencyList* adjList = v_c->adjList;
-//	for (int i = 0; i<adjList->num_neighbours; i++) {
-//		if (adjList->neighbours[i] == neighbour) {
-//			return adjList->costs[i].distance_cost;
-//		}
-//	}
-//	//TODO: could this cause an overflow?
-//	printf("couldn't get the cost");
-//	return INT_MAX;
-	return 0;
+	return get_distance_heuristic(graph, curr, neighbour);
 }
 
 void print_path_console(graph* graph, int start, int goal){
@@ -184,6 +179,7 @@ void print_path_console(graph* graph, int start, int goal){
 	}
 
 	int curr = 0;
+	printf("Going from %d to %d\n", goal, start);
 	while(path[curr] != start) {
 		printf("step: %d, vid: %d\n", curr, path[curr]);
 		curr++;
@@ -225,4 +221,8 @@ void append_to_path_points_array(path_points* path, int i, Point to_add){
 	}
 	path->actual_size++;
 	path->ordered_point_arr[i] = to_add;
+}
+
+void print_astar_node(astar_node* node){
+	printf("v_id: %d, f_val %d, g_val %d, h_val %d\n", node->v_id, node->f_val, node->g_val, node->h_val);
 }

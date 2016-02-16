@@ -278,5 +278,4 @@ const unsigned int ColourPalletteData[256] = {
 		0x00FFFFFF	// white
 };
 
-
 #endif /* COLOURPALLETTE_H_ */

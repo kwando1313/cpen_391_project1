@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "graph.h"
 #include "menu.h"
+#include "control.h"
 #include "graphics.h"
 #include "touchscreen.h"
 #include <math.h>
@@ -106,7 +107,6 @@ int get_node(graph* graph){
 /* Returns the node if we pressed a point sufficiently close to the node. Assumption: Each node has
    a finite metric in relation to every other node, i.e there is a maximum of one node sufficiently close.*/
 int get_valid_vertex(graph* graph, Point p){
-	//TODO: Sort the graph, implement search algorithm
 	printf("started valid vertex\n");
 	for(int i = 0; i<graph->num_vertices; i++) {
 		vertex v = *graph->vertices[i];
@@ -133,7 +133,8 @@ void listen(){
 			}
 			while(butt == NULL);
 
-			butt.p(butt.key);
+			// TODO: need proper param
+			butt.p(&butt.key);
 
 //			if(butt == INFO){
 //				do_info();

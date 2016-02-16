@@ -31,7 +31,6 @@ Button* keyboard;
 #define EAST_BUTT keyboard[36]
 #define NORTH_BUTT keyboard[37]
 #define SOUTH_BUTT keyboard[38]
-//#define INVALID_BUTT keyboard[39]
 
 // keyboard variables
 #define N_KEYS 39

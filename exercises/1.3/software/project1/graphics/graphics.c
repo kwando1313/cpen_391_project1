@@ -1,10 +1,13 @@
 #include "misc_helpers.h"
 #include "graphics.h"
+#include "hashmap.h"
+#include "ColourPallette.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
 
+#define NUM_COLOURS 256
 
 #define GraphicsCommandReg   		(*(volatile unsigned short int *)(0x84000000))
 #define GraphicsStatusReg   		(*(volatile unsigned short int *)(0x84000000))
@@ -25,6 +28,9 @@
 
 // pauses until the graphics chip status register indicates that it is idle
 #define WAIT_FOR_GRAPHICS		while((GraphicsStatusReg & 0x0001) != 0x0001);
+
+// maps 24bit RGB to 8bit pallette addr
+hashmap* colours_hashmap;
 
 // This function writes a single pixel to the x,y coords specified using the specified colour
 // Note colour is a byte and represents a palette number (0-255) not a 24 bit RGB value
@@ -480,3 +486,17 @@ void rand_line(int min_x, int max_x, int min_y, int max_y, int colour){
 	Line(x1,y1,x2,y2,colour);
 }
 
+void setUpPallete(void){
+	colours_hashmap = hashmapCreate(NUM_COLOURS);
+	for (int i = 0; i<NUM_COLOURS; i++){
+		hashmapInsert(colours_hashmap, (void*)i, (long)getRGB(i));
+	}
+}
+
+int getPalleteAddr(int RGB){
+	return (int)hashmapGet(colours_hashmap, (long)(RGB));
+}
+
+int getRGB(int addr){
+	return ColourPalletteData[addr];
+}
