@@ -14,6 +14,6 @@ int main(void) {
 //
 //	printf("\n\nend\n");
 
-	hashmap_test();
+	graph_test();
 	return 0;
 }

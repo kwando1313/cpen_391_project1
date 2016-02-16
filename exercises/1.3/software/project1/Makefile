@@ -159,6 +159,7 @@ C_SRCS += control/control.c
 C_SRCS += control/load_node.c
 C_SRCS += misc/bluetooth/bluetooth.c
 C_SRCS += tests/hashmap_test.c
+C_SRCS += tests/graph_test.c
 CXX_SRCS :=
 ASM_SRCS :=
 
