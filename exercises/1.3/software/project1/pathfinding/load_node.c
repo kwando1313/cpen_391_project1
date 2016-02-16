@@ -13,6 +13,8 @@
 #include <altera_up_sd_card_avalon_interface.h>
 #include "graphics.h"
 
+int keyify(char* name);
+
 void handle_nodes(short file, graph* graph, hashmap* hashmap){
 	char c = "";
 	int x = 0;
@@ -23,16 +25,15 @@ void handle_nodes(short file, graph* graph, hashmap* hashmap){
 	int y_coord = 0;
 
 	char* text = "";
-	bool stop = false;
-	while(data >= 0 && stop==false){
+	while(data >= 0){
 		data = alt_up_sd_card_read(file);
 		c = (char)data;
+
 		if (c == '$'){
-			x = 0;
-			y = 0;
-			stop = true;
+			break;
 		}
-		else if (c == ','){
+
+		if (c == ','){
 			printf("%s\n", text);
 			if (y == 0){
 				strcpy(node_name, text);
@@ -46,47 +47,35 @@ void handle_nodes(short file, graph* graph, hashmap* hashmap){
 			memset(&text[0], 0, sizeof(text));
 			y++;
 		}
-		else if (c == ';'){
-			printf("%s\n", text);
-			if (y == 2){
-				y_coord = atoi(text);
-				printf("Y Coordinate: %d\n", y_coord);
-				vertex* v = init_vertex(x_coord, y_coord, 0, node_name, x_coord, y_coord);
-				printf("Vertex name: %s\n", v->name);
-				int v_id = add_vertex(graph, v);
-				printf("Inserted vertex ID: %d\n", v_id);
-				int node_key = keyify(v->name);
-				if (strcmp("point1", v->name) == 0){
-					printf("My name is point1!\n");
-				}
-				if (strcmp("point2", v->name) == 0){
-					printf("My name is point2!\n");
-				}
-				if (strcmp("point3", v->name) == 0){
-					printf("My name is point3!\n");
-				}
-				printf("Node key for %d (%s) is %d\n", v_id, v->name, node_key);
-
-				hashmapInsert(hashmap, v_id, node_key);
-				printf(hashmapGet(hashmap, node_key));
-				memset(&text[0], 0, sizeof(text));
-				y=0;
-				x++;
+		else if (c == ';' && y == 2){
+			y_coord = atoi(text);
+			printf("Y Coordinate: %d\n", y_coord);
+			vertex* v = init_vertex(x_coord, y_coord, 0, node_name, x_coord, y_coord);
+			printf("Vertex name: %s\n", v->name);
+			int v_id = add_vertex(graph, v);
+			printf("Inserted vertex ID: %d\n", v_id);
+			int node_key = keyify(v->name);
+			if (strcmp("point1", v->name) == 0){
+				printf("My name is point1!\n");
 			}
+			if (strcmp("point2", v->name) == 0){
+				printf("My name is point2!\n");
+			}
+			if (strcmp("point3", v->name) == 0){
+				printf("My name is point3!\n");
+			}
+			printf("Node key for %d (%s) is %d\n", v_id, v->name, node_key);
 
+			hashmapInsert(hashmap, v_id, node_key);
+			printf(hashmapGet(hashmap, node_key));
+			memset(&text[0], 0, sizeof(text));
+			y=0;
+			x++;
 		}
-		else if (c == '\n'){
-			continue;
-		}
-		else if (c == '\r'){
-			continue;
-		}
-		else {
+		else if (c != '\n' && c != '\r'){
 			text = strncat(text, &c, 1);
-
 		}
 	}
-	stop = false;
 }
 
 void handle_edges(short file, graph* graph, hashmap* hashmap){
@@ -183,102 +172,39 @@ int keyify(char* name){
 alt_up_sd_card_dev* get_device_reference(){
 	alt_up_sd_card_dev* device_reference = NULL;
 	if ((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL){
-			printf("SDCard Open FAILED\n");
-			return NULL;
+		return NULL;
 	}
 
-	printf("SDCard Open PASSED\n");
 	return device_reference;
-
 }
 
 
 void load_graph(char* filename){
-	graph* graph = init_graph(40);
-	hashmap* hashmap = hashmapCreate(40);
-	int test = keyify("point1");
-	int test2 = keyify("point2");
+	graph* graph = init_graph(DEFAULT_GRAPH_SIZE);
+	hashmap* hashmap = hashmapCreate(DEFAULT_GRAPH_SIZE);
+	bool found_file = false;
 
-	printf("%d %d", test, test2);
-
-	hashmapInsert(hashmap, "point1", test);
-	printf(hashmapGet(hashmap, test));
-	//return;
 	alt_up_sd_card_dev* device_reference = get_device_reference();
-	if (device_reference == NULL){
-		printf("Can't open device\n");
+	if (device_reference == NULL || !alt_up_sd_card_is_Present() || !alt_up_sd_card_is_FAT16()){
+		printf("Can't find device, or device not configured properly\n");
 		return;
 	}
 
-	//Init_Touch();
-	//clear_screen(WHITE);
-	int connected = 0;
-	printf("Opening SDCard\n");
-
-
-	if((connected == 0) && (alt_up_sd_card_is_Present())){
-		printf("Card connected.\n");
-
-		if(alt_up_sd_card_is_FAT16()) {
-			printf("FAT16 file system detected.\n");
-			char * name = "A";
-
-
-			if (alt_up_sd_card_find_first("/", name) == 0){
-
-				short int file = alt_up_sd_card_fopen(name, false);
-				if (file == -1){
-					printf("This file could not be opened.\n");
-				}
-				else if (file == -2){
-					printf("This file is already opened.\n");
-				}
-				else {
-					if (strcmp(name, filename)== 0){
-						handle_data(file, graph, hashmap);
-					}
-					alt_up_sd_card_fclose(file);
-				}
-				while(alt_up_sd_card_find_next(name) == 0){
-					printf("NOW I FOUND: %s\n", name);
-					if (strcmp(name, filename) == 0){
-						short int file = alt_up_sd_card_fopen(name, false);
-						if (file == -1){
-							printf("This file could not be opened.\n");
-						}
-						else if (file == -2){
-							printf("This file is already opened.\n");
-						}
-						else {
-							if (strcmp(name, filename)== 0){
-								handle_data(file, graph, hashmap);
-							}
-							else {
-								printf("Finished reading file!\n");
-							}
-						}
-						alt_up_sd_card_fclose(file);
-					}
-				}
-				return;
-
-			}
-			else if (alt_up_sd_card_find_first("/", name) == 1){
-				printf("This is an invalid directory.\n");
-			}
-			else if (alt_up_sd_card_find_first("/", name) == 2){
-				printf("The SD card has either been disconnected, or is NOT a FAT16 type.\n");
-			}
-		}
-
-		else{
-			printf("Unknown file system.\n");
-		}
-		connected = 1;
-	} else if((connected == 1) && (alt_up_sd_card_is_Present() == 0)){
-		printf("Card disconnected.\n");
-		connected =0;
+	char name[13];
+	if (alt_up_sd_card_find_first(".", name) != 0){
+		printf("Couldn't find root dir\n");
+		return;
 	}
 
-
+	do {
+		if (strcmp(name, filename)== 0){
+			short int file = alt_up_sd_card_fopen(name, false);
+			if (file >= 0){
+				printf("found file %s in SD"\n, filename);
+				handle_data(file, graph, hashmap);
+				found_file = true; //want to close file, so use this rather than returning
+			}
+			alt_up_sd_card_fclose(file);
+		}
+	}while(!found_file && alt_up_sd_card_find_next(name) == 0);
 }

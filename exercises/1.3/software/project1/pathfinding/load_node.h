@@ -8,7 +8,6 @@
 #ifndef LOAD_NODE_H_
 #define LOAD_NODE_H_
 
-int keyify(char* name);
 void handle_nodes(short file);
 void handle_edges(short file);
 void handle_data(short file);
