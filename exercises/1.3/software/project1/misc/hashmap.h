@@ -4,14 +4,14 @@
 #define HASHMAP_ERROR (void*)-1
 
 typedef struct __hash_entry{
-  void* data;
-  unsigned int key;
-  struct __hash_entry* next;
+	void* data;
+	unsigned int key;
+	struct __hash_entry* next;
 } hash_entry;
 
 typedef struct __hashmap{
-  hash_entry** buckets;
-  int size, count;
+	hash_entry** buckets;
+	int size, count;
 } hashmap;
 
 // Creates a new hashmap near the given size

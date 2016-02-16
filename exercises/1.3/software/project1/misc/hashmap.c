@@ -108,7 +108,7 @@ void* hashmapRemove(hashmap* map, unsigned int key){
 }
 
 int hashmapCount(hashmap* map){
-  return map->count;
+	return map->count;
 }
 
 void hashmapDelete(hashmap* map){
