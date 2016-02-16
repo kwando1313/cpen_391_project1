@@ -19,7 +19,7 @@ void handle_nodes(short file, graph* graph, hashmap* hashmap){
 	char c = "";
 	int x = 0;
 	int y = 0;
-	short data =0;
+	short data = 0;
 	char* node_name = "A";
 	int x_coord = 0;
 	int y_coord = 0;
@@ -30,44 +30,26 @@ void handle_nodes(short file, graph* graph, hashmap* hashmap){
 		c = (char)data;
 
 		if (c == '$'){
-			break;
+			data = -1;
 		}
 
 		if (c == ','){
 			printf("%s\n", text);
 			if (y == 0){
 				strcpy(node_name, text);
-				printf("%s\n", node_name);
 			}
 			else if (y == 1){
-				x_coord = atoi(text) + 100;
-				printf("X Coordinate: %d\n", x_coord);
+				x_coord = atoi(text);
 			}
-
 			memset(&text[0], 0, sizeof(text));
 			y++;
 		}
 		else if (c == ';' && y == 2){
 			y_coord = atoi(text);
-			printf("Y Coordinate: %d\n", y_coord);
 			vertex* v = init_vertex(x_coord, y_coord, 0, node_name, x_coord, y_coord);
-			printf("Vertex name: %s\n", v->name);
 			int v_id = add_vertex(graph, v);
-			printf("Inserted vertex ID: %d\n", v_id);
 			int node_key = keyify(v->name);
-			if (strcmp("point1", v->name) == 0){
-				printf("My name is point1!\n");
-			}
-			if (strcmp("point2", v->name) == 0){
-				printf("My name is point2!\n");
-			}
-			if (strcmp("point3", v->name) == 0){
-				printf("My name is point3!\n");
-			}
-			printf("Node key for %d (%s) is %d\n", v_id, v->name, node_key);
-
 			hashmapInsert(hashmap, v_id, node_key);
-			printf(hashmapGet(hashmap, node_key));
 			memset(&text[0], 0, sizeof(text));
 			y=0;
 			x++;
@@ -96,27 +78,18 @@ void handle_edges(short file, graph* graph, hashmap* hashmap){
 		else if (c == ','){
 			if (y == 0){
 				node1_key = keyify(text);
-				printf("Node 1 Key: %d\n", node1_key);
 			}
 			else if (y == 1){
 				node2_key = keyify(text);
-				printf("Node 2 Key: %d\n", node2_key);
 			}
 			memset(&text[0], 0, sizeof(text));
 			y++;
 		}
-		else if (c == ';'){
-			if (y == 2){
-				weight = atoi(text);
-			}
-			printf(hashmapGet(hashmap, 3778));
-			printf("\n");
+		else if (c == ';' && y == 2){
+			weight = atoi(text);
 			int v1_id = (int*)hashmapGet(hashmap, node1_key);
 			int v2_id = (int*)hashmapGet(hashmap, node2_key);
-			printf("Vertex 1 ID: %d\n", v1_id);
-			printf("Vertex 2 ID: %d\n", v2_id);
 			cost cost1 = {weight};
-			printf("Cost: %d\n", cost1.distance_cost);
 			if (v1_id != -1 && v2_id != -1){
 				add_edge(graph, v1_id, v2_id, cost1);
 			}
@@ -124,16 +97,10 @@ void handle_edges(short file, graph* graph, hashmap* hashmap){
 			y=0;
 			x++;
 		}
-		else if (c == '\n'){
-			continue;
-		}
-		else if (c == '\r'){
-			continue;
-		}
-		else {
+		else if (c != '\n' && c != '\r'){
 			text = strncat(text, &c, 1);
-
 		}
+
 	}
 
 }
@@ -142,6 +109,7 @@ void handle_data(short file, graph* graph, hashmap* hashmap){
 	handle_nodes(file, graph, hashmap);
 	handle_edges(file, graph, hashmap);
 
+	//This is testing code that will be removed... vvv
 	for(int i = 0; i<graph->num_vertices; i++) {
 		vertex* v = get_vertex(graph, i);
 		WriteAPixel(v->x, v->y, CYAN);
@@ -201,7 +169,7 @@ void load_graph(char* filename){
 		if (strcmp(found_file_name, filename_all_caps)== 0){
 			short int file = alt_up_sd_card_fopen(found_file_name, false);
 			if (file >= 0){
-				printf("found file %s in SD\n", filename_all_caps);
+				printf("found file %s in SD\n", filename);
 				handle_data(file, graph, hashmap);
 				found_file = true; //want to close file, so use this rather than returning
 			}
