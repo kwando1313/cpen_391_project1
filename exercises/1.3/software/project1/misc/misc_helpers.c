@@ -58,3 +58,14 @@ int sign(int a)
     else
         return 1 ;
 }
+
+void to_caps(char* from, char* to){
+
+	int x = 0;
+	while (from[x] != '\0'){
+		to[x] = (char) toupper(from[x]);
+		x++;
+	}
+	to[x] = '\0';
+	return;
+}

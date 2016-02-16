@@ -28,5 +28,6 @@ int max(int x, int y);
 
 int abs(int a);
 int sign(int a);
+void to_caps(char* from, char* to);
 
 #endif /* MISC_HELPERS_H_ */

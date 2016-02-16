@@ -77,6 +77,7 @@ void draw_image(Point topLeft, short file){
 
 		}
 	}
+	printf("File done!\n");
 	return;
 }
 
@@ -86,84 +87,54 @@ void read_bytes(char* str, int len, short file){
 	}
 }
 
-void load_image(Point topLeft, char* filename){//, int bmpWidth, int bmpHeight){
+void load_image(Point topLeft, char* fn){
 	alt_up_sd_card_dev* device_reference = NULL;
-		//Init_Touch();
-		//clear_screen(WHITE);
-		int connected = 0;
-		printf("Opening SDCard\n");
+	int length = strlen(fn);
+	char filename[length];
+	to_caps(fn, filename);
 
+	//char* filename = "WTF.BMP";
+	printf("%s\n", filename);
+	printf("Opening SDCard\n");
+	device_reference = get_device_reference();
 
-		device_reference = get_device_reference();
-
-		if (device_reference == NULL){
-			printf("Can't open device\n");
-			return;
-		}
-
-		if((connected == 0) && (alt_up_sd_card_is_Present())){
-			printf("Card connected.\n");
-
-
-			if(alt_up_sd_card_is_FAT16()) {
-				printf("FAT16 file system detected.\n");
-				char * name = "A";
-				if (alt_up_sd_card_find_first("/", name) == 0){
-
-					short int file = alt_up_sd_card_fopen(name, false);
-					if (file == -1){
-						printf("This file could not be opened.\n");
-					}
-					else if (file == -2){
-						printf("This file is already opened.\n");
+	if((device_reference!= NULL)&&(alt_up_sd_card_is_Present()) && (alt_up_sd_card_is_FAT16())){
+		printf("Card connected and is FAT16.\n");
+		char * name = "A";
+		if (alt_up_sd_card_find_first("/", name) == 0){
+			short int file = alt_up_sd_card_fopen(name, false);
+			if (strcmp(name, filename)== 0){
+				if (file == -1 ){
+					printf("This file could not be opened or is already opened.\n");
+				}
+				else {
+					draw_image(topLeft, file);//, bmpHeight, bmpWidth);
+					alt_up_sd_card_fclose(file);
+				}
+			}
+			while(alt_up_sd_card_find_next(name) == 0){
+				file = alt_up_sd_card_fopen(name, false);
+				if (strcmp(name, filename)== 0){
+					if (file == -1 || file == -2){
+						printf("This file could not be opened or is already opened.\n");
 					}
 					else {
-						if (strcmp(name, filename)== 0){
-							draw_image(topLeft, file);//, bmpHeight, bmpWidth);
-						}
+						draw_image(topLeft, file);//, bmpHeight, bmpWidth);
 						alt_up_sd_card_fclose(file);
 					}
-					while(alt_up_sd_card_find_next(name) == 0){
-						if (strcmp(name, filename) == 0){
-
-							short int file = alt_up_sd_card_fopen(name, false);
-							if (file == -1){
-								printf("This file could not be opened.\n");
-							}
-							else if (file == -2){
-								printf("This file is already opened.\n");
-							}
-							else {
-								draw_image(topLeft, file);//, bmpHeight, bmpWidth);
-							}
-							alt_up_sd_card_fclose(file);
-
-						}
-						else {
-							printf("Found a file I'm not looking for...");
-						}
-					}
-					return;
-
-				}
-				else if (alt_up_sd_card_find_first("/", name) == 1){
-					printf("This is an invalid directory.\n");
-				}
-				else if (alt_up_sd_card_find_first("/", name) == 2){
-					printf("The SD card has either been disconnected, or is NOT a FAT16 type.\n");
 				}
 			}
-
-			else{
-				printf("Unknown file system.\n");
-			}
-			connected = 1;
-		} else if((connected == 1) && (alt_up_sd_card_is_Present() == 0)){
-			printf("Card disconnected.\n");
-			connected =0;
-
+			return;
 		}
-		return;
+		else if (alt_up_sd_card_find_first("/", name) == 1){
+			printf("This is an invalid directory.\n");
+		}
+		else if (alt_up_sd_card_find_first("/", name) == 2){
+			printf("The SD card has either been disconnected, or is NOT a FAT16 type.\n");
+		}
+	}
+	printf("An error occurred.\n");
+	return;
 }
 
 //Text box is left aligned and has text wrapping
