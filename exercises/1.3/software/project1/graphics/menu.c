@@ -8,161 +8,101 @@
 #include "misc_helpers.h"
 #include "graphics.h"
 #include "FontSize.h"
+#include "menu.h"
 #include <stdio.h>
 #include <string.h>
 #include <touchscreen.h>
 #include <graphics.h>
 #include <altera_up_sd_card_avalon_interface.h>
 
-#define BMPHEIGHT 459
-#define BMPWIDTH 500
-#define HEADERSIZE 54
+
+/*	IMGHEIGHT 	: Full height of our BMP
+ * 	IMGWIDTH 	: Full width of our BMP
+ * 	BOXHEIGHT 	: Height of the box we print our image.
+ * 	BOXWIDTH 	: Width of the box we print our image.
+ * 	HEADERSIZE changes with type of BMP file
+ * 	COLOURTABLESIZE = size of colour table containing 256 colours (with BGRA fields)
+ */
+#define IMGHEIGHT 	1050
+#define IMGWIDTH 	500
+#define BOXHEIGHT	480
+#define BOXWIDTH 	500
+#define HEADERSIZE 	54
 #define COLOURTABLESIZE 1024
 
-void read_bytes(char* str, int len, short file);
+// Store the integer values of the colours for each pixel.
+int pixel[IMGHEIGHT][IMGWIDTH];
 
-void draw_image(Point topLeft, short file){
+/*	Load image from SD Card.
+ * 	SD Card must be formatted in FAT16 to work with DE2.
+ * 	Length of filenames cannot be longer than 12 characters.
+ * 	including file extension (i.e. "abcdefghi.bmp" is invalid.
+ */
+void load_image(Point topLeft, char* filename){
+	bool found_file = false;
+	int ystart = 20;	// where we want to start the y pixels. Prints up from this row.
+	int xstart = 0; 	// where we want to start the x pixels. Prints to the right from this column.
 
-	char header;
-	unsigned char height[4];
-	unsigned char width[4];
-	unsigned char buf[200];
-
-	printf("Reading file...\n");
-	//54
-
-	read_bytes(buf, 18, file);
-	read_bytes(width, 4, file);
-	read_bytes(height, 4, file);
-	read_bytes(buf, 28, file);
-
-	int bmpWidth = *(int *) width;
-	int bmpHeight = *(int *) height;
-	//printf("%d", test);
-
-	printf("\n");
-	short data =0;
-
-	char pixel[bmpHeight][bmpWidth][3];
-	char B[bmpHeight][bmpWidth];
-	char G[bmpHeight][bmpWidth];
-	char R[bmpHeight][bmpWidth];
-
-	for (int j = 0; j < bmpHeight; j++){
-		for (int i = 0; i < bmpWidth; i++){
-			data = alt_up_sd_card_read(file);
-			B[j][i] = (char)data;
-			data = alt_up_sd_card_read(file);
-			G[j][i] = (char)data;
-			data = alt_up_sd_card_read(file);
-			R[j][i] = (char)data;
-			pixel[j][i][0] = R[j][i];
-			pixel[j][i][1] = G[j][i];
-			pixel[j][i][2] = B[j][i];
-		}
-	}
-
-	for (int y = 0; y < bmpHeight; y++){
-		for (int x = 0; x < bmpWidth; x++){
-			int initialX = x;
-			int colour = check_colour(pixel[y][x]);
-			int colour2 = check_colour(pixel[y][x]);
-			while(colour == colour2 && x < bmpWidth){
-				x++;
-				colour2 = check_colour(pixel[y][x]);
-			}
-			HLine(topLeft.x + initialX, topLeft.y + bmpHeight-y, x - initialX, colour);
-			//WriteAPixel(topLeft.x + x, topLeft.y + bmpHeight-y, colour);
-
-		}
-	}
-	return;
-}
-
-void read_bytes(char* str, int len, short file){
-	for(int x=0 ; x<len ; x++){
-		str[x]=(unsigned char)(alt_up_sd_card_read(file));
-	}
-}
-
-void load_image(Point topLeft, char* filename){//, int bmpWidth, int bmpHeight){
-	alt_up_sd_card_dev* device_reference = NULL;
-		//Init_Touch();
-		//clear_screen(WHITE);
-		int connected = 0;
-		printf("Opening SDCard\n");
-
-
-		device_reference = get_device_reference();
-
-		if (device_reference == NULL){
-			printf("Can't open device\n");
-			return;
-		}
-
-		if((connected == 0) && (alt_up_sd_card_is_Present())){
-			printf("Card connected.\n");
-
-
-			if(alt_up_sd_card_is_FAT16()) {
-				printf("FAT16 file system detected.\n");
-				char * name = "A";
-				if (alt_up_sd_card_find_first("/", name) == 0){
-
-					short int file = alt_up_sd_card_fopen(name, false);
-					if (file == -1){
-						printf("This file could not be opened.\n");
-					}
-					else if (file == -2){
-						printf("This file is already opened.\n");
-					}
-					else {
-						if (strcmp(name, filename)== 0){
-							draw_image(topLeft, file);//, bmpHeight, bmpWidth);
-						}
-						alt_up_sd_card_fclose(file);
-					}
-					while(alt_up_sd_card_find_next(name) == 0){
-						if (strcmp(name, filename) == 0){
-
-							short int file = alt_up_sd_card_fopen(name, false);
-							if (file == -1){
-								printf("This file could not be opened.\n");
-							}
-							else if (file == -2){
-								printf("This file is already opened.\n");
-							}
-							else {
-								draw_image(topLeft, file);//, bmpHeight, bmpWidth);
-							}
-							alt_up_sd_card_fclose(file);
-
-						}
-						else {
-							printf("Found a file I'm not looking for...");
-						}
-					}
-					return;
-
-				}
-				else if (alt_up_sd_card_find_first("/", name) == 1){
-					printf("This is an invalid directory.\n");
-				}
-				else if (alt_up_sd_card_find_first("/", name) == 2){
-					printf("The SD card has either been disconnected, or is NOT a FAT16 type.\n");
-				}
-			}
-
-			else{
-				printf("Unknown file system.\n");
-			}
-			connected = 1;
-		} else if((connected == 1) && (alt_up_sd_card_is_Present() == 0)){
-			printf("Card disconnected.\n");
-			connected =0;
-
-		}
+	if (get_device_reference() == NULL || !alt_up_sd_card_is_Present() || !alt_up_sd_card_is_FAT16()){
+		printf("Can't find device, or device not configured properly\n");
 		return;
+	}
+
+	char name[13];
+	if (alt_up_sd_card_find_first(".", name) != 0){
+		printf("Couldn't find root dir\n");
+		return;
+	}
+
+	do {
+		if (strcmp(name, filename)== 0){
+			short int file = alt_up_sd_card_fopen(name, false);
+			if (file >= 0){
+				printf("found file %s in SD\n", filename);
+				get_header(file);
+				get_pixels(file);
+				draw_img(topLeft, file, 0, ystart);
+				found_file = true; //want to close file, so use this rather than returning
+			}
+			alt_up_sd_card_fclose(file);
+		}
+	}while(!found_file && alt_up_sd_card_find_next(name) == 0);
+}
+
+/* Get header information.
+ * Iterate and print bitmap file header + Windows Bitmap Info Header.
+ * Iterate and do not print the colour table.
+ */
+void get_header (short file){
+	char header;
+	for(int x=0 ; x < HEADERSIZE ; x++){
+		header=(unsigned char)(alt_up_sd_card_read(file));
+		printf ("%hhx ",header & 0xff);
+	}
+	for (int i = 0; i < COLOURTABLESIZE; i++){
+		alt_up_sd_card_read(file);
+	}
+}
+/* Store pixel colours in 2-D array.
+ */
+void get_pixels (short file){
+	for (int j = 0; j < IMGHEIGHT; j++){
+		for (int i = 0; i < IMGWIDTH; i++){
+			pixel[j][i] = alt_up_sd_card_read(file);												}
+	}
+}
+
+/* Draw the pictures in the range we want.
+ * We're picking the top left point to start from
+ * but actually draw from the bottom left first.
+ */
+void draw_img (Point topLeft, short file, int xstart, int ystart){
+	for (int y = 0; y < BOXHEIGHT; y++){
+		for (int x = 0; x < BOXWIDTH; x++){
+			int colour = pixel[ystart + y][xstart + x];
+			WriteAPixel(topLeft.x + x, topLeft.y + BOXHEIGHT-y, colour);
+		}
+	}
 }
 
 //Text box is left aligned and has text wrapping
@@ -229,7 +169,7 @@ void draw_information_box(char* text){
 
 	point8.x = 500;
 	point8.y = 0;
-	draw_text_box(point8, 300, 330,2, BLACK, 255, BLACK, text, SMALL);
+	draw_text_box(point8, 300, 330,2, BLACK, WHITE, BLACK, text, SMALL);
 
 }
 
@@ -284,51 +224,8 @@ void draw_menu(Point leftCorner, int width, int height, int borderWidth, int bor
 	}
 }
 
-void draw_keyboard(Point leftCorner, int size){
-//qwertyuiop
-	//asdfghjkl
-	//zxcvbnm
-
-	char topRow[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '\0'};
-	char homeRow[] = {'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '\0'};
-	char bottomRow[] = {'Z', 'X', 'C', 'V', 'B', 'N', 'M', '\0'};
-
-	int x = 0;
-	Point initialLeftCorner = {leftCorner.x, leftCorner.y};
-	while(topRow[x] != '\0'){
-		char* c = "A";
-		strncpy(c, &topRow[x], 1);
-		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
-		leftCorner.x += size;
-		x++;
-	}
-	x = 0;
-	leftCorner.x = initialLeftCorner.x;
-	leftCorner.y = initialLeftCorner.y + size;
-	while(homeRow[x] != '\0'){
-		char* c = "A";
-		strncpy(c, &homeRow[x], 1);
-		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
-		leftCorner.x += size;
-		x++;
-	}
-	draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, "<-", MEDIUM);
-	leftCorner.x = initialLeftCorner.x;
-	leftCorner.y = initialLeftCorner.y + 2*size;
-	x = 0;
-	while(bottomRow[x] != '\0'){
-		char* c = "A";
-		strncpy(c, &bottomRow[x], 1);
-		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
-		leftCorner.x += size;
-		x++;
-	}
-	draw_button(leftCorner, 3*size, size, 1, BLACK, WHITE, BLACK, "SPACE", MEDIUM);
-	return;
-}
 
 void init_screen(){
-
 
 		Point point6 = {500, 330};
 		Point point7 = {650, 330}; //Adjust these to fit within the margins...
@@ -360,61 +257,4 @@ void photo_screen(){
 //	Point point = {500, 0};
 //	load_image(point, name, 330, 300);
 	draw_information_box("BUILDING PHOTO");
-}
-
-int check_colour(char* pixel){
-	if (pixel[0] ==  ((char)0xff) && pixel[1] == (char) 0x0 && pixel[2] == (char) 0x00){
-		return RED;
-	}
-	else if (pixel[0] ==  ((char)0xB5) && pixel[1] == (char) 0xE6 && pixel[2] == (char) 0x1D){
-		return LIME;
-	}
-	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0xff){
-		return BLUE;
-	}
-	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x00){
-		return BLACK;
-	}
-	else if (pixel[0] ==  ((char)0xff) && pixel[1] == (char) 0xff && pixel[2] == (char) 0x00){
-		return YELLOW;
-	}
-	else if (pixel[0] ==  ((char)0x99) && pixel[1] == (char) 0xD9 && pixel[2] == (char) 0xEA){
-		return CYAN;
-	}
-	else if (pixel[0] ==  ((char)0xc0) && pixel[1] == (char) 0xc0 && pixel[2] == (char) 0xc){
-		return SILVER;
-	}
-	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x80){
-		return GRAY;
-	}
-	else if (pixel[0] ==  ((char)0xED) && pixel[1] == (char) 0x1C && pixel[2] == (char) 0x24){
-		return MAROON;
-	}
-	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x00){
-		return OLIVE;
-	}
-	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x00){
-		return GREEN;
-	}
-	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x80){
-		return PURPLE;
-	}
-	else if (pixel[0] ==  ((char)0x22) && pixel[1] == (char) 0xB1 && pixel[2] == (char) 0x4C){
-		return GREEN;
-	}
-	else if (pixel[0] ==  ((char)0x3F) && pixel[1] == (char) 0x48 && pixel[2] == (char) 0xCC){
-		return PURPLE;
-	}
-	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0xA2 && pixel[2] == (char) 0xE8){
-		return TEAL;
-	}
-	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x80){
-		return NAVY;
-	}
-	else if (pixel[0] ==  ((char)0xa5) && pixel[1] == (char) 0x2a && pixel[2] == (char) 0x2a){
-		return BROWN;
-	}
-	else{
-		return WHITE;
-	}
 }
