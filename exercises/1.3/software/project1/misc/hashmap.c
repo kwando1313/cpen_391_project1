@@ -1,5 +1,5 @@
 //stolen from http://www2.informatik.hu-berlin.de/~weber/slipOff/hashmap_c.html
-//hope it works.....
+//made a few small modifications
 
 #include "hashmap.h"
 #include <stdio.h>
