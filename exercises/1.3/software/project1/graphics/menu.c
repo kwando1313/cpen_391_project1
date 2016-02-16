@@ -13,7 +13,7 @@
 #include <touchscreen.h>
 #include <graphics.h>
 #include <altera_up_sd_card_avalon_interface.h>
-
+#include "Directions.h"
 
 /*	BMPHEIGHT = y pixels
  * 	BMPWIDTH = x pixels
@@ -288,19 +288,74 @@ void draw_menu(Point leftCorner, int width, int height, int borderWidth, int bor
 	}
 }
 
+void draw_keyboard(Point leftCorner, int size){
+//qwertyuiop
+	//asdfghjkl
+	//zxcvbnm
 
+	char topRow[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '\0'};
+	char homeRow[] = {'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '\0'};
+	char bottomRow[] = {'Z', 'X', 'C', 'V', 'B', 'N', 'M', '\0'};
+
+	int x = 0;
+	Point initialLeftCorner = {leftCorner.x, leftCorner.y};
+	while(topRow[x] != '\0'){
+		char* c = "A";
+		strncpy(c, &topRow[x], 1);
+		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
+		leftCorner.x += size;
+		x++;
+	}
+	draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, "<-", MEDIUM);
+	x = 0;
+	leftCorner.x = initialLeftCorner.x;
+	leftCorner.y = initialLeftCorner.y + size;
+	while(homeRow[x] != '\0'){
+		char* c = "A";
+		strncpy(c, &homeRow[x], 1);
+		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
+		leftCorner.x += size;
+		x++;
+	}
+	draw_button(leftCorner, 2*size, size, 1, BLACK, WHITE, BLACK, "ENTER", MEDIUM);
+	leftCorner.x = initialLeftCorner.x;
+	leftCorner.y = initialLeftCorner.y + 2*size;
+	x = 0;
+	while(bottomRow[x] != '\0'){
+		char* c = "A";
+		strncpy(c, &bottomRow[x], 1);
+		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
+		leftCorner.x += size;
+		x++;
+	}
+	draw_button(leftCorner, 2*size, size, 1, BLACK, WHITE, BLACK, "SPACE", MEDIUM);
+	draw_button(leftCorner, 2*size, size, 1, BLACK, WHITE, BLACK, "BACK", MEDIUM);
+	return;
+}
+
+// Includes the RHS of the screen (i.e everything but the map)
 void init_screen(){
 
-		Point point6 = {500, 330};
-		Point point7 = {650, 330}; //Adjust these to fit within the margins...
+		Point point6 = {500, 380};
+		Point point7 = {650, 380}; //Adjust these to fit within the margins...
+		Point point8 = {500, 330};
+		Point point9 = {500, 230};
 
 		char* firstTextArray[] = {"Info", "Photo", ""};
 		char* secondTextArray[] = {"Directions", "About", ""};
+		char* thirdTextArray[] = {"", "Search", ""};
 
-		draw_information_box("Pathfinding Map (Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nThis is our project!");
-		draw_menu(point6, 150, 75, 2, BLACK, 255, BLACK, SMALL, firstTextArray);
+		about_screen();
 
-		draw_menu(point7, 150, 75, 2, BLACK, 255, BLACK, SMALL, secondTextArray);
+		draw_menu(point6, 150, 50, 2, BLACK, 255, BLACK, SMALL, firstTextArray);
+
+		draw_menu(point7, 150, 50, 2, BLACK, 255, BLACK, SMALL, secondTextArray);
+
+		draw_menu(point8, 300, 50, 2 , BLACK, 255, BLACK, SMALL, thirdTextArray);
+
+		draw_menu(point9, 300, 100, 2 , BLACK, 255, BLACK, SMALL, "");
+
+		draw_arrows();
 
 }
 
@@ -322,3 +377,130 @@ void photo_screen(){
 //	load_image(point, name, 330, 300);
 	draw_information_box("BUILDING PHOTO");
 }
+
+void pop_screen(){
+	Point p = (0, 0); // left corner of the keyboard
+	int s = 5; // size of the keyboards buttons
+	draw_keyboard(p, 5);
+}
+
+void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int direction){
+	Point topRight = {topLeft.x + width, topLeft.y};
+	Point bottomLeft = {topLeft.x, topLeft.y + height};
+	Point bottomRight = {topLeft.x + width, topLeft.y + height};
+	draw_filled_rectangle_border(topLeft, topRight, bottomLeft, bottomRight, fillColour, borderColour, borderWidth);
+
+	Point cornerOne = {0, 0};
+	Point cornerTwo = {0, 0};
+	Point cornerThree = {0, 0};
+
+	if (direction == UP){
+		cornerOne.x = topLeft.x + width/2;
+		cornerOne.y = topLeft.y + height/3;
+		cornerTwo.x = topLeft.x + width/3;
+		cornerTwo.y = topLeft.y + 2*height/3;
+		cornerThree.x = topLeft.x + 2*width/3;
+		cornerThree.y = topLeft.y + 2*height/3;
+	}
+	else if (direction == RIGHT){
+		cornerOne.x = topLeft.x + width/3;
+		cornerOne.y = topLeft.y + height/3;
+		cornerTwo.x = topLeft.x + width/3;
+		cornerTwo.y =  topLeft.y + 2*height/3;
+		cornerThree.x = topLeft.x + 2*width/3;
+		cornerThree.y = topLeft.y + height/2;
+	}
+	else if (direction == DOWN){
+
+		cornerOne.x = topLeft.x + width/3;
+		cornerOne.y = topLeft.y + height/3;
+		cornerTwo.x = topLeft.x + 2*width/3;
+		cornerTwo.y =  topLeft.y + height/3;
+		cornerThree.x = topLeft.x + width/2;
+		cornerThree.y = topLeft.y + 2*height/3;
+	}
+	else{
+
+		cornerOne.x = topLeft.x + width/3;
+		cornerOne.y = topLeft.y + height/2;
+		cornerTwo.x = topLeft.x + 2*width/3;
+		cornerTwo.y =  topLeft.y + height/3;
+		cornerThree.x = topLeft.x + 2*width/3;
+		cornerThree.y = topLeft.y + 2*height/3;
+	}
+
+	draw_filled_triangle(cornerOne, cornerTwo, cornerThree, BLACK);
+}
+
+void draw_arrows(){
+	// bounded in (500-800, 230-330)
+	Point LPOINT = {510, 305};
+	Point RPOINT = {740, 305};
+	Point UPOINT = {625, 320};
+	Point DPOINT = {625, 290};
+
+	draw_arrow(LPOINT, 50, 50, 1, BLACK, WHITE, LEFT);
+
+	draw_arrow(RPOINT, 50, 50, 1, BLACK, WHITE, RIGHT);
+
+	draw_arrow(UPOINT, 50, 50, 1, BLACK, WHITE, UP);
+
+	draw_arrow(DPOINT, 50, 50, 1, BLACK, WHITE, DOWN);
+}
+
+//int check_colour(char* pixel){
+//	if (pixel[0] ==  ((char)0xff) && pixel[1] == (char) 0x0 && pixel[2] == (char) 0x00){
+//		return RED;
+//	}
+//	else if (pixel[0] ==  ((char)0xB5) && pixel[1] == (char) 0xE6 && pixel[2] == (char) 0x1D){
+//		return LIME;
+//	}
+//	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0xff){
+//		return BLUE;
+//	}
+//	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x00){
+//		return BLACK;
+//	}
+//	else if (pixel[0] ==  ((char)0xff) && pixel[1] == (char) 0xff && pixel[2] == (char) 0x00){
+//		return YELLOW;
+//	}
+//	else if (pixel[0] ==  ((char)0x99) && pixel[1] == (char) 0xD9 && pixel[2] == (char) 0xEA){
+//		return CYAN;
+//	}
+//	else if (pixel[0] ==  ((char)0xc0) && pixel[1] == (char) 0xc0 && pixel[2] == (char) 0xc){
+//		return SILVER;
+//	}
+//	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x80){
+//		return GRAY;
+//	}
+//	else if (pixel[0] ==  ((char)0xED) && pixel[1] == (char) 0x1C && pixel[2] == (char) 0x24){
+//		return MAROON;
+//	}
+//	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x00){
+//		return OLIVE;
+//	}
+//	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x00){
+//		return GREEN;
+//	}
+//	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x80){
+//		return PURPLE;
+//	}
+//	else if (pixel[0] ==  ((char)0x22) && pixel[1] == (char) 0xB1 && pixel[2] == (char) 0x4C){
+//		return GREEN;
+//	}
+//	else if (pixel[0] ==  ((char)0x3F) && pixel[1] == (char) 0x48 && pixel[2] == (char) 0xCC){
+//		return PURPLE;
+//	}
+//	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0xA2 && pixel[2] == (char) 0xE8){
+//		return TEAL;
+//	}
+//	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x80){
+//		return NAVY;
+//	}
+//	else if (pixel[0] ==  ((char)0xa5) && pixel[1] == (char) 0x2a && pixel[2] == (char) 0x2a){
+//		return BROWN;
+//	}
+//	else{
+//		return WHITE;
+//	}
+//}

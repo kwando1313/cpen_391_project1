@@ -6,24 +6,28 @@
 
 #define IL 500
 #define IR 650
-#define IU 330
-#define ID 405
+#define IT 330
+#define IB 405
 
 #define DL 650
 #define DR 800
-#define DU 330
-#define DD 405
+#define DT 330
+#define DB 405
 
 #define PL 500
 #define PR 650
-#define PU 405
-#define PD 480
+#define PT 405
+#define PB 480
 
 #define AL 650
 #define AR 800
-#define AU 405
-#define AD 480
+#define AT 405
+#define AB 480
 
+#define SL 500
+#define SR 800
+#define ST 255
+#define SB 330
 
 void load_image(Point bottomLeft, char* filename);//, char* filename, int bmpheight, int bmpwidth);
 
@@ -37,4 +41,5 @@ void info_screen();
 void directions_screen();
 void photo_screen();
 void init_screen();
+void pop_screen();
 #endif /* MENU_H_ */

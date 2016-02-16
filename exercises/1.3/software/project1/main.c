@@ -8,15 +8,16 @@
 int main(void) {
 	printf("start\n\n");
 
+//	for(int i = 0; i<50; i++){
+//		graph* graph = create_test_graph();
+//		printf("created graph\n");
+//		destroy_graph(graph);
+//		printf("destroyed graph\n");
+//	}
+//
+//	printf("\n\nend\n");
 
-	for(int i = 0; i<50; i++){
-		graph* graph = create_test_graph();
-		printf("created graph\n");
-		destroy_graph(graph);
-		printf("destroyed graph\n");
-	}
-
-	printf("\n\nend\n");
+	init_control();
 
 	return 0;
 }

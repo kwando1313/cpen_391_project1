@@ -14,6 +14,7 @@
 void init_control(){
 	init_touch();
 	init_screen();
+	init_keyboard();
 }
 
 //  DELETE WHEN BUTTON FCNS WORKS
@@ -108,71 +109,31 @@ int get_valid_vertex(graph* graph, Point p){
 	//TODO: Sort the graph, implement search algorithm
 	printf("started valid vertex\n");
 	for(int i = 0; i<graph->num_vertices; i++) {
-		vertex v = graph->vertices[i];
-		if (sqrt((exp((v->x-p.x),2) + exp((v->y-p.y),2))) <= RADIUS ){
-			return v->id;
+		vertex v = *graph->vertices[i];
+		if (sqrt((pow((v.x-p.x),2) + pow((v.y-p.y),2))) <= RADIUS ){
+			return v.id;
 		}
 	}
 	return -1;
 }
 
-
-// Display info of the next node touched
-void do_info(){
-	// TODO: Need to load up some info text for each node.
-	info_screen();
-	//int node = get_node();
-
-	return;
-}
-
-// Ask for a start and end node and find the best directions
-void do_dir(graph* graph){
-	printf("do dir\n");
-	directions_screen();
-	draw_information_box("PLEASE SELECT STARTING POINT");
-	int start_node = get_node(graph);
-	draw_information_box("PLEASE SELECT DESTINATION");
-	int end_node = get_node(graph);
-	path_points* path = get_path_points(graph, start_node, end_node);
-	draw_path(path->ordered_point_arr, path->actual_size, CYAN);
-	destroy_path_points(path);
-	draw_information_box("HAVE A FUN TRIP!");
-	printf("done do dir\n");
-}
-
-// Display photo of the next node touched
-void do_photo(){
-	// TODO: Need to load up a photo for each node
-	photo_screen();
-	//int node = get_node();
-
-}
-
-// Display app about
-void do_about(){
-	about_screen();
-}
-
-// Pop up the keyboard
-void do_pop(){
-	pop_up();
-	// TODO: wait until a search query is entered and then pop_down()
-}
-
-// Listen for button inputs TODO: use button types
+// Listen for button inputs
 void listen(){
 		graph* graph = create_test_graph();
 		draw_graph(graph, YELLOW, RED);
-		draw_nodes(graph);
 
 		while(1){
 			// Wait for button input
 			Point p_i = GetPress();
 			printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
 
-			Button butt = get_button(p_i);
-			butt.p();
+			Button butt;
+			do{
+				butt = get_button(p_i);
+			}
+			while(butt == NULL);
+
+			butt.p(butt.key);
 
 //			if(butt == INFO){
 //				do_info();
@@ -193,7 +154,7 @@ void listen(){
 }
 
 
-//remove after sprint 1
+// remove after sprint 1;
 graph* create_test_graph(){
 	cost default_cost = {0};
 	graph* graph = init_graph(DEFAULT_GRAPH_SIZE);

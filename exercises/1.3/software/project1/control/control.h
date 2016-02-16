@@ -15,17 +15,12 @@ void init_control();
 
 void listen();
 
-// ptr fcns
-void do_info();
-void do_dir(graph* graph);
-void do_photo();
-void do_about();
-void do_pop();
-
 // To remove after button fcns work
 //int get_button();
 
 int get_node(graph* graph);
+
+int get_valid_vertex(graph* graph, Point p);
 
 //TODO: remove after sprint 1
 graph* create_test_graph(void);
