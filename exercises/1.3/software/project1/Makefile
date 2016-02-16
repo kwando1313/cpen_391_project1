@@ -144,10 +144,9 @@ ELF := project1.elf
 # Paths to C, C++, and assembly source files.
 C_SRCS += main.c
 C_SRCS += graphics/graphics.c
-C_SRCS += bluetooth/bluetooth.c
 C_SRCS += gps/gps.c
 C_SRCS += misc/misc_helpers.c
-C_SRCS += rs232/rs232.c
+C_SRCS += misc/rs232/rs232.c
 C_SRCS += touchscreen/touchscreen.c
 C_SRCS += graphics/fill.c
 C_SRCS += graphics/draw_font.c
@@ -158,6 +157,7 @@ C_SRCS += misc/hashmap.c
 C_SRCS += misc/b_tree.c
 C_SRCS += control/control.c
 C_SRCS += control/load_node.c
+C_SRCS += misc/bluetooth/bluetooth.c
 CXX_SRCS :=
 ASM_SRCS :=
 
@@ -197,10 +197,10 @@ BSP_ROOT_DIR := ../project1_bsp/
 
 # List of application specific include directories, library directories and library names
 APP_INCLUDE_DIRS += misc
-APP_INCLUDE_DIRS += rs232
+APP_INCLUDE_DIRS += misc/rs232
 APP_INCLUDE_DIRS += graphics
 APP_INCLUDE_DIRS += touchscreen
-APP_INCLUDE_DIRS += bluetooth
+APP_INCLUDE_DIRS += misc/bluetooth
 APP_INCLUDE_DIRS += gps
 APP_INCLUDE_DIRS += pathfinding
 APP_INCLUDE_DIRS += control
