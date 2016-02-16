@@ -184,8 +184,7 @@ void load_graph(char* filename){
 	hashmap* hashmap = hashmapCreate(DEFAULT_GRAPH_SIZE);
 	bool found_file = false;
 
-	alt_up_sd_card_dev* device_reference = get_device_reference();
-	if (device_reference == NULL || !alt_up_sd_card_is_Present() || !alt_up_sd_card_is_FAT16()){
+	if (get_device_reference() == NULL || !alt_up_sd_card_is_Present() || !alt_up_sd_card_is_FAT16()){
 		printf("Can't find device, or device not configured properly\n");
 		return;
 	}
