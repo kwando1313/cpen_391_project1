@@ -1,14 +1,7 @@
-/*
- * menu.c
- *
- *  Created on: 2016-01-28
- *      Author: kwando1313
- */
-
 #include "misc_helpers.h"
 #include "FontSize.h"
 #include "menu.h"
-//#include "ColourPallette.h"
+#include "Colours.h"
 #include <stdio.h>
 #include <string.h>
 #include <touchscreen.h>
@@ -33,6 +26,7 @@ void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart);
 void read_bytes(char* str, int len, short file);
 void draw_image_old(Point topLeft, short file);
 int check_colour(char* pixel);
+int rgb_from_pixel_arr(char*** pixel, int x, int y);
 
 // Store the integer values of the colours for each pixel.
 int pixel[IMGHEIGHT][IMGWIDTH];
@@ -81,7 +75,7 @@ void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart){
 }
 
 void draw_image_old(Point topLeft, short file){
-	setUpPallete();
+	setUpPallete(); //TODO doesn't need to be called more than once. Should be done in some general init() function
 	char header;
 	unsigned char height[4];
 	unsigned char width[4];
@@ -124,20 +118,25 @@ void draw_image_old(Point topLeft, short file){
 	for (int y = 0; y < bmpHeight; y++){
 		for (int x = 0; x < bmpWidth; x++){
 			int initialX = x;
-			int rgb = (0xff & pixel[y][x][0]) << 16 | (0xff & pixel[y][x][1]) << 8 | (0xff & pixel[y][x][2]);
+			int rgb = rgb_from_pixel_arr(pixel, x, y);
 			int colour = getPalleteAddr(rgb);
-//			int colour = check_colour(pixel[y][x]);
-//			int colour2 = check_colour(pixel[y][x]);
-//			while(colour == colour2 && x < bmpWidth){
-//				x++;
-//				colour2 = check_colour(pixel[y][x]);
-//			}
+			int curr_rgb = rgb;
+			while(rgb == curr_rgb && x < bmpWidth){
+				x++;
+				curr_rgb = rgb_from_pixel_arr(pixel, x, y);
+			}
+
+			HLine(topLeft.x + initialX, topLeft.y + bmpHeight-y, x - initialX, colour);
+			//WriteAPixel(topLeft.x + x, topLeft.y + bmpHeight-y, colour);
 			printf("rgb: %x\n", rgb);
-//			HLine(topLeft.x + initialX, topLeft.y + bmpHeight-y, x - initialX, colour);
-			WriteAPixel(topLeft.x + x, topLeft.y + bmpHeight-y, colour);
 			printf("write colour %d\n", colour);
 		}
 	}
+}
+
+int rgb_from_pixel_arr(char*** pixel, int x, int y){
+	int rgb = (0xff & pixel[y][x][0]) << 16 | (0xff & pixel[y][x][1]) << 8 | (0xff & pixel[y][x][2]);
+	return rgb;
 }
 
 /* Get header information.

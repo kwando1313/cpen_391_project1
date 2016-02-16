@@ -159,7 +159,6 @@ C_SRCS += misc/hashmap.c
 C_SRCS += pathfinding/b_tree.c
 C_SRCS += control/control.c
 C_SRCS += pathfinding/load_node.c
-C_SRCS += graphics/ColourPallette.c
 CXX_SRCS :=
 ASM_SRCS :=
 

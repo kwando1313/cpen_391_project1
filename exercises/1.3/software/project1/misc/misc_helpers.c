@@ -1,5 +1,6 @@
 #include "misc_helpers.h"
 #include <math.h>
+#include <ctype.h>
 
 double convert_to_radians(double angle){
 	return (angle*M_PI/180);
