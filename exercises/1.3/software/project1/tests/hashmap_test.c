@@ -1,10 +1,3 @@
-/*
- * hashmap_test.c
- *
- *  Created on: 2016-02-16
- *      Author: kwando1313
- */
-
 #include "hashmap.h"
 
 int hashmap_test(void) {

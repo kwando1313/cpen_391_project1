@@ -1,11 +1,3 @@
-/*
- * graph_test.c
- *
- *  Created on: 2016-02-16
- *      Author: kwando1313
- */
-
-
 #include "graph.h"
 
 int graph_test(void){
@@ -81,7 +73,6 @@ int graph_test(void){
 			printf("\nTest failed: Remove edge didn't work.");
 			return -1;
 		}
-
 	}
 
 	printf("\nAll tests passed!");
