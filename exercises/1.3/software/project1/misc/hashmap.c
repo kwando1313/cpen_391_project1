@@ -91,32 +91,33 @@ void* hashmapGet(hashmap* map, unsigned int key){
 	}
 }
 
-void* hashmapRemove(hashmap* hash, unsigned int key)
-{
-//
-//  if (hash->count)
-//  {
-//    long index, i, step;
-//    index = key % hash->size;
-//    step = (key % (hash->size-2)) + 1;
-//
-//    for (i = 0; i < hash->size; i++)
-//    {
-//      if (hash->table[index].key == key)
-//      {
-//        if (hash->table[index].flags & ACTIVE)
-//          return hash->table[index].data;
-//        break;
-//      }
-//      else
-//        if (!hash->table[index].data)
-//          break;
-//
-//      index = (index + step) % hash->size;
-//    }
-//  }
-//
-	return HASHMAP_ERROR;
+void* hashmapRemove(hashmap* map, unsigned int key){
+	int index = hash(key) % map->size;
+	hash_entry* curr_entry = map->buckets[index];
+	hash_entry* prev_entry = map->buckets[index];
+	while(true){
+		if (curr_entry == NULL) {
+			return HASHMAP_ERROR;
+		}
+
+		if (curr_entry->key == key) {
+			void* data = curr_entry->data;
+
+			if (prev_entry == curr_entry) {
+				// first entry in bucket
+				map->buckets[index] = curr_entry->next;
+			} else {
+				prev_entry->next = curr_entry->next;
+			}
+
+			free(curr_entry);
+			map->count--;
+			return data;
+		}
+
+		prev_entry = curr_entry;
+		curr_entry = curr_entry->next;
+	}
 }
 
 int hashmapCount(hashmap* map){
