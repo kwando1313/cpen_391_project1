@@ -6,21 +6,8 @@
 //this can be played with, just don't make too high(ie > 5)
 #define LOAD_FACTOR 2
 
-static void rehash(hashmap* hm)
-{
-//  long size = hm->size;
-//  hEntry* table = hm->table;
-//
-//  hm->size = findPrimeGreaterThan(size<<1);
-//  hm->table = (hEntry*)calloc(sizeof(hEntry), hm->size);
-//  hm->count = 0;
-//
-//  while(--size >= 0)
-//    if (table[size].flags == ACTIVE)
-//      hashmapInsert(hm, table[size].data, table[size].key);
-//
-//  free(table);
-}
+void rehash(hashmap* map);
+void free_bucket(hash_entry* head);
 
 hashmap* hashmapCreate(int start_size){
 	hashmap* map = malloc(sizeof(hashmap));
@@ -126,19 +113,45 @@ int hashmapCount(hashmap* map){
 
 void hashmapDelete(hashmap* map){
 	for (int i = 0; i<map->size; i++) {
-		hash_entry* head = map->buckets[i];
-		if (head == NULL){
-		        return;
-		}
-		hash_entry* prev = head;
-		head = head->next;
-		while (head != NULL) {
-			free(prev);
-		    prev = head;
-		    head = head->next;
-		}
-		free(prev); // frees last entry
+		free_bucket(map->buckets[i]);
 	}
 	free(map->buckets);
 	free(map);
+}
+
+
+void rehash(hashmap* map){
+	int old_size = map->size;
+	hash_entry** old_buckets = map->buckets;
+	map->size *= 2;
+	map->count = 0;
+	map->buckets = malloc(sizeof(hash_entry*)*map->size);
+	for (int i = 0; i<map->size; i++){
+		map->buckets[i] = NULL;
+	}
+
+	for(int i = 0; i<old_size; i++){
+		hash_entry* curr = old_buckets[i];
+		while(curr != NULL) {
+			hashmapInsert(map, curr->data, curr->key);
+			curr = curr->next;
+		}
+		free_bucket(old_buckets[i]);
+	}
+
+	free(old_buckets);
+}
+
+void free_bucket(hash_entry* head){
+	if (head == NULL){
+		return;
+	}
+	hash_entry* prev = head;
+	head = head->next;
+	while (head != NULL) {
+		free(prev);
+		prev = head;
+		head = head->next;
+	}
+	free(prev); // frees last entry
 }
