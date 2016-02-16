@@ -278,5 +278,8 @@ const unsigned int ColourPalletteData[256] = {
 		0x00FFFFFF	// white
 };
 
+void setUpPallete(void);
+int getPalleteAddr(int RGB);
+int getRGB(int addr);
 
 #endif /* COLOURPALLETTE_H_ */

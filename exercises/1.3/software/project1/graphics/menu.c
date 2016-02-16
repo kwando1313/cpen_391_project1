@@ -6,13 +6,12 @@
  */
 
 #include "misc_helpers.h"
-#include "graphics.h"
 #include "FontSize.h"
 #include "menu.h"
+//#include "ColourPallette.h"
 #include <stdio.h>
 #include <string.h>
 #include <touchscreen.h>
-#include <graphics.h>
 #include <altera_up_sd_card_avalon_interface.h>
 
 
@@ -29,6 +28,11 @@
 #define BOXWIDTH 	500
 #define HEADERSIZE 	54
 #define COLOURTABLESIZE 1024
+
+void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart);
+void read_bytes(char* str, int len, short file);
+void draw_image_old(Point topLeft, short file);
+int check_colour(char* pixel);
 
 // Store the integer values of the colours for each pixel.
 int pixel[IMGHEIGHT][IMGWIDTH];
@@ -59,14 +63,77 @@ void load_image(Point topLeft, char* filename){
 			short int file = alt_up_sd_card_fopen(name, false);
 			if (file >= 0){
 				printf("found file %s in SD\n", filename);
-				get_header(file);
-				get_pixels(file);
-				draw_img(topLeft, file, 0, ystart);
+				draw_image_wrapper(topLeft, file, 0, ystart);
 				found_file = true; //want to close file, so use this rather than returning
 			}
 			alt_up_sd_card_fclose(file);
 		}
 	}while(!found_file && alt_up_sd_card_find_next(name) == 0);
+}
+
+void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart){
+//	get_header(file);
+//	get_pixels(file);
+//	draw_img(topLeft, file, 0, ystart);
+	draw_image_old(topLeft, file);
+}
+
+void draw_image_old(Point topLeft, short file){
+	setUpPallete();
+	char header;
+	unsigned char height[4];
+	unsigned char width[4];
+	unsigned char buf[200];
+
+	printf("Reading file...\n");
+	//54
+
+	read_bytes(buf, 18, file);
+	read_bytes(width, 4, file);
+	read_bytes(height, 4, file);
+	read_bytes(buf, 28, file);
+
+	int bmpWidth = *(int *) width;
+	int bmpHeight = *(int *) height;
+	//printf("%d", test);
+
+	printf("\n");
+	short data =0;
+
+	char pixel[bmpHeight][bmpWidth][3];
+	char B[bmpHeight][bmpWidth];
+	char G[bmpHeight][bmpWidth];
+	char R[bmpHeight][bmpWidth];
+
+	for (int j = 0; j < bmpHeight; j++){
+		for (int i = 0; i < bmpWidth; i++){
+			data = alt_up_sd_card_read(file);
+			B[j][i] = (char)data;
+			data = alt_up_sd_card_read(file);
+			G[j][i] = (char)data;
+			data = alt_up_sd_card_read(file);
+			R[j][i] = (char)data;
+			pixel[j][i][0] = R[j][i];
+			pixel[j][i][1] = G[j][i];
+			pixel[j][i][2] = B[j][i];
+		}
+	}
+
+	for (int y = 0; y < bmpHeight; y++){
+		for (int x = 0; x < bmpWidth; x++){
+			int initialX = x;
+			int rgb = (0xff & pixel[y][x][0]) << 16 | (0xff & pixel[y][x][1]) << 8 | (0xff & pixel[y][x][2]);
+			int colour = getPalleteAddr(rgb);
+//			int colour = check_colour(pixel[y][x]);
+//			int colour2 = check_colour(pixel[y][x]);
+//			while(colour == colour2 && x < bmpWidth){
+//				x++;
+//				colour2 = check_colour(pixel[y][x]);
+//			}
+//			HLine(topLeft.x + initialX, topLeft.y + bmpHeight-y, x - initialX, colour);
+			WriteAPixel(topLeft.x + x, topLeft.y + bmpHeight-y, colour);
+		}
+	}
 }
 
 /* Get header information.
@@ -88,7 +155,8 @@ void get_header (short file){
 void get_pixels (short file){
 	for (int j = 0; j < IMGHEIGHT; j++){
 		for (int i = 0; i < IMGWIDTH; i++){
-			pixel[j][i] = alt_up_sd_card_read(file);												}
+			pixel[j][i] = alt_up_sd_card_read(file);
+		}
 	}
 }
 
@@ -257,4 +325,66 @@ void photo_screen(){
 //	Point point = {500, 0};
 //	load_image(point, name, 330, 300);
 	draw_information_box("BUILDING PHOTO");
+}
+
+void read_bytes(char* str, int len, short file){
+	for(int x=0 ; x<len ; x++){
+		str[x]=(unsigned char)(alt_up_sd_card_read(file));
+	}
+}
+int check_colour(char* pixel){
+	if (pixel[0] ==  ((char)0xff) && pixel[1] == (char) 0x0 && pixel[2] == (char) 0x00){
+		return RED;
+	}
+	else if (pixel[0] ==  ((char)0xB5) && pixel[1] == (char) 0xE6 && pixel[2] == (char) 0x1D){
+		return LIME;
+	}
+	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0xff){
+		return BLUE;
+	}
+	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x00){
+		return BLACK;
+	}
+	else if (pixel[0] ==  ((char)0xff) && pixel[1] == (char) 0xff && pixel[2] == (char) 0x00){
+		return YELLOW;
+	}
+	else if (pixel[0] ==  ((char)0x99) && pixel[1] == (char) 0xD9 && pixel[2] == (char) 0xEA){
+		return CYAN;
+	}
+	else if (pixel[0] ==  ((char)0xc0) && pixel[1] == (char) 0xc0 && pixel[2] == (char) 0xc){
+		return SILVER;
+	}
+	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x80){
+		return GRAY;
+	}
+	else if (pixel[0] ==  ((char)0xED) && pixel[1] == (char) 0x1C && pixel[2] == (char) 0x24){
+		return MAROON;
+	}
+	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x00){
+		return OLIVE;
+	}
+	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x80 && pixel[2] == (char) 0x00){
+		return GREEN;
+	}
+	else if (pixel[0] ==  ((char)0x80) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x80){
+		return PURPLE;
+	}
+	else if (pixel[0] ==  ((char)0x22) && pixel[1] == (char) 0xB1 && pixel[2] == (char) 0x4C){
+		return GREEN;
+	}
+	else if (pixel[0] ==  ((char)0x3F) && pixel[1] == (char) 0x48 && pixel[2] == (char) 0xCC){
+		return PURPLE;
+	}
+	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0xA2 && pixel[2] == (char) 0xE8){
+		return TEAL;
+	}
+	else if (pixel[0] ==  ((char)0x00) && pixel[1] == (char) 0x00 && pixel[2] == (char) 0x80){
+		return NAVY;
+	}
+	else if (pixel[0] ==  ((char)0xa5) && pixel[1] == (char) 0x2a && pixel[2] == (char) 0x2a){
+		return BROWN;
+	}
+	else{
+		return WHITE;
+	}
 }
