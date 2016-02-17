@@ -122,20 +122,18 @@ void OutGraphicsFontCalibri(int x, int y, int colour, int backgroundcolour, int 
 		theRow = 22;
 		theColumn = 11;
 
-		printf("%d", theCharacter);
-
 		for(row = (theCharacter*22); row < (theCharacter+1)*22 ; row ++)	{
 			pixels = calibri_8ptBitmaps[row] ;		     								// get the pixels for row 0 of the character to be displayed
 			BitMask = 128;							   											// set of hex 200 i.e. bit 7-0 = 0010 0000 0000
-			for(column = 0; column < theColumn;   )  	{
+			for(column = 0; column < theColumn;   column++)  	{
 				if((pixels & BitMask))														// if valid pixel, then write it
-					WriteAPixel(theX+(column%11), theY+(row%22), theColour) ;
+					WriteAPixel(theX+(column%theColumn), theY+(row%theRow), theColour) ;
 				else {																		// if not a valid pixel, do we erase or leave it along (no erase)
 					if(Erase == 1)
-						WriteAPixel(theX+(column%11), theY+(row%22), backgroundcolour) ;
+						WriteAPixel(theX+(column%theColumn), theY+(row%theRow), backgroundcolour) ;
 					// else leave it alone
 				}
-					column ++ ;
+					//column ++ ;
 				BitMask = BitMask >> 1 ;
 			}
 		}
