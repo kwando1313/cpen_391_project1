@@ -1,24 +1,27 @@
 #ifndef CONTROL_H_
 #define CONTROL_H_
 
+
+#define NO_RESPONSE 0
+#define INFO 1
+#define DIR 2
+#define PHOTO 3
+#define ABOUT 4
+
 #include "graph.h"
+#include "button.h"
+
 
 void init_control();
 
 void listen();
+void kb_listen();
 
-void do_info();
-
-void do_dir(graph* graph);
-
-void do_photo();
-
-void do_about();
-
-int get_button();
-
+bool is_kb_butt(Button* butt);
 
 int get_node(graph* graph);
+
+int get_valid_vertex(graph* graph, Point p);
 
 //TODO: remove after sprint 1
 graph* create_test_graph(void);
