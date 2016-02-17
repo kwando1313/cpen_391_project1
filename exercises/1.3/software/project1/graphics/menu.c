@@ -176,8 +176,8 @@ void draw_text_box(Point topLeft, int width, int height, int borderWidth, int bo
 	int initialX = 0;
 	int initialY = 0;
 
-	int fontSizePixelsWidth = 5;
-	int fontSizePixelsHeight = 7;
+	int fontSizePixelsWidth = 11;
+	int fontSizePixelsHeight = 22;
 
 	if (fontSize == MEDIUM){
 		fontSizePixelsWidth = 10;
@@ -207,7 +207,7 @@ void draw_text_box(Point topLeft, int width, int height, int borderWidth, int bo
 				OutGraphicsCharFont2a(initialX, initialY, textColour, textColour, (int)token[x], 0);
 			}
 			else {
-				OutGraphicsCharFont1(initialX, initialY, textColour, textColour, (int)token[x], 0);
+				OutGraphicsFontCalibri(initialX, initialY, textColour, textColour, (int)token[x], 0);
 			}
 			initialX = initialX + fontSizePixelsWidth + 1;
 		}
@@ -215,7 +215,7 @@ void draw_text_box(Point topLeft, int width, int height, int borderWidth, int bo
 			OutGraphicsCharFont2a(initialX, initialY, textColour, textColour, (int)" ", 0);
 		}
 		else {
-			OutGraphicsCharFont1(initialX, initialY, textColour, textColour, (int)" ", 0);
+			OutGraphicsFontCalibri(initialX, initialY, textColour, textColour, (int)" ", 0);
 		}
 		initialX = initialX + fontSizePixelsWidth + 1;
 		token = strtok(NULL, " ");

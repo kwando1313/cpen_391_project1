@@ -8,6 +8,9 @@
 #define FONT2_XPIXELS	10				// width of Font2 characters in pixels (no spacing)
 #define FONT2_YPIXELS	14				// height of Font2 characters in pixels (no spacing)
 
+#define FONT3_XPIXELS
+#define FONT3_YPIXELS
+
 // defined constants representing colours pre-programmed into colour palette
 // there are 256 colours but only 8 are shown below, we write these to the colour registers
 // Add more defines below for more colours as you like - just make sure they match up with ColourPallete.h

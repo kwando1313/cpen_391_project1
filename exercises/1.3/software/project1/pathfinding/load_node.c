@@ -16,7 +16,7 @@
 int keyify(char* name);
 
 void handle_nodes(short file, graph* graph, hashmap* hashmap){
-	char c = "";
+	char c;
 	int x = 0;
 	int y = 0;
 	short data = 0;
@@ -24,16 +24,15 @@ void handle_nodes(short file, graph* graph, hashmap* hashmap){
 	int x_coord = 0;
 	int y_coord = 0;
 
-	char* text = "";
+	char* text;
 	while(data >= 0){
-		data = alt_up_sd_card_read(file);
-		c = (char)data;
+		c = (char)alt_up_sd_card_read(file);
 
 		if (c == '$'){
 			data = -1;
 		}
 
-		if (c == ','){
+		else if (c == ','){
 			printf("%s\n", text);
 			if (y == 0){
 				strcpy(node_name, text);
@@ -67,11 +66,10 @@ void handle_edges(short file, graph* graph, hashmap* hashmap){
 	int node2_key = 0;
 	int weight = 0;
 	short data = 0;
-	char c = "";
+	char c;
 	char* text = "A";
 	while(data >= 0){
-		data = alt_up_sd_card_read(file);
-		c = (char)data;
+		c = (char)alt_up_sd_card_read(file);
 		if (c == '$'){
 			data = -1;
 		}
@@ -87,8 +85,8 @@ void handle_edges(short file, graph* graph, hashmap* hashmap){
 		}
 		else if (c == ';' && y == 2){
 			weight = atoi(text);
-			int v1_id = (int*)hashmapGet(hashmap, node1_key);
-			int v2_id = (int*)hashmapGet(hashmap, node2_key);
+			int v1_id = (int)hashmapGet(hashmap, node1_key);
+			int v2_id = (int)hashmapGet(hashmap, node2_key);
 			cost cost1 = {weight};
 			if (v1_id != -1 && v2_id != -1){
 				add_edge(graph, v1_id, v2_id, cost1);
@@ -108,22 +106,6 @@ void handle_edges(short file, graph* graph, hashmap* hashmap){
 void handle_data(short file, graph* graph, hashmap* hashmap){
 	handle_nodes(file, graph, hashmap);
 	handle_edges(file, graph, hashmap);
-
-	//This is testing code that will be removed... vvv
-	for(int i = 0; i<graph->num_vertices; i++) {
-		vertex* v = get_vertex(graph, i);
-		WriteAPixel(v->x, v->y, CYAN);
-		adjacencyList* adjList = v->adjList;
-		int num_edges = adjList->num_neighbours;
-		printf("h\n");
-		printf("Edges: %d ", num_edges);
-		for (int j = 0; j<num_edges; j++) {
-			vertex* w = get_vertex(graph, adjList->neighbours[j]);
-			Line(v->x, v->y, w->x, w->y, RED);
-		}
-	}
-
-	printf("Finished reading file!\n");
 }
 
 int keyify(char* name){
