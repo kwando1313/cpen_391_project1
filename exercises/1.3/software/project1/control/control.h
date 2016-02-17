@@ -1,7 +1,6 @@
 #ifndef CONTROL_H_
 #define CONTROL_H_
 
-
 #define NO_RESPONSE 0
 #define INFO 1
 #define DIR 2
@@ -9,15 +8,15 @@
 #define ABOUT 4
 
 #include "graph.h"
+#include "button.h"
 
 
 void init_control();
 
 void listen();
+void kb_listen();
 
-// To remove after button fcns work
-//int get_button();
-
+bool is_kb_butt(Button* butt);
 
 int get_node(graph* graph);
 
