@@ -12,9 +12,9 @@ typedef struct Button {
     int bottom;
     char key;
     int id;
-    void (*p)();
-    bool (*ent_p)();
-    void (*kb_p)(char key); // what each button does
+    int mode; // 0 or 1 for pop up keyboard; 1 is active
+    int (*p)(void *); // what each button does
+
 } Button ;
 
 Button* keyboard;
@@ -22,8 +22,9 @@ Button* keyboard;
 // screen buttons
 #define DEL_BUTT keyboard[10]
 #define ENTER_BUTT keyboard[20]
-#define SPACE_BUTT keyboard[28]
-#define BACK_BUTT keyboard[29]
+
+#define BACK_BUTTON keyboard[29]
+
 #define INFO_BUTT keyboard[30]
 #define DIR_BUTT keyboard[31]
 #define PHOTO_BUTT keyboard[32]
@@ -39,31 +40,31 @@ Button* keyboard;
 #define KB_KEYS 30
 #define S_KEYS 9
 
-void init_kb_button(char key, int id);
-void init_s_button(char key, int id);
+#define ACTIVE 1
 
+Button init_button(char key, int id, int mode);
+
+// Button availability will be fixed dependent on mode. Unless we don't implement popup keyboard like I assumed.
 void init_keyboard();
 void destroy_keyboard();
+
+// Sets pop up keyboard keys
+void pop_up();
+void pop_down();
+
 
 // Gets the button upon input for control
 int falls_inside(Point p, Button b);
 Button* get_button(Point p);
 
 // ptr fcns
-void do_key(char key);
-void do_del();
-void do_back();
-bool do_enter();
-void do_info();
-//void do_dir();
-void do_photo();
-void do_about();
-void do_pop();
-void do_west();
-void do_east();
-void do_north();
-void do_south();
 
+void do_info(void *);
+void do_dir(void *);
+void do_photo(void *);
+void do_about(void *);
+void do_pop(void *);
+void do_key(void *);
 
 
 #endif /* BUTTON_H_ */

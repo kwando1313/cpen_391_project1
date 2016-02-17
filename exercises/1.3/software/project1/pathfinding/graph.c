@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-
 #include "graphics.h"
 #include "graph.h"
 
@@ -181,11 +180,6 @@ void draw_graph(graph* graph, int v_colour, int edge_colour){
 			vertex* w = get_vertex(graph, adjList->neighbours[j]);
 			Line(v->x, v->y, w->x, w->y, edge_colour);
 		}
-	}
-
-	for(int i = 0; i<graph->num_vertices; i++) {
-		vertex* v = get_vertex(graph, i);
-		WriteAPixel(v->x, v->y, v_colour);
 	}
 }
 

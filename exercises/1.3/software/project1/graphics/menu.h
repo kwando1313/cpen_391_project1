@@ -29,47 +29,7 @@
 #define ST 255
 #define SB 330
 
-#define WL 550
-#define WR 600
-#define WT 240
-#define WB 290
-
-#define EL 700
-#define ER 750
-#define ET 240
-#define EB 290
-
-#define NL 625
-#define NR 675
-#define NT 210
-#define NB 260
-
-#define SL 625
-#define SR 675
-#define ST 270
-#define SB 320
-
-//TODO do we need these?
-#define IU 330
-#define ID 405
-
-#define DL 650
-#define DR 800
-#define DU 330
-#define DD 405
-
-#define PL 500
-#define PR 650
-#define PU 405
-#define PD 480
-
-#define AL 650
-#define AR 800
-#define AU 405
-#define AD 480
-
 void draw_image(Point topLeft, short file);//, int bmpWidth, int bmpHeight);
-void load_image(Point bottomLeft, char* filename);//, int bmpWidth, int bmpHeight);
 
 void load_image(Point bottomLeft, char* filename);//, char* filename, int bmpheight, int bmpwidth);
 void draw_keyboard(Point leftCorner, int size);
@@ -89,7 +49,5 @@ void directions_screen();
 void photo_screen();
 void init_screen();
 void pop_screen();
-//TODO: need fcn to redraw the map after finished with keyboard
-void map_screen();
 
 #endif /* MENU_H_ */

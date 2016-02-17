@@ -2,6 +2,7 @@
 #include "FontSize.h"
 #include "menu.h"
 #include "Colours.h"
+#include "Directions.h"
 #include <stdio.h>
 #include <string.h>
 #include <touchscreen.h>
@@ -37,6 +38,13 @@ int bmpWidth, bmpHeight;
  * 	Length of filenames cannot be longer than 12 characters.
  * 	including file extension (i.e. "abcdefghi.bmp" is invalid.
  */
+
+void read_bytes(unsigned char* str, int len, short file){
+	for(int x=0 ; x<len ; x++){
+		str[x]=(unsigned char)(alt_up_sd_card_read(file));
+	}
+}
+
 void load_image(Point topLeft, char* filename){
 	bool found_file = false;
 	int ystart = 20;	// where we want to start the y pixels. Prints up from this row.
@@ -319,24 +327,83 @@ void draw_menu(Point leftCorner, int width, int height, int borderWidth, int bor
 	}
 }
 
+void draw_keyboard(Point leftCorner, int size){
+//qwertyuiop
+	//asdfghjkl
+	//zxcvbnm
 
+	char topRow[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '\0'};
+	char homeRow[] = {'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '\0'};
+	char bottomRow[] = {'Z', 'X', 'C', 'V', 'B', 'N', 'M', '\0'};
+
+	int x = 0;
+	Point initialLeftCorner = {leftCorner.x, leftCorner.y};
+	while(topRow[x] != '\0'){
+		char* c = "A";
+		strncpy(c, &topRow[x], 1);
+		//255 is WHITE
+		draw_button(leftCorner, size, size, 1, BLACK, 255, BLACK, c, MEDIUM);
+		leftCorner.x += size;
+		x++;
+	}
+	draw_button(leftCorner, size, size, 1, BLACK, 255, BLACK, "<-", MEDIUM);
+	x = 0;
+	leftCorner.x = initialLeftCorner.x;
+	leftCorner.y = initialLeftCorner.y + size;
+	while(homeRow[x] != '\0'){
+		char* c = "A";
+		strncpy(c, &homeRow[x], 1);
+		draw_button(leftCorner, size, size, 1, BLACK, 255, BLACK, c, MEDIUM);
+		leftCorner.x += size;
+		x++;
+	}
+	draw_button(leftCorner, 2*size, size, 1, BLACK, 255, BLACK, "ENTER", MEDIUM);
+	leftCorner.x = initialLeftCorner.x;
+	leftCorner.y = initialLeftCorner.y + 2*size;
+	x = 0;
+	while(bottomRow[x] != '\0'){
+		char* c = "A";
+		strncpy(c, &bottomRow[x], 1);
+		draw_button(leftCorner, size, size, 1, BLACK, 255, BLACK, c, MEDIUM);
+		leftCorner.x += size;
+		x++;
+	}
+	draw_button(leftCorner, 2*size, size, 1, BLACK, 255, BLACK, "SPACE", MEDIUM);
+	leftCorner.x += 2*size;
+	draw_button(leftCorner, 2*size, size, 1, BLACK, 255, BLACK, "BACK", MEDIUM);
+	return;
+}
+
+// Includes the RHS of the screen (i.e everything but the map)
 void init_screen(){
+		clear_screen(255); // 255 is WHITE
 
-		Point point6 = {500, 330};
-		Point point7 = {650, 330}; //Adjust these to fit within the margins...
+		Point point6 = {500, 380};
+		Point point7 = {650, 380}; //Adjust these to fit within the margins...
+		Point point8 = {500, 330};
+		Point point9 = {500, 200};
 
 		char* firstTextArray[] = {"Info", "Photo", ""};
 		char* secondTextArray[] = {"Directions", "About", ""};
+		char* thirdTextArray[] = {"Search", ""};
+		char* fourthTextArray[] = {"Compass", ""};
 
-		draw_information_box("Pathfinding Map (Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nThis is our project!");
-		draw_menu(point6, 150, 75, 2, BLACK, 255, BLACK, SMALL, firstTextArray);
+		about_screen();
 
-		draw_menu(point7, 150, 75, 2, BLACK, 255, BLACK, SMALL, secondTextArray);
+		draw_menu(point6, 150, 50, 2, BLACK, 255, BLACK, SMALL, firstTextArray);
+
+		draw_menu(point7, 150, 50, 2, BLACK, 255, BLACK, SMALL, secondTextArray);
+
+		draw_menu(point8, 300, 50, 2 , BLACK, 255, BLACK, SMALL, thirdTextArray);
+
+		draw_menu(point9, 300, 130, 2 , BLACK, 255, BLACK, SMALL, fourthTextArray);
+
+		draw_arrows();
 
 }
 
 void about_screen(){
-	draw_information_box("Pathfinding Map (Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nThis is our project!");
+	draw_information_box("Pathfinding Map (CPEN 391 Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nThis is our project!");
 }
 
 void info_screen(){
@@ -354,8 +421,87 @@ void photo_screen(){
 	draw_information_box("BUILDING PHOTO");
 }
 
-void read_bytes(unsigned char* str, int len, short file){
-	for(int x=0 ; x<len ; x++){
-		str[x]=(unsigned char)(alt_up_sd_card_read(file));
+// draw the pop up keyboard on the LHS of the screen
+void pop_screen(){
+	Point p = {30, 330};
+	Point p1 = {0, 300};
+	Point p2 = {0, 230};
+	char* t[] = {" ", ""};
+
+	//bounded in (0-500, 300-480)
+	draw_menu(p1, 500, 180, 2 , BLACK, 255, BLACK, SMALL, t);
+	//bounded in (0-500, 230-300)
+	draw_menu(p2, 500, 70, 2 , BLACK, 255, BLACK, SMALL, t);
+	//bounded in (30-470, 330-450)
+	draw_keyboard(p, 40);
+}
+
+void map_screen(){
+	// TODO:
+
+}
+
+void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int direction){
+	Point topRight = {topLeft.x + width, topLeft.y};
+	Point bottomLeft = {topLeft.x, topLeft.y + height};
+	Point bottomRight = {topLeft.x + width, topLeft.y + height};
+	draw_filled_rectangle_border(topLeft, topRight, bottomLeft, bottomRight, fillColour, borderColour, borderWidth);
+
+	Point cornerOne = {0, 0};
+	Point cornerTwo = {0, 0};
+	Point cornerThree = {0, 0};
+
+	if (direction == UP){
+		cornerOne.x = topLeft.x + width/2;
+		cornerOne.y = topLeft.y + height/3;
+		cornerTwo.x = topLeft.x + width/3;
+		cornerTwo.y = topLeft.y + 2*height/3;
+		cornerThree.x = topLeft.x + 2*width/3;
+		cornerThree.y = topLeft.y + 2*height/3;
 	}
+	else if (direction == RIGHT){
+		cornerOne.x = topLeft.x + width/3;
+		cornerOne.y = topLeft.y + height/3;
+		cornerTwo.x = topLeft.x + width/3;
+		cornerTwo.y =  topLeft.y + 2*height/3;
+		cornerThree.x = topLeft.x + 2*width/3;
+		cornerThree.y = topLeft.y + height/2;
+	}
+	else if (direction == DOWN){
+
+		cornerOne.x = topLeft.x + width/3;
+		cornerOne.y = topLeft.y + height/3;
+		cornerTwo.x = topLeft.x + 2*width/3;
+		cornerTwo.y =  topLeft.y + height/3;
+		cornerThree.x = topLeft.x + width/2;
+		cornerThree.y = topLeft.y + 2*height/3;
+	}
+	else{
+
+		cornerOne.x = topLeft.x + width/3;
+		cornerOne.y = topLeft.y + height/2;
+		cornerTwo.x = topLeft.x + 2*width/3;
+		cornerTwo.y =  topLeft.y + height/3;
+		cornerThree.x = topLeft.x + 2*width/3;
+		cornerThree.y = topLeft.y + 2*height/3;
+	}
+
+	draw_filled_triangle(cornerOne, cornerTwo, cornerThree, BLACK);
+}
+
+void draw_arrows(){
+	// bounded in (500-800, 200-330); midway pts: (650, 275)
+	Point LPOINT = {550, 240};
+	Point RPOINT = {700, 240};
+	Point UPOINT = {625, 210};
+	Point DPOINT = {625, 270};
+
+	// 255 is WHITE
+	draw_arrow(LPOINT, 50, 50, 1, BLACK, 255, LEFT);
+
+	draw_arrow(RPOINT, 50, 50, 1, BLACK, 255, RIGHT);
+
+	draw_arrow(UPOINT, 50, 50, 1, BLACK, 255, UP);
+
+	draw_arrow(DPOINT, 50, 50, 1, BLACK, 255, DOWN);
 }

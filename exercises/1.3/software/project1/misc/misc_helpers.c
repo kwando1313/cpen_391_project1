@@ -27,6 +27,7 @@ int falls_between(int item, int edge, int otherEdge){
 	int upper = max(edge, otherEdge);
 	return (lower <= item && item <= upper);
 }
+
 int avg_val(int x, int y, int z){
 	return (x+y+z)/3;
 }
