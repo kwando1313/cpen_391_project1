@@ -49,7 +49,7 @@ void init_kb_button(char key, int id){
 		i = id - 21;
 		j = 2;
 	}
-	else if(id == SPACE_BUTT){
+	else if(id == SPACE_BUTT.id){
 		SPACE_BUTT.left = 310;
 		SPACE_BUTT.right = 390;
 		SPACE_BUTT.top = 410;
@@ -57,7 +57,7 @@ void init_kb_button(char key, int id){
 		SPACE_BUTT.kb_p = do_key;
 		return;
 	}
-	else if(id == BACK_BUTT){
+	else if(id == BACK_BUTT.id){
 		BACK_BUTT.left = 390;
 		BACK_BUTT.right = 470;
 		BACK_BUTT.top = 410;
