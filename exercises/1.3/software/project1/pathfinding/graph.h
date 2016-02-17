@@ -76,5 +76,6 @@ void print_path_console(graph* graph, int start, int goal);
 path_points* get_path_points(graph* graph, int start, int goal);
 void destroy_path_points(path_points* path);
 void draw_graph(graph* graph, int v_colour, int edge_colour);
+void draw_node(int colour, vertex* v);
 
 #endif

@@ -169,10 +169,12 @@ void destroy_path_points(path_points* path){
 	free(path);
 }
 
+// Draws the edges and nodes of the graph
 void draw_graph(graph* graph, int v_colour, int edge_colour){
 
 	for(int i = 0; i<graph->num_vertices; i++) {
 		vertex* v = get_vertex(graph, i);
+		draw_node(v_colour, v);
 		adjacencyList* adjList = v->adjList;
 		int num_edges = adjList->num_neighbours;
 		for (int j = 0; j<num_edges; j++) {
@@ -185,4 +187,10 @@ void draw_graph(graph* graph, int v_colour, int edge_colour){
 		vertex* v = get_vertex(graph, i);
 		WriteAPixel(v->x, v->y, v_colour);
 	}
+}
+
+// Draws a filled-in circle with fixed a radius at a node
+void draw_node(int colour, vertex* v){
+	Point p = {v->x, v->y};
+	draw_filled_circle(p, RADIUS, colour);
 }
