@@ -5,7 +5,7 @@
 #include <math.h>
 #include <assert.h>
 
-#define DEFAULT_PATH_SIZE 30
+#define DEFAULT_PATH_SIZE 16
 
 astar_node* init_astar_node(int v_id, int g_val, int h_val);
 int get_distance_heuristic(graph* graph, int start, int goal);
@@ -35,10 +35,12 @@ void print_astar_node(astar_node* node);
  * - chosen btree(O(logn) for all). Heap would be O(n) to search, O(logn) for find/remove, O(logn) to add.
  */
 
+void hashmapInsert(hashmap* map, const void* data, unsigned int key);
+
+void* hashmapGet(hashmap* map, unsigned int key);
 
 int* a_star(graph* graph, int start, int goal){
-	//TODO: closed_set should be replaced with hashset
-	bnode* closed_set = NULL;
+	hashmap* closed_set = hashmapCreate(DEFAULT_PATH_SIZE);
 	hashmap* path = hashmapCreate(DEFAULT_PATH_SIZE);
 
 	astar_node* curr_node = init_astar_node(start, 0, get_distance_heuristic(graph, start, goal));
@@ -55,14 +57,14 @@ int* a_star(graph* graph, int start, int goal){
 		astar_node* next_node;
 
 		if (curr_node->v_id == goal) {
-			free_tree(closed_set, true);
+			hashmapDelete(closed_set);
 			//free_tree(open_set, true);
 			free_tree(vid_to_astar_node, true);
 			free(curr_node);
 			return reconstruct_path(path, start, goal);
 		}
 
-		closed_set = insert_bnode(closed_set, curr_node->v_id, NULL);
+		hashmapInsert(closed_set, NULL, curr_node->v_id);
 		vertex* curr_vertex = get_vertex(graph, curr_node->v_id);
 
 		int num_neighbours = curr_vertex->adjList->num_neighbours;
@@ -70,7 +72,7 @@ int* a_star(graph* graph, int start, int goal){
 		for (int i = 0; i < num_neighbours; i++){
 			int neighbour_id = curr_vertex->adjList->neighbours[i];
 
-			if (node_exists(closed_set, neighbour_id)) {
+			if (hashmapGet(closed_set, neighbour_id) != HASHMAP_ERROR) {
 				//already explored node
 				continue;
 			}
