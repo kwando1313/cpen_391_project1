@@ -22,6 +22,7 @@ Button* keyboard;
 // screen buttons
 #define DEL_BUTT keyboard[10]
 #define ENTER_BUTT keyboard[20]
+#define SPACE_BUTT keyboard[28]
 #define BACK_BUTT keyboard[29]
 #define INFO_BUTT keyboard[30]
 #define DIR_BUTT keyboard[31]

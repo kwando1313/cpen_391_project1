@@ -17,12 +17,57 @@ void init_kb_button(char key, int id){
 	keyboard[id].key = key;
 	keyboard[id].id = id;
 
-	/*TODO: We can use the id to know where to draw.
-			Use the key to initialise the fcn ptr is. */
-	keyboard[id].left = 0;
-	keyboard[id].right = 0;
-	keyboard[id].top = 0;
-	keyboard[id].bottom = 0;
+	// We can use the id to know where to draw
+	int i;
+	int j;
+	// Del, Enter, Space, and Back are special cases
+	if(id < DEL_BUTT.id){
+		i = id;
+		j = 0;
+	}
+	else if(id == DEL_BUTT.id){
+		DEL_BUTT.left = 430;
+		DEL_BUTT.right = 470;
+		DEL_BUTT.top = 330;
+		DEL_BUTT.bottom = 370;
+		DEL_BUTT.p = do_del;
+		return;
+	}
+	else if(id < ENTER_BUTT.id){
+		i = id - 11;
+		j = 1;
+	}
+	else if(id == ENTER_BUTT.id){
+		ENTER_BUTT.left = 390;
+		ENTER_BUTT.right = 470;
+		ENTER_BUTT.top = 370;
+		ENTER_BUTT.bottom = 410;
+		ENTER_BUTT.ent_p = do_enter;
+		return;
+	}
+	else if(id >= 21){
+		i = id - 21;
+		j = 2;
+	}
+	else if(id == SPACE_BUTT){
+		SPACE_BUTT.left = 310;
+		SPACE_BUTT.right = 390;
+		SPACE_BUTT.top = 410;
+		SPACE_BUTT.bottom = 450;
+		SPACE_BUTT.kb_p = do_key;
+		return;
+	}
+	else if(id == BACK_BUTT){
+		BACK_BUTT.left = 390;
+		BACK_BUTT.right = 470;
+		BACK_BUTT.top = 410;
+		BACK_BUTT.bottom = 450;
+		BACK_BUTT.p = do_back;
+	}
+	keyboard[id].left = 30 + 40*i;
+	keyboard[id].right = 70 + 40*i;
+	keyboard[id].top = 330 + 40*j;
+	keyboard[id].bottom = 370 + 40*j;
 	keyboard[id].kb_p = do_key;
 }
 
@@ -134,7 +179,7 @@ Button* get_button(Point p){
 }
 
 // Display info of the next node touched
-void do_info(void* nothing){
+void do_info(){
 	// TODO: Need to load up some info text for each node.
 	info_screen();
 	//int node = get_node();
@@ -161,7 +206,6 @@ void do_photo(void* nothing){
 	// TODO: Need to load up a photo for each node
 	photo_screen();
 	//int node = get_node();
-
 }
 
 // Display app about
@@ -209,7 +253,7 @@ void do_del(){
 /* On valid search, go to and highlight the searched node? Re-draw the map.
 	On invalid search, display invalid search and keep listening for keyboard inputs */
 bool do_enter(){
-	// TODO: first check validity of search
+	// TODO: first check validity of search, add a name for every node and check if the input hits a match
 	do_back();
 	return 1;
 }
@@ -217,4 +261,5 @@ bool do_enter(){
 // Redraw the map
 void do_back(){
 	// TODO:
+	init_screen(); //replace this
 }

@@ -396,9 +396,17 @@ void pop_screen(){
 	Point p2 = {0, 230};
 	char* t[] = {" ", ""};
 
+	//bounded in (0-500, 300-480)
 	draw_menu(p1, 500, 180, 2 , BLACK, 255, BLACK, SMALL, t);
+	//bounded in (0-500, 230-300)
 	draw_menu(p2, 500, 70, 2 , BLACK, 255, BLACK, SMALL, t);
+	//bounded in (30-470, 330-450)
 	draw_keyboard(p, 40);
+}
+
+void map_screen(){
+	// TODO:
+
 }
 
 void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int direction){
