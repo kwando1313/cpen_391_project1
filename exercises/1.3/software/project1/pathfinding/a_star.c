@@ -23,9 +23,10 @@ void print_astar_node(astar_node* node);
  * closed_set:
  * - searchable by v_id
  * - insert a v_id
- * - chosen btree(O(logn)), should change to hashset(O(1))
+ * - hashset
  *
  * path:
+ * - map random vertices to each other
  * - hashmap
  *
  * open_set:
