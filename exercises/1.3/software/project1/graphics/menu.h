@@ -6,6 +6,50 @@
 
 #define IL 500
 #define IR 650
+#define IT 330
+#define IB 405
+
+#define DL 650
+#define DR 800
+#define DT 330
+#define DB 405
+
+#define PL 500
+#define PR 650
+#define PT 405
+#define PB 480
+
+#define AL 650
+#define AR 800
+#define AT 405
+#define AB 480
+
+#define SL 500
+#define SR 800
+#define ST 255
+#define SB 330
+
+#define WL 550
+#define WR 600
+#define WT 240
+#define WB 290
+
+#define EL 700
+#define ER 750
+#define ET 240
+#define EB 290
+
+#define NL 625
+#define NR 675
+#define NT 210
+#define NB 260
+
+#define SL 625
+#define SR 675
+#define ST 270
+#define SB 320
+
+//TODO do we need these?
 #define IU 330
 #define ID 405
 
@@ -44,4 +88,8 @@ void info_screen();
 void directions_screen();
 void photo_screen();
 void init_screen();
+void pop_screen();
+//TODO: need fcn to redraw the map after finished with keyboard
+void map_screen();
+
 #endif /* MENU_H_ */
