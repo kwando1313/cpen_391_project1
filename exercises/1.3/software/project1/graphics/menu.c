@@ -18,11 +18,9 @@ extern const unsigned int ColourPalletteData[256];
  */
 //#define IMGHEIGHT 	525
 //#define IMGWIDTH 	717
-#define IMGHEIGHT 	1050
-#define IMGWIDTH 	500
-#define BOXHEIGHT	480
-#define BOXWIDTH 	500
-#define HEADERSIZE 	54
+#define DISPLAY_HEIGHT	480
+#define DISPLAY_WIDTH 	500
+#define HEADERSIZE 		54
 #define COLOURTABLESIZE 1024
 
 void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart);
@@ -31,7 +29,7 @@ void draw_image_old(Point topLeft, short file);
 int rgb_from_pixel_arr(char*** pixel, int x, int y);
 
 // Store the integer values of the colours for each pixel.
-int pixel[IMGHEIGHT][IMGWIDTH];
+int** image_pixels; //full_map[bmpWidth][bmpHeight]
 int bmpWidth, bmpHeight;
 
 /*	Load image from SD Card.
@@ -158,7 +156,12 @@ void get_header (short file){
 
 	bmpWidth = *(int *) width;
 	bmpHeight = *(int *) height;
-	printf("%d, %d", bmpWidth, bmpHeight);
+	printf("bmp width: %d, bmp height: %d\n", bmpWidth, bmpHeight);
+
+	image_pixels = malloc(sizeof(int*)*bmpWidth);
+	for(int i = 0; i<bmpWidth; i++){
+		image_pixels[i] = malloc(sizeof(int)*bmpHeight);
+	}
 
 	unsigned char entry[4];
 
@@ -173,10 +176,11 @@ void get_header (short file){
 
 /* Store pixel colours in 2-D array.
  */
-void get_pixels (short file){
+void get_pixels(short file){
+	printf("bmp width: %d, bmp height: %d\n", bmpWidth, bmpHeight);
 	for (int j = 0; j < bmpHeight; j++){
 		for (int i = 0; i < bmpWidth; i++){
-			pixel[j][i] = alt_up_sd_card_read(file);
+			image_pixels[i][j] = alt_up_sd_card_read(file);
 		}
 	}
 }
@@ -186,12 +190,12 @@ void get_pixels (short file){
  * but actually draw from the bottom left first.
  */
 void draw_img (Point topLeft, short file, int xstart, int ystart){
-	for (int y = 0; y < BOXHEIGHT; y++){
-		for (int x = 0; x < BOXWIDTH; x++){
-			int colour = pixel[ystart + y][xstart + x];
+	for (int y = 0; y < DISPLAY_HEIGHT; y++){
+		for (int x = 0; x < DISPLAY_WIDTH; x++){
+			int colour = image_pixels[xstart + x][ystart + y];
 //			if(getPalleteAddr(int RGB);
 //			int getRGB(int addr);
-			WriteAPixel(topLeft.x + x, topLeft.y + BOXHEIGHT-y, colour);
+			WriteAPixel(topLeft.x + x, topLeft.y + DISPLAY_HEIGHT-y, colour);
 		}
 	}
 }
