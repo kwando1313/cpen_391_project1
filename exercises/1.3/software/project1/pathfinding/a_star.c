@@ -5,7 +5,7 @@
 #include <math.h>
 #include <assert.h>
 
-#define DEFAULT_PATH_SIZE 16
+#define DEFAULT_PATH_SIZE 8
 
 astar_node* init_astar_node(int v_id, int g_val, int h_val);
 int get_distance_heuristic(graph* graph, int start, int goal);
@@ -44,22 +44,23 @@ int* a_star(graph* graph, int start, int goal){
 	hashmap* path = hashmapCreate(DEFAULT_PATH_SIZE);
 
 	astar_node* curr_node = init_astar_node(start, 0, get_distance_heuristic(graph, start, goal));
+
 	//maps fval to astar_node
 	bnode* open_set = create_new_bnode(curr_node->f_val, curr_node);
-	//should be hashmap-> for now, using btrees
-	bnode* vid_to_astar_node = NULL;
-	vid_to_astar_node = insert_bnode(vid_to_astar_node, curr_node->v_id, curr_node);
+
+	hashmap* vid_to_astar_node = hashmapCreate(DEFAULT_PATH_SIZE);
+	hashmapInsert(vid_to_astar_node, curr_node, curr_node->v_id);
 
 	while(open_set != NULL) {
 		curr_node = pop_smallest(&open_set); //pop off the (estimated) best node
-		vid_to_astar_node = delete_bnode_with_key(vid_to_astar_node, curr_node->v_id);
+		hashmapRemove(vid_to_astar_node, curr_node->v_id);
 
 		astar_node* next_node;
 
 		if (curr_node->v_id == goal) {
 			hashmapDelete(closed_set);
 			//free_tree(open_set, true);
-			free_tree(vid_to_astar_node, true);
+			hashmapDelete(vid_to_astar_node);
 			free(curr_node);
 			return reconstruct_path(path, start, goal);
 		}
@@ -80,13 +81,14 @@ int* a_star(graph* graph, int start, int goal){
 			int tentative_g = curr_node->g_val + get_cost(graph, curr_node->v_id, neighbour_id);
 
 			//node hasnt been explored. Either in our list to explore, or completely brand new
-			if (!node_exists(vid_to_astar_node, neighbour_id)) {
+			if (hashmapGet(vid_to_astar_node, neighbour_id) == HASHMAP_ERROR) {
 				next_node = init_astar_node(neighbour_id, tentative_g, get_distance_heuristic(graph, neighbour_id, goal));
 				open_set = insert_bnode(open_set, next_node->f_val, next_node);
-				vid_to_astar_node = insert_bnode(vid_to_astar_node, neighbour_id, next_node);
+				hashmapInsert(vid_to_astar_node, next_node, neighbour_id);
 			} else {
 				//get g score of neighbour
-				next_node = (astar_node*) get_data(vid_to_astar_node, neighbour_id);
+				next_node = (astar_node*) hashmapGet(vid_to_astar_node, neighbour_id);
+				assert(next_node != HASHMAP_ERROR);
 
 				if (tentative_g >= next_node->g_val) {
 					// this path is not better
@@ -94,12 +96,12 @@ int* a_star(graph* graph, int start, int goal){
 				} else {
 					//found a better path to that node
 					open_set = delete_bnode_with_v_id(open_set, next_node->f_val, next_node->v_id);
-					vid_to_astar_node = delete_bnode_with_key(vid_to_astar_node, neighbour_id);
+					hashmapRemove(vid_to_astar_node, neighbour_id);
 
 					next_node = init_astar_node(neighbour_id, tentative_g, get_distance_heuristic(graph, neighbour_id, goal));
 
 					open_set = insert_bnode(open_set, next_node->f_val, next_node);
-					vid_to_astar_node = insert_bnode(vid_to_astar_node, neighbour_id, next_node);
+					hashmapInsert(vid_to_astar_node, next_node, neighbour_id);
 				}
 			}
 
