@@ -26,8 +26,6 @@ extern const unsigned int ColourPalletteData[256];
 
 void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart);
 void read_bytes(unsigned char* str, int len, short file);
-void draw_image_old(Point topLeft, short file);
-int rgb_from_pixel_arr(char*** pixel, int x, int y);
 
 // Store the integer values of the colours for each pixel.
 int** image_pixels; //full_map[bmpWidth][bmpHeight]
@@ -80,72 +78,6 @@ void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart){
 	get_header(file);
 	get_pixels(file);
 	draw_img(topLeft, file, 0, ystart);
-	//draw_image_old(topLeft, file);
-}
-
-void draw_image_old(Point topLeft, short file){
-	setUpPallete(); //TODO doesn't need to be called more than once. Should be done in some general init() function
-	char header;
-	unsigned char height[4];
-	unsigned char width[4];
-	unsigned char buf[200];
-
-	printf("Reading file...\n");
-	//54
-
-	read_bytes(buf, 18, file);
-	read_bytes(width, 4, file);
-	read_bytes(height, 4, file);
-	read_bytes(buf, 28, file);
-
-	int bmpWidth = *(int *) width;
-	int bmpHeight = *(int *) height;
-	//printf("%d", test);
-
-	printf("\n");
-	short data =0;
-
-	char pixel[bmpHeight][bmpWidth][3];
-	char B[bmpHeight][bmpWidth];
-	char G[bmpHeight][bmpWidth];
-	char R[bmpHeight][bmpWidth];
-
-	for (int j = 0; j < bmpHeight; j++){
-		for (int i = 0; i < bmpWidth; i++){
-			data = alt_up_sd_card_read(file);
-			B[j][i] = (char)data;
-			data = alt_up_sd_card_read(file);
-			G[j][i] = (char)data;
-			data = alt_up_sd_card_read(file);
-			R[j][i] = (char)data;
-			pixel[j][i][0] = R[j][i];
-			pixel[j][i][1] = G[j][i];
-			pixel[j][i][2] = B[j][i];
-		}
-	}
-
-	for (int y = 0; y < bmpHeight; y++){
-		for (int x = 0; x < bmpWidth; x++){
-			int initialX = x;
-			int rgb = rgb_from_pixel_arr(pixel, x, y);
-			int colour = getPalleteAddr(rgb);
-			int curr_rgb = rgb;
-			while(rgb == curr_rgb && x < bmpWidth){
-				x++;
-				curr_rgb = rgb_from_pixel_arr(pixel, x, y);
-			}
-
-			HLine(topLeft.x + initialX, topLeft.y + bmpHeight-y, x - initialX, colour);
-			//WriteAPixel(topLeft.x + x, topLeft.y + bmpHeight-y, colour);
-			printf("rgb: %x\n", rgb);
-			printf("write colour %d\n", colour);
-		}
-	}
-}
-
-int rgb_from_pixel_arr(char*** pixel, int x, int y){
-	int rgb = (0xff & pixel[y][x][0]) << 16 | (0xff & pixel[y][x][1]) << 8 | (0xff & pixel[y][x][2]);
-	return rgb;
 }
 
 /* Get header information.
