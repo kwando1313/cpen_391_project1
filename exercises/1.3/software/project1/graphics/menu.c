@@ -7,6 +7,7 @@
 #include <touchscreen.h>
 #include <altera_up_sd_card_avalon_interface.h>
 
+extern const unsigned int ColourPalletteData[256];
 
 /*	IMGHEIGHT 	: Full height of our BMP
  * 	IMGWIDTH 	: Full width of our BMP
@@ -15,6 +16,8 @@
  * 	HEADERSIZE changes with type of BMP file
  * 	COLOURTABLESIZE = size of colour table containing 256 colours (with BGRA fields)
  */
+//#define IMGHEIGHT 	525
+//#define IMGWIDTH 	717
 #define IMGHEIGHT 	1050
 #define IMGWIDTH 	500
 #define BOXHEIGHT	480
@@ -23,12 +26,13 @@
 #define COLOURTABLESIZE 1024
 
 void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart);
-void read_bytes(char* str, int len, short file);
+void read_bytes(unsigned char* str, int len, short file);
 void draw_image_old(Point topLeft, short file);
 int rgb_from_pixel_arr(char*** pixel, int x, int y);
 
 // Store the integer values of the colours for each pixel.
 int pixel[IMGHEIGHT][IMGWIDTH];
+int bmpWidth, bmpHeight;
 
 /*	Load image from SD Card.
  * 	SD Card must be formatted in FAT16 to work with DE2.
@@ -67,10 +71,10 @@ void load_image(Point topLeft, char* filename){
 }
 
 void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart){
-//	get_header(file);
-//	get_pixels(file);
-//	draw_img(topLeft, file, 0, ystart);
-	draw_image_old(topLeft, file);
+	get_header(file);
+	get_pixels(file);
+	draw_img(topLeft, file, 0, ystart);
+	//draw_image_old(topLeft, file);
 }
 
 void draw_image_old(Point topLeft, short file){
@@ -143,20 +147,35 @@ int rgb_from_pixel_arr(char*** pixel, int x, int y){
  * Iterate and do not print the colour table.
  */
 void get_header (short file){
-	char header;
-	for(int x=0 ; x < HEADERSIZE ; x++){
-		header=(unsigned char)(alt_up_sd_card_read(file));
-		printf ("%hhx ",header & 0xff);
-	}
-	for (int i = 0; i < COLOURTABLESIZE; i++){
-		alt_up_sd_card_read(file);
+	unsigned char height[4];
+	unsigned char width[4];
+	unsigned char buf[30];
+
+	read_bytes(buf, 18, file);
+	read_bytes(width, 4, file);
+	read_bytes(height, 4, file);
+	read_bytes(buf, 28, file);
+
+	bmpWidth = *(int *) width;
+	bmpHeight = *(int *) height;
+	printf("%d, %d", bmpWidth, bmpHeight);
+
+	unsigned char entry[4];
+
+	for (int i = 0; i < COLOURTABLESIZE; i+=4){
+		read_bytes(entry, 4, file);
+		int rgb = *(int*)entry;
+		if(ColourPalletteData[i/4] != rgb){
+			printf("entry: %d, rgb: %x\n", i/4, rgb);
+		}
 	}
 }
+
 /* Store pixel colours in 2-D array.
  */
 void get_pixels (short file){
-	for (int j = 0; j < IMGHEIGHT; j++){
-		for (int i = 0; i < IMGWIDTH; i++){
+	for (int j = 0; j < bmpHeight; j++){
+		for (int i = 0; i < bmpWidth; i++){
 			pixel[j][i] = alt_up_sd_card_read(file);
 		}
 	}
@@ -170,6 +189,8 @@ void draw_img (Point topLeft, short file, int xstart, int ystart){
 	for (int y = 0; y < BOXHEIGHT; y++){
 		for (int x = 0; x < BOXWIDTH; x++){
 			int colour = pixel[ystart + y][xstart + x];
+//			if(getPalleteAddr(int RGB);
+//			int getRGB(int addr);
 			WriteAPixel(topLeft.x + x, topLeft.y + BOXHEIGHT-y, colour);
 		}
 	}
@@ -329,7 +350,7 @@ void photo_screen(){
 	draw_information_box("BUILDING PHOTO");
 }
 
-void read_bytes(char* str, int len, short file){
+void read_bytes(unsigned char* str, int len, short file){
 	for(int x=0 ; x<len ; x++){
 		str[x]=(unsigned char)(alt_up_sd_card_read(file));
 	}

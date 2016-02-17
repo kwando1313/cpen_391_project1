@@ -6,14 +6,11 @@
 #include "load_node.h"
 
 int main(void) {
-//	printf("start\n\n");
-//
-//	clear_screen(255);
-//	Point x = {0,0};
-//	load_image(x, "WTF.BMP");
-//
-//	printf("\n\nend\n");
+	clear_screen(255);
+	Point x = {0,0};
+	//load_image(x, "ubcnew.BMP");
+	load_image(x, "ubc1.BMP");
 
-	graph_test();
+	printf("\n\nend\n");
 	return 0;
 }

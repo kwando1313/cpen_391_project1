@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+extern const unsigned int ColourPalletteData[256];
+
 #define NUM_COLOURS 256
 
 #define GraphicsCommandReg   		(*(volatile unsigned short int *)(0x84000000))
