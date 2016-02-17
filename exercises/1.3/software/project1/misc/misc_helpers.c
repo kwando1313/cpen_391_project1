@@ -77,3 +77,32 @@ int sign(int a)
     else
         return 1 ;
 }
+
+load_file(char* filename, void (*func)(short)){
+	bool found_file = false;
+
+	if (get_device_reference() == NULL || !alt_up_sd_card_is_Present() || !alt_up_sd_card_is_FAT16()){
+		printf("Can't find device, or device not configured properly\n");
+		return;
+	}
+
+	char filename_all_caps[strlen(filename)];
+	to_caps(filename, filename_all_caps);
+	char found_file_name[13];
+	if (alt_up_sd_card_find_first(".", found_file_name) != 0){
+		printf("Couldn't find root dir\n");
+		return;
+	}
+
+	do {
+		if (strcmp(found_file_name, filename_all_caps)== 0){
+			short int file = alt_up_sd_card_fopen(found_file_name, false);
+			if (file >= 0){
+				printf("found file %s in SD\n", filename_all_caps);
+				(*func)(file);
+				found_file = true; //want to close file, so use this rather than returning
+			}
+			alt_up_sd_card_fclose(file);
+		}
+	}while(!found_file && alt_up_sd_card_find_next(found_file_name) == 0);
+}

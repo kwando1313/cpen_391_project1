@@ -15,6 +15,8 @@
 
 typedef struct{int x, y; } Point;
 
+load_file(char* filename, void (*func)(short));
+
 void read_bytes_from_file(unsigned char* str, int len, short file);
 
 double convert_to_radians(double angle);
