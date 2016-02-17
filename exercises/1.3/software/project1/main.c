@@ -4,14 +4,15 @@
 #include "touchscreen.h"
 #include "control.h"
 #include "load_node.h"
+#include "image.h"
 
 int main(void) {
 	clear_screen(255);
-	init_control();
+	//init_control();
 	Point x = {0,0};
 	//load_image(x, "ubcnew.BMP");
 	load_image(x, "ubc1.BMP");
-	//listen();
+
 	printf("\n\nend\n");
 	return 0;
 }

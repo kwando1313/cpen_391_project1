@@ -1,9 +1,3 @@
-/*
- * load_node.c
- *
- *  Created on: 2016-02-03
- *      Author: kwando1313
- */
 #include "graph.h"
 #include "string.h"
 #include "hashmap.h"
@@ -108,22 +102,7 @@ void handle_edges(short file, graph* graph, hashmap* hashmap){
 void handle_data(short file, graph* graph, hashmap* hashmap){
 	handle_nodes(file, graph, hashmap);
 	handle_edges(file, graph, hashmap);
-
-	//This is testing code that will be removed... vvv
-	for(int i = 0; i<graph->num_vertices; i++) {
-		vertex* v = get_vertex(graph, i);
-		WriteAPixel(v->x, v->y, CYAN);
-		adjacencyList* adjList = v->adjList;
-		int num_edges = adjList->num_neighbours;
-		printf("h\n");
-		printf("Edges: %d ", num_edges);
-		for (int j = 0; j<num_edges; j++) {
-			vertex* w = get_vertex(graph, adjList->neighbours[j]);
-			Line(v->x, v->y, w->x, w->y, RED);
-		}
-	}
-
-	printf("Finished reading file!\n");
+	printf("Graph loaded.\n");
 }
 
 int keyify(char* name){
