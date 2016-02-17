@@ -60,7 +60,7 @@ int* a_star(graph* graph, int start, int goal){
 
 		if (curr_node->v_id == goal) {
 			hashmapDelete(closed_set);
-			//free_tree(open_set, true);
+			free_tree(open_set, true);
 			hashmapDelete(vid_to_astar_node);
 			free(curr_node);
 			return reconstruct_path(path, start, goal);
