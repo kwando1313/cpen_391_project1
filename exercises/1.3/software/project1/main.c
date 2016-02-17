@@ -18,6 +18,7 @@ int main(void) {
 //	printf("\n\nend\n");
 
 	init_control();
+	pop_screen();
 
 //	clear_screen(255);
 //	Point x = {0,0};

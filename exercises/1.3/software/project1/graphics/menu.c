@@ -239,7 +239,8 @@ void draw_information_box(char* text){
 
 	point8.x = 500;
 	point8.y = 0;
-	draw_text_box(point8, 300, 330,2, BLACK, WHITE, BLACK, text, SMALL);
+	//255 is WHITE
+	draw_text_box(point8, 300, 330,2, BLACK, 255, BLACK, text, SMALL);
 
 }
 
@@ -308,48 +309,52 @@ void draw_keyboard(Point leftCorner, int size){
 	while(topRow[x] != '\0'){
 		char* c = "A";
 		strncpy(c, &topRow[x], 1);
-		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
+		//255 is WHITE
+		draw_button(leftCorner, size, size, 1, BLACK, 255, BLACK, c, MEDIUM);
 		leftCorner.x += size;
 		x++;
 	}
-	draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, "<-", MEDIUM);
+	draw_button(leftCorner, size, size, 1, BLACK, 255, BLACK, "<-", MEDIUM);
 	x = 0;
 	leftCorner.x = initialLeftCorner.x;
 	leftCorner.y = initialLeftCorner.y + size;
 	while(homeRow[x] != '\0'){
 		char* c = "A";
 		strncpy(c, &homeRow[x], 1);
-		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
+		draw_button(leftCorner, size, size, 1, BLACK, 255, BLACK, c, MEDIUM);
 		leftCorner.x += size;
 		x++;
 	}
-	draw_button(leftCorner, 2*size, size, 1, BLACK, WHITE, BLACK, "ENTER", MEDIUM);
+	draw_button(leftCorner, 2*size, size, 1, BLACK, 255, BLACK, "ENTER", MEDIUM);
 	leftCorner.x = initialLeftCorner.x;
 	leftCorner.y = initialLeftCorner.y + 2*size;
 	x = 0;
 	while(bottomRow[x] != '\0'){
 		char* c = "A";
 		strncpy(c, &bottomRow[x], 1);
-		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
+		draw_button(leftCorner, size, size, 1, BLACK, 255, BLACK, c, MEDIUM);
 		leftCorner.x += size;
 		x++;
 	}
-	draw_button(leftCorner, 2*size, size, 1, BLACK, WHITE, BLACK, "SPACE", MEDIUM);
-	draw_button(leftCorner, 2*size, size, 1, BLACK, WHITE, BLACK, "BACK", MEDIUM);
+	draw_button(leftCorner, 2*size, size, 1, BLACK, 255, BLACK, "SPACE", MEDIUM);
+	leftCorner.x += 2*size;
+	draw_button(leftCorner, 2*size, size, 1, BLACK, 255, BLACK, "BACK", MEDIUM);
 	return;
 }
 
 // Includes the RHS of the screen (i.e everything but the map)
 void init_screen(){
+		clear_screen(255); // 255 is WHITE
 
 		Point point6 = {500, 380};
 		Point point7 = {650, 380}; //Adjust these to fit within the margins...
 		Point point8 = {500, 330};
-		Point point9 = {500, 230};
+		Point point9 = {500, 200};
 
 		char* firstTextArray[] = {"Info", "Photo", ""};
 		char* secondTextArray[] = {"Directions", "About", ""};
-		char* thirdTextArray[] = {"", "Search", ""};
+		char* thirdTextArray[] = {"Search", ""};
+		char* fourthTextArray[] = {"Compass", ""};
 
 		about_screen();
 
@@ -359,14 +364,14 @@ void init_screen(){
 
 		draw_menu(point8, 300, 50, 2 , BLACK, 255, BLACK, SMALL, thirdTextArray);
 
-		draw_menu(point9, 300, 100, 2 , BLACK, 255, BLACK, SMALL, "");
+		draw_menu(point9, 300, 130, 2 , BLACK, 255, BLACK, SMALL, fourthTextArray);
 
 		draw_arrows();
 
 }
 
 void about_screen(){
-	draw_information_box("Pathfinding Map (CPEN 391Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nThis is our project!");
+	draw_information_box("Pathfinding Map (CPEN 391 Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nThis is our project!");
 }
 
 void info_screen(){
@@ -384,10 +389,16 @@ void photo_screen(){
 	draw_information_box("BUILDING PHOTO");
 }
 
+// draw the pop up keyboard on the LHS of the screen
 void pop_screen(){
-	Point p = (0, 0); // left corner of the keyboard
-	int s = 5; // size of the keyboards buttons
-	draw_keyboard(p, 5);
+	Point p = {30, 330};
+	Point p1 = {0, 300};
+	Point p2 = {0, 230};
+	char* t[] = {" ", ""};
+
+	draw_menu(p1, 500, 180, 2 , BLACK, 255, BLACK, SMALL, t);
+	draw_menu(p2, 500, 70, 2 , BLACK, 255, BLACK, SMALL, t);
+	draw_keyboard(p, 40);
 }
 
 void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int direction){
@@ -439,19 +450,20 @@ void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borde
 }
 
 void draw_arrows(){
-	// bounded in (500-800, 230-330)
-	Point LPOINT = {510, 305};
-	Point RPOINT = {740, 305};
-	Point UPOINT = {625, 320};
-	Point DPOINT = {625, 290};
+	// bounded in (500-800, 200-330); midway pts: (650, 275)
+	Point LPOINT = {550, 240};
+	Point RPOINT = {700, 240};
+	Point UPOINT = {625, 210};
+	Point DPOINT = {625, 270};
 
-	draw_arrow(LPOINT, 50, 50, 1, BLACK, WHITE, LEFT);
+	// 255 is WHITE
+	draw_arrow(LPOINT, 50, 50, 1, BLACK, 255, LEFT);
 
-	draw_arrow(RPOINT, 50, 50, 1, BLACK, WHITE, RIGHT);
+	draw_arrow(RPOINT, 50, 50, 1, BLACK, 255, RIGHT);
 
-	draw_arrow(UPOINT, 50, 50, 1, BLACK, WHITE, UP);
+	draw_arrow(UPOINT, 50, 50, 1, BLACK, 255, UP);
 
-	draw_arrow(DPOINT, 50, 50, 1, BLACK, WHITE, DOWN);
+	draw_arrow(DPOINT, 50, 50, 1, BLACK, 255, DOWN);
 }
 
 

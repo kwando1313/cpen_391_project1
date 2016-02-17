@@ -117,6 +117,13 @@ int get_valid_vertex(graph* graph, Point p){
 	return -1;
 }
 
+// Returns whether a button is a keyboard button or not
+bool is_kb_butt(Button* butt){
+	if(butt->id < KB_KEYS)
+		return 1;
+	return 0;
+}
+
 // Listen for button inputs
 void listen(){
 		graph* graph = create_test_graph();
@@ -127,31 +134,50 @@ void listen(){
 			Point p_i = GetPress();
 			printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
 
-			Button butt;
+			Button* butt;
 			do{
 				butt = get_button(p_i);
 			}
 			while(butt == NULL);
 
-			// TODO: need proper param
-			butt.p(&butt.key);
-
-//			if(butt == INFO){
-//				do_info();
-//			}
-//			else if(butt == DIR){
-//				draw_graph(graph, YELLOW, RED);
-//				do_dir(graph);
-//				//destroy_graph(graph);
-//				graph = create_test_graph();
-//			}
-//			else if(butt == PHOTO){
-//				do_photo();
-//			}
-//			else if(butt == ABOUT){
-//				do_about();
-//			}
+			butt->p();
 		}
+}
+
+// Listen for only keyboard button inputs
+void kb_listen(){
+	while(1){
+		Point p_i = GetPress();
+		printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
+
+		// Wait for keyboard button input
+		Button* butt;
+		do{
+			butt = get_button(p_i);
+		}
+		while(butt != NULL && (!is_kb_butt(butt)));
+
+
+		if(butt->id != BACK_BUTT.id || butt->id != ENTER_BUTT.id || butt->id != DEL_BUTT.id)
+			butt->kb_p(butt->key);
+
+		// We are done with the keyboard upon BACK
+		else if(butt->id == BACK_BUTT.id){
+			butt->p();
+			break;
+		}
+
+		// We are done with the keyboard upon valid search input
+		else if(butt->id == ENTER_BUTT.id){
+			if(butt->ent_p()){
+				break;
+			}
+		}
+
+		// Else butt is the delete button
+		else
+			butt->p();
+	}
 }
 
 

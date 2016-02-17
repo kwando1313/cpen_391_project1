@@ -5,26 +5,30 @@
 #include "button.h"
 #include "menu.h"
 #include "touchscreen.h"
+#include "control.h"
 
-Button init_button(char key, int id, int mode){
-	Button button;
+const char KEYS[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '-',
+			  	  	'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '+',
+			  	  	'Z', 'X', 'C', 'V', 'B', 'N', 'M', ' ', '<',
+			  	  	'!', '@', '#', '$', '%',
+			  	  	'a', 'd', 'w', 's'};
 
-	button.key = key;
-	button.id = id;
-	button.mode = mode;
+void init_kb_button(char key, int id){
+	keyboard[id].key = key;
+	keyboard[id].id = id;
 
-	if(!mode){
-		/*TODO: set coords after choosing where to draw shit; decide what the fcn to call for kb buttons
-				We can use the id to know where to draw.
-				Use the key to initialise the fcn ptr is. */
-		//TODO: make the fcn ptr.
-		button.left = 0;
-		button.right = 0;
-		button.top = 0;
-		button.bottom = 0;
-		//button.p = do_key;
-	}
-	return button;
+	/*TODO: We can use the id to know where to draw.
+			Use the key to initialise the fcn ptr is. */
+	keyboard[id].left = 0;
+	keyboard[id].right = 0;
+	keyboard[id].top = 0;
+	keyboard[id].bottom = 0;
+	keyboard[id].kb_p = do_key;
+}
+
+void init_s_button(char key, int id){
+	keyboard[id].key = key;
+	keyboard[id].id = id;
 }
 
 void init_keyboard(){
@@ -32,48 +36,69 @@ void init_keyboard(){
 
 	// KB buttons
 	for(int i = 0; i < KB_KEYS; i++){
-		keyboard[i] = init_button(KEYS[i], i, !ACTIVE);
+		init_kb_button(KEYS[i], i);
 	}
+	DEL_BUTT.p = do_del;
+	ENTER_BUTT.ent_p = do_enter;
+	BACK_BUTT.p = do_back;
 
 	// Screen buttons
 	for(int i = KB_KEYS; i < N_KEYS - 1; i++){
-		keyboard[i] = init_button(KEYS[i], i, ACTIVE);
+		init_s_button(KEYS[i], i);
 	}
-
-//	// Invalid button
-//	keyboard[N_KEYS-1] = init_button(KEYS[N_KEYS-1], (N_KEYS-1), 0);
-
-	// TODO: make the ptr fcns
-	// Fix screen buttons
-	//INFO_BUTT.p = &do_info;
+	INFO_BUTT.p = do_info;
 	INFO_BUTT.top = IT;
 	INFO_BUTT.bottom = IB;
 	INFO_BUTT.left = IL;
 	INFO_BUTT.right = IR;
 
-	//DIR_BUTT.p = do_dir();
+	//DIR_BUTT.p = do_dir;
 	DIR_BUTT.top = DT;
 	DIR_BUTT.bottom = DB;
 	DIR_BUTT.left = DL;
 	DIR_BUTT.right = DR;
 
-	//PHOTO_BUTT.p = &do_photo;
+	PHOTO_BUTT.p = do_photo;
 	PHOTO_BUTT.top = PT;
 	PHOTO_BUTT.bottom = PB;
 	PHOTO_BUTT.left = PL;
 	PHOTO_BUTT.right = PR;
 
-	//ABOUT_BUTT.p = &do_about;
+	ABOUT_BUTT.p = do_about;
 	ABOUT_BUTT.top = AT;
 	ABOUT_BUTT.bottom = AB;
 	ABOUT_BUTT.left = AL;
 	ABOUT_BUTT.right = AR;
 
-	//POP_BUTT.p = &do_pop;
+	POP_BUTT.p = do_pop;
 	POP_BUTT.top = ST;
 	POP_BUTT.bottom = SB;
 	POP_BUTT.left = SL;
 	POP_BUTT.right = SR;
+
+	WEST_BUTT.p = do_west;
+	WEST_BUTT.top = WT;
+	WEST_BUTT.bottom = WB;
+	WEST_BUTT.left = WL;
+	WEST_BUTT.right = WR;
+
+	EAST_BUTT.p = do_east;
+	EAST_BUTT.top = ET;
+	EAST_BUTT.bottom = EB;
+	EAST_BUTT.left = EL;
+	EAST_BUTT.right = ER;
+
+	NORTH_BUTT.p = do_north;
+	NORTH_BUTT.top = NT;
+	NORTH_BUTT.bottom = NB;
+	NORTH_BUTT.left = NL;
+	NORTH_BUTT.right = NR;
+
+	SOUTH_BUTT.p = do_south;
+	SOUTH_BUTT.top = ST;
+	SOUTH_BUTT.bottom = SB;
+	SOUTH_BUTT.left = SL;
+	SOUTH_BUTT.right = SR;
 }
 
 void destroy_keyboard(Button* keyboard){
@@ -81,20 +106,6 @@ void destroy_keyboard(Button* keyboard){
 //		free(keyboard[i]);
 //	}
 	free(keyboard);
-}
-
-// Activates pop up keyboard
-void pop_up(Button* keyboard){
-	for(int i = 0; i < KB_KEYS; i++){
-		keyboard[i].mode = ACTIVE;
-	}
-}
-
-// Deactivates pop up keyboard
-void pop_down(Button* keyboard){
-	for(int i = 0; i < KB_KEYS; i++){
-		keyboard[i].mode = !ACTIVE;
-	}
 }
 
 /* Assumption: all of our buttons are rectangles. Aside: nodes aren't buttons but they are circles right now.
@@ -106,14 +117,14 @@ int falls_inside(Point p, Button b){
 }
 
 // Returns the button that was pressed. Do we want better search despite fixed small keyboard?
-Button get_button(Point p){
+Button* get_button(Point p){
 	for(int i = 0; i < N_KEYS; i++){
 		if(falls_inside(p, keyboard[i])){
 			Point p_f = GetRelease();
 			printf("Released Coordinates: (%i, %i)\n", p_f.x, p_f.y);
 
 			if(falls_inside(p_f, keyboard[i]))
-				return keyboard[i];
+				return &keyboard[i];
 			else
 				return NULL;
 		}
@@ -158,31 +169,52 @@ void do_about(void* nothing){
 	about_screen();
 }
 
-// Pop up the keyboard
-void do_pop(void* nothing){
-	pop_up(keyboard);
-	pop_screen();
-	// TODO: wait until a search query is entered and then do some stuff before pop_down();
-	//pop_down();
-	//re-draw the map
+// Translate the map left
+void do_west(){
+	// TODO:
 }
 
-//void do_key(void* key){
-//	// TODO: special cases of KB buttons
-//
-//	// delete
-//	if(key == '-'){
-//		// delete the letter in the front and go back to the position of that letter
-//	}
-//	// enter
-//	else if(key == '+'){
-//		// returns the search input; inform the user of an invalid input and request them to try again
-//	}
-//	// back
-//	else if(key == '<'){
-//		// pop down the keyboard and redraw the map; reusable in do_pop so write a fcn to do this
-//	}
-//	else{
-//		// find out where to draw next key and then draw it.
-//	}
-//}
+// Translate the map east
+void do_east(){
+	// TODO:
+}
+
+// Translate the map north
+void do_north(){
+	// TODO:
+}
+
+// Translate the map south
+void do_south(){
+	// TODO:
+}
+
+// Pop up the keyboard
+void do_pop(void* nothing){
+	pop_screen();
+	kb_listen();
+}
+
+// Draws the character on the search bar (buffer) and updates the search matcher
+void do_key(char key){
+	// TODO:
+	printf("%c\n", key);
+}
+
+// Deletes the front of the search bar (buffer) and updates the search matcher
+void do_del(){
+	// TODO:
+}
+
+/* On valid search, go to and highlight the searched node? Re-draw the map.
+	On invalid search, display invalid search and keep listening for keyboard inputs */
+bool do_enter(){
+	// TODO: first check validity of search
+	do_back();
+	return 1;
+}
+
+// Redraw the map
+void do_back(){
+	// TODO:
+}
