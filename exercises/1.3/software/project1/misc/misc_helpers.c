@@ -3,6 +3,12 @@
 #include <math.h>
 #include <ctype.h>
 
+void read_bytes_from_file(unsigned char* str, int len, short file){
+	for(int x=0 ; x<len ; x++){
+		str[x]=(unsigned char)(alt_up_sd_card_read(file));
+	}
+}
+
 double convert_to_radians(double angle){
 	return (angle*M_PI/180);
 }

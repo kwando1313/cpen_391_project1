@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <altera_up_sd_card_avalon_interface.h>
 #include "graphics.h"
+#include "misc_helpers.h"
 #include "image.h"
 
 extern const unsigned int ColourPalletteData[256];
@@ -20,12 +21,16 @@ extern const unsigned int ColourPalletteData[256];
 #define HEADERSIZE 		54
 #define COLOURTABLESIZE 1024
 
-void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart);
-void read_bytes(unsigned char* str, int len, short file);
+void load_image_to_pixels_arr(short file);
 
 // Store the integer values of the colours for each pixel.
 int** image_pixels; //full_map[bmpWidth][bmpHeight]
 int bmpWidth, bmpHeight;
+
+void load_draw_image(Point topLeft, int xstart, int ystart, char* filename){
+	load_image(filename);
+	draw_image(topLeft, xstart, ystart);
+}
 
 /*	Load image from SD Card.
  * 	SD Card must be formatted in FAT16 to work with DE2.
@@ -33,16 +38,9 @@ int bmpWidth, bmpHeight;
  * 	including file extension (i.e. "abcdefghi.bmp" is invalid.
  */
 
-void read_bytes(unsigned char* str, int len, short file){
-	for(int x=0 ; x<len ; x++){
-		str[x]=(unsigned char)(alt_up_sd_card_read(file));
-	}
-}
-
-void load_image(Point topLeft, char* filename){
+//TODO same code as load_node, functionalize this. Pass in *f(), this gets called on file found
+void load_image(char* filename){
 	bool found_file = false;
-	int ystart = 20;	// where we want to start the y pixels. Prints up from this row.
-	int xstart = 0; 	// where we want to start the x pixels. Prints to the right from this column.
 
 	if (get_device_reference() == NULL || !alt_up_sd_card_is_Present() || !alt_up_sd_card_is_FAT16()){
 		printf("Can't find device, or device not configured properly\n");
@@ -62,7 +60,7 @@ void load_image(Point topLeft, char* filename){
 			short int file = alt_up_sd_card_fopen(found_file_name, false);
 			if (file >= 0){
 				printf("found file %s in SD\n", filename_all_caps);
-				draw_image_wrapper(topLeft, file, 0, ystart);
+				load_image_to_pixels_arr(file);
 				found_file = true; //want to close file, so use this rather than returning
 			}
 			alt_up_sd_card_fclose(file);
@@ -70,11 +68,11 @@ void load_image(Point topLeft, char* filename){
 	}while(!found_file && alt_up_sd_card_find_next(found_file_name) == 0);
 }
 
-void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart){
+void load_image_to_pixels_arr(short file){
 	get_header(file);
 	get_pixels(file);
-	draw_img(topLeft, file, 0, ystart);
 }
+	//draw_img(topLeft, file, 0, ystart);
 
 /* Get header information.
  * Iterate and print bitmap file header + Windows Bitmap Info Header.
@@ -85,10 +83,10 @@ void get_header (short file){
 	unsigned char width[4];
 	unsigned char buf[30];
 
-	read_bytes(buf, 18, file);
-	read_bytes(width, 4, file);
-	read_bytes(height, 4, file);
-	read_bytes(buf, 28, file);
+	read_bytes_from_file(buf, 18, file);
+	read_bytes_from_file(width, 4, file);
+	read_bytes_from_file(height, 4, file);
+	read_bytes_from_file(buf, 28, file);
 
 	bmpWidth = *(int *) width;
 	bmpHeight = *(int *) height;
@@ -102,7 +100,7 @@ void get_header (short file){
 	unsigned char entry[4];
 
 	for (int i = 0; i < COLOURTABLESIZE; i+=4){
-		read_bytes(entry, 4, file);
+		read_bytes_from_file(entry, 4, file);
 		int rgb = *(int*)entry;
 		if(ColourPalletteData[i/4] != rgb){
 			printf("entry: %d, rgb: %x\n", i/4, rgb);
@@ -125,7 +123,7 @@ void get_pixels(short file){
  * We're picking the top left point to start from
  * but actually draw from the bottom left first.
  */
-void draw_img (Point topLeft, short file, int xstart, int ystart){
+void draw_image(Point topLeft, int xstart, int ystart){
 	for (int y = 0; y < DISPLAY_HEIGHT; y++){
 		for (int x = 0; x < DISPLAY_WIDTH; x++){
 			int colour = image_pixels[xstart + x][ystart + y];

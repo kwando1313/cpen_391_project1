@@ -10,8 +10,9 @@ int main(void) {
 	clear_screen(255);
 	//init_control();
 	Point x = {0,0};
-	//load_image(x, "ubcnew.BMP");
-	load_image(x, "ubc1.BMP");
+
+	//load_draw_image(x, 0, 0, "ubcnew.bmp");
+	load_draw_image(x, 0, 0, "ubc1.bmp");
 
 	printf("\n\nend\n");
 	return 0;
