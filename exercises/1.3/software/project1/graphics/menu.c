@@ -15,13 +15,14 @@
  * 	HEADERSIZE changes with type of BMP file
  * 	COLOURTABLESIZE = size of colour table containing 256 colours (with BGRA fields)
  */
-#define IMGHEIGHT 	1050
-#define IMGWIDTH 	500
+#define IMGHEIGHT 	855
+#define IMGWIDTH 	1256
 #define BOXHEIGHT	480
 #define BOXWIDTH 	500
 #define HEADERSIZE 	54
 #define COLOURTABLESIZE 1024
-#define SHIFT 20
+#define SHIFT 30
+
 
 void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart);
 void read_bytes(char* str, int len, short file);
@@ -31,7 +32,7 @@ int rgb_from_pixel_arr(char*** pixel, int x, int y);
 // Store the integer values of the colours for each pixel.
 int pixel[IMGHEIGHT][IMGWIDTH];
 int xstart = 0, ystart = 0;
-
+Point start = {0,0};
 /*	Load image from SD Card.
  * 	SD Card must be formatted in FAT16 to work with DE2.
  * 	Length of filenames cannot be longer than 12 characters.
@@ -178,12 +179,17 @@ void draw_img (Point topLeft, int xstart, int ystart){
 		}
 	}
 }
+/*	Move the x and y start points according to button
+ * 	Draw image again.
+ * 	This code is written to not go past the edge of the image.
+ */
 void move_img (int direction){
 	if (direction == UP){
 		if (ystart > IMGHEIGHT - BOXHEIGHT - SHIFT)
 			ystart = IMGHEIGHT - BOXHEIGHT;
 		else ystart += SHIFT;
 		printf ("UP\n");
+
 	}
 	else if (direction == DOWN){
 		if (ystart < SHIFT)
@@ -204,7 +210,9 @@ void move_img (int direction){
 		else xstart -= SHIFT;
 		printf ("LEFT\n");
 	}
-
+	Point printStart = ret_start_points ();
+	printf ("%d, %d", printStart.x, printStart.y);
+	draw_img(start, printStart.x, printStart.y);
 }
 //Text box is left aligned and has text wrapping
 void draw_text_box(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize){
@@ -271,7 +279,7 @@ void draw_information_box(char* text){
 	point8.x = 500;
 	point8.y = 0;
 	//255 is WHITE
-	draw_text_box(point8, 300, 330,2, BLACK, 255, BLACK, text, SMALL);
+	draw_text_box(point8, 300, 200, 2, BLACK, 255, BLACK, text, SMALL);
 
 }
 
@@ -385,7 +393,7 @@ void init_screen(){
 		char* firstTextArray[] = {"Info", "Photo", ""};
 		char* secondTextArray[] = {"Directions", "About", ""};
 		char* thirdTextArray[] = {"Search", ""};
-		char* fourthTextArray[] = {"Compass", ""};
+		char* fourthTextArray[] = {" ", ""};
 
 		about_screen();
 
@@ -435,6 +443,7 @@ void pop_screen(){
 	draw_keyboard(p, 40);
 }
 
+// redraw the map when we leave pop_screen
 void map_screen(){
 	// TODO:
 

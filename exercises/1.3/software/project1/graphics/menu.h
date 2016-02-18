@@ -3,47 +3,48 @@
 
 #include "graphics.h"
 
-
+//button coords
+//info
 #define IL 500
 #define IR 650
-#define IT 330
-#define IB 405
-
+#define IT 380
+#define IB 430
+//direction
 #define DL 650
 #define DR 800
-#define DT 330
-#define DB 405
-
+#define DT 380
+#define DB 430
+//photo
 #define PL 500
 #define PR 650
-#define PT 405
+#define PT 430
 #define PB 480
-
+//about
 #define AL 650
 #define AR 800
-#define AT 405
+#define AT 430
 #define AB 480
-
-#define SL 500
-#define SR 800
-#define ST 255
-#define SB 330
-
+//west
 #define WL 550
 #define WR 600
 #define WT 240
 #define WB 290
-
+//pop
+#define POPL 500
+#define POPR 800
+#define POPT 330
+#define POPB 380
+//east
 #define EL 700
 #define ER 750
 #define ET 240
 #define EB 290
-
+//north
 #define NL 625
 #define NR 675
 #define NT 210
 #define NB 260
-
+//south
 #define SL 625
 #define SR 675
 #define ST 270
@@ -66,6 +67,8 @@ void draw_button(Point topLeft, int width, int height, int borderWidth, int bord
 void draw_menu(Point leftCorner, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, int fontSize, char* menuText[]);
 void draw_text_box(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize);
 void draw_information_box(char* text);
+void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int direction);
+void draw_arrows();
 
 void about_screen();
 void info_screen();
