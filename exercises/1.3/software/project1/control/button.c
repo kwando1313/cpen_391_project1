@@ -6,6 +6,7 @@
 #include "menu.h"
 #include "touchscreen.h"
 #include "control.h"
+#include "Directions.h"
 
 const char KEYS[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '-',
 			  	  	'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '+',
@@ -215,22 +216,22 @@ void do_about(void* nothing){
 
 // Translate the map left
 void do_west(){
-	// TODO:
+	move_img (LEFT);
 }
 
 // Translate the map east
 void do_east(){
-	// TODO:
+	move_img (RIGHT);
 }
 
 // Translate the map north
 void do_north(){
-	// TODO:
+	move_img (UP);
 }
 
 // Translate the map south
 void do_south(){
-	// TODO:
+	move_img (DOWN);
 }
 
 // Pop up the keyboard

@@ -7,24 +7,17 @@
 
 int main(void) {
 	printf("start\n\n");
-
-//	for(int i = 0; i<50; i++){
-//		graph* graph = create_test_graph();
-//		printf("created graph\n");
-//		destroy_graph(graph);
-//		printf("destroyed graph\n");
-//	}
-//
-//	printf("\n\nend\n");
-
+	clear_screen(255);
 	init_control();
-	pop_screen();
 
-//	clear_screen(255);
-//	Point x = {0,0};
-//	load_image(x, "WTF.BMP");
-//
-//	printf("\n\nend\n");
+	Point x = {0,0};
+	//load_image(x, "ubcnew.BMP");
+	load_image(x, "ubc1.BMP");
+	Point printStart = ret_start_points ();
+	printf ("%d, %d", printStart.x, printStart.y);
+	draw_img(x, printStart.x, printStart.y);
+	listen();
+	printf("\n\nend\n");
 
 	return 0;
 }

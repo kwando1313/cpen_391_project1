@@ -126,8 +126,7 @@ bool is_kb_butt(Button* butt){
 
 // Listen for button inputs
 void listen(){
-		graph* graph = create_test_graph();
-		draw_graph(graph, YELLOW, RED);
+		//graph* graph = create_test_graph();
 
 		while(1){
 			// Wait for button input
