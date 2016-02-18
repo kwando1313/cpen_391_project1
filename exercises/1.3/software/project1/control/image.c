@@ -37,8 +37,6 @@ void load_draw_image(Point topLeft, int xstart, int ystart, char* filename){
  * 	Length of filenames cannot be longer than 12 characters.
  * 	including file extension (i.e. "abcdefghi.bmp" is invalid.
  */
-
-//TODO same code as load_node, functionalize this. Pass in *f(), this gets called on file found
 void load_image(char* filename){
 	void (*func)(short) = &load_image_to_pixels_arr;
 	load_file(filename, func);
