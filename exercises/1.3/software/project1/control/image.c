@@ -16,8 +16,8 @@ extern const unsigned int ColourPalletteData[256];
  */
 //#define IMGHEIGHT 	525
 //#define IMGWIDTH 	717
-#define DISPLAY_HEIGHT	480
-#define DISPLAY_WIDTH 	500
+#define DISPLAY_HEIGHT	400
+#define DISPLAY_WIDTH 	400
 #define HEADERSIZE 		54
 #define COLOURTABLESIZE 1024
 
@@ -90,6 +90,7 @@ void get_pixels(short file){
 		for (int i = 0; i < width; i++){
 			image_pixels[i][j] = alt_up_sd_card_read(file);
 		}
+
 	}
 }
 
@@ -98,12 +99,26 @@ void get_pixels(short file){
  * but actually draw from the bottom left first.
  */
 void draw_image(Point topLeft, int xstart, int ystart){
-	for (int y = 0; y < DISPLAY_HEIGHT; y++){
-		for (int x = 0; x < DISPLAY_WIDTH; x++){
+
+	int height = (bmpHeight < DISPLAY_HEIGHT) ? bmpHeight : DISPLAY_HEIGHT;
+	int width = (bmpWidth < DISPLAY_WIDTH) ? bmpWidth: DISPLAY_WIDTH;
+
+
+	for (int y = 0; y < height; y++){
+		for (int x = 0; x < width; x++){
+			int initialX = x;
 			int colour = image_pixels[xstart + x][ystart + y];
+			int colour2 = image_pixels[xstart + x][ystart + y];
+
+			while (colour == colour2 && x < width){
+				x++;
+				colour2 = image_pixels[xstart+x][ystart+y];
+			}
 //			if(getPalleteAddr(int RGB);
 //			int getRGB(int addr);
-			WriteAPixel(topLeft.x + x, topLeft.y + DISPLAY_HEIGHT-y, colour);
+			HLine(topLeft.x + initialX, topLeft.y + height - y, x - initialX, colour);
+			x--;
+			//WriteAPixel(topLeft.x + x, topLeft.y + height-y, colour);
 		}
 	}
 }
