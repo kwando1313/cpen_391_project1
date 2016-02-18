@@ -144,15 +144,26 @@ void test_read_gps(void){
 		old_button = button_value;
 	}
 }
+void read_gps(void) {
+	Init_GPS();
+	gps_data* data = get_gps_data();
 
+	double lati;
+	double longi;
+	//convert the latitude and longitude data to completely be in degrees
+	minutes_to_degrees (data->lati, data->longi, &lati, &longi);
+	printf ("Lati: %lf, Longi: %lf\n", lati, longi);
+	return;
+}
 void wait_for_header(void) {
 	char str[] = "$GPGGA";
 	char buf[7];
 	buf[6] = 0;
-
 	while (true){
 		for (int i = 0; i < 6; i++) {
 			buf[i] = getcharGPS();
+			if (buf[0] != '$')
+				break;
 		}
 		if (strcmp(str,buf) == 0) {
 			return;
@@ -180,8 +191,7 @@ gps_data* get_new_gps_data(void){
 	char rx;
 	int i = 0;
 
-	gps_data* new_gps_data = malloc(sizeof(gps_data));
-
+	gps_data* new_gps_data = init_gps_data();
 	while(true) {
 		rx = getcharGPS();
 		if (rx == '*'){
@@ -241,4 +251,56 @@ gps_data* get_new_gps_data(void){
 gps_data* get_gps_data(void){
 	wait_for_header();
 	return get_new_gps_data();
+}
+
+/*
+ * Initialize new gps dat struct
+ */
+gps_data* init_gps_data (void){
+	gps_data* data = malloc(sizeof(gps_data));
+
+	data->time[10] = 0;
+	data->lati[9] = 0;
+	data->longi[10] = 0;
+	data->NS[1] = 0;
+	data->EW[1] = 0;
+	data->pos[1] = 0;
+	data->numSat[2] = 0;
+	data->HDOP[4] = 0;
+	data->alt[4] = 0;
+	data->altUnit[1] = 0;
+	data->geo[4] = 0;
+	data->geoUnit[1] = 0;
+
+	return data;
+}
+
+void minutes_to_degrees (char* latitude, char* longitude, double *lati, double *longi){
+	char bufLat[8];
+	char bufLong[8];
+	double minsLat;
+	double minsLong;
+	double degLat;
+	double degLong;
+
+
+	bufLat[0] = latitude[0]; //copy the values already in degrees
+	bufLat[1] = latitude[1];
+	bufLong[0] = longitude[0];
+	bufLong[1] = longitude[1];
+	bufLong[2] = longitude[2];
+
+	degLat = atof(bufLat);	//convert degrees values into double from char
+	degLong = atof(bufLong);
+
+
+	strcpy (bufLat, &latitude[2]);	// copy values in minutes degrees
+	strcpy (bufLong, &longitude[3]);
+
+	minsLat = atof(bufLat);	//convert minutes degrees to double form char
+	minsLong = atof(bufLong);
+
+	*lati = degLat + (minsLat / 60);	//get complete data in degrees
+	*longi = degLong + (minsLong / 60);
+
 }

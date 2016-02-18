@@ -5,6 +5,7 @@
 #include "control.h"
 #include "load_node.h"
 #include "search.h"
+#include "gps.h"
 
 int main(void) {
 	printf("start\n\n");
@@ -21,12 +22,11 @@ int main(void) {
 	s_listen();
 */
 
-	Point x = {0,0};
-	load_image(x, "ubcfull3.BMP");
-	//load_image(x, "ubc1.BMP");
-	draw_img(x, x.x, x.y);
-	s_listen();
-	printf("\n\nend\n");
-
+//	Point x = {0,0};
+//	load_image(x, "ubcfull3.BMP");
+//	//load_image(x, "ubc1.BMP");
+//	draw_img(x, x.x, x.y);
+//	s_listen();
+	read_gps();
 	return 0;
 }

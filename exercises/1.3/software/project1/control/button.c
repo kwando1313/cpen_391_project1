@@ -8,6 +8,7 @@
 #include "control.h"
 #include "Directions.h"
 #include "search.h"
+#include "gps.h"
 
 const char KEYS[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '-',
 			  	  	'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '+',
@@ -93,7 +94,7 @@ void init_s_button(char key, int id){
 		DIR_BUTT.left = DL;
 		DIR_BUTT.right = DR;
 		//DIR_BUTT.p = do_dir;
-		DIR_BUTT.p = do_about; // REMOVE AFTER
+		DIR_BUTT.p = do_dir; // REMOVE AFTER
 	break;
 
 	case 32:
@@ -232,7 +233,7 @@ void do_info(){
 }
 
 //// Ask for a start and end node and find the best directions
-//void do_dir(void* graph){
+void do_dir(){
 //	printf("do dir\n");
 //	directions_screen();
 //	draw_information_box("PLEASE SELECT STARTING POINT");
@@ -243,8 +244,11 @@ void do_info(){
 //	draw_path(path->ordered_point_arr, path->actual_size, CYAN);
 //	destroy_path_points(path);
 //	draw_information_box("HAVE A FUN TRIP!");
-//	printf("done do dir\n");
-//}
+	printf("start do dir\n");
+	read_gps();
+	printf("done do dir\n");
+
+}
 
 // Display photo of the next node touched
 void do_photo(void* nothing){

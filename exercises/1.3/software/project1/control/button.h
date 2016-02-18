@@ -56,7 +56,7 @@ void do_del();
 void do_back();
 bool do_enter();
 void do_info();
-//void do_dir();
+void do_dir();
 void do_photo();
 void do_about();
 void do_pop();
