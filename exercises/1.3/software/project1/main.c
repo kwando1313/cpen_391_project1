@@ -5,11 +5,12 @@
 #include "control.h"
 #include "load_node.h"
 #include "search.h"
+#include "gps.h"
 
 int main(void) {
 	printf("start\n\n");
 
-// TEST KEYBOARD PRESSING
+// TEST KEYBOARD PRESSING -- KEEP THIS FOR NOW
 //	init_control();
 //	for(int i = 0; i < N_KEYS; i++){
 //		printf("%c: ",keyboard[i].key);
@@ -21,7 +22,7 @@ int main(void) {
 //	s_listen();
 
 
-// TEST DISPLAYING SEARCH QUERY
+// TEST DISPLAYING SEARCH QUERY -- KEEP THIS FOR NOW
 //  init_control();
 //	pop_screen();
 //	reset_query();
@@ -43,16 +44,18 @@ int main(void) {
 //	keyboard[24].kb_p(keyboard[24].key); //V
 
 
-// 	ANGELA'S MAIN TESTING
+// 	ANGELA'S MAIN TESTING -- KEEP THIS FOR NOW I THINK
 //	clear_screen(255);
 //	init_control();
-//
+
 //	Point x = {0,0};
 //	load_image(x, "ubcfull3.BMP");
 //	//load_image(x, "ubc1.BMP");
 //	draw_img(x, x.x, x.y);
 //	s_listen();
-//	printf("\n\nend\n");
 
+//	read_gps();
+
+//	printf("\n\nend\n");
 	return 0;
 }

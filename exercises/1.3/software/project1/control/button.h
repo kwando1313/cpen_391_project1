@@ -37,7 +37,6 @@ Button* keyboard;
 // keyboard variables
 #define N_KEYS 39
 #define KB_KEYS 30
-//#define S_KEYS 9
 
 void init_kb_button(char key, int id);
 void init_s_button(char key, int id);
@@ -56,7 +55,7 @@ void do_del();
 void do_back();
 bool do_enter();
 void do_info();
-//void do_dir();
+void do_dir();
 void do_photo();
 void do_about();
 void do_pop();
