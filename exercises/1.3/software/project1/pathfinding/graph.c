@@ -17,16 +17,16 @@ graph* init_graph(int inital_max_vertices){
 	return new_graph;
 }
 
-vertex* init_vertex(int latitude, int longitude, int altitude, char* name,
+vertex* init_vertex(float latitude, float longitude, float altitude, char* name,
 		int x, int y){
 	vertex* new_vertex = malloc(sizeof(vertex));
 	new_vertex->id = -1;
 	new_vertex->adjList = init_adjList();
 
 	//temporary, just for sprint1 since we don't have any actual data yet
-//	new_vertex.latitude = latitude;
-//	new_vertex.longitude = longitude;
-//	new_vertex.altitude = altitude;
+//	new_vertex.latitude = latitude * FLOAT_TO_INT_MULTIPLIER;
+//	new_vertex.longitude = longitude * FLOAT_TO_INT_MULTIPLIER;
+//	new_vertex.altitude = altitude * FLOAT_TO_INT_MULTIPLIER;
 	new_vertex->latitude = x;
 	new_vertex->longitude = y;
 	new_vertex->altitude = 0;
@@ -187,4 +187,38 @@ void draw_graph(graph* graph, int v_colour, int edge_colour){
 void draw_node(int colour, vertex* v){
 	Point p = {v->x, v->y};
 	draw_filled_circle(p, RADIUS, colour);
+}
+
+//TODO replace these with some hashmap thing
+vertex* find_vertex_by_name(graph* graph, char* name){
+	for (int i = 0; i<graph->num_vertices; i++) {
+		vertex* v = get_vertex(graph, i);
+		if (strcmp(name, v->name) == 0) {
+			return v;
+		}
+	}
+	return NULL;
+}
+
+//TODO replace this if we have more than >100 nodes or so
+//TODO should this include altitude?
+vertex* find_vertex_by_coords(graph* graph, float latitude, float longitude){
+	unsigned int lat_i = latitude * FLOAT_TO_INT_MULTIPLIER;
+	unsigned int long_i = longitude * FLOAT_TO_INT_MULTIPLIER;
+	vertex* min_v = get_vertex(graph, 0);
+
+	unsigned int min_dist = (unsigned int)sqrt(sub_and_sqre(lat_i, min_v->latitude)
+							+ sub_and_sqre(long_i, min_v->longitude));
+
+	for (int i = 1; i<graph->num_vertices; i++) {
+		vertex* v = get_vertex(graph, i);
+		unsigned int dist = (unsigned int)sqrt(sub_and_sqre(lat_i, v->latitude)
+							+ sub_and_sqre(long_i, v->longitude));
+		if (dist < min_dist){
+			min_dist = dist;
+			min_v = v;
+		}
+	}
+
+	return min_v;
 }

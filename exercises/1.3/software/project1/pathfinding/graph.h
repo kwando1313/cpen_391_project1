@@ -7,7 +7,7 @@
 
 #define DEFAULT_NUM_NEIGHBOURS 4
 #define DEFAULT_GRAPH_SIZE 32
-#define DOUBLE_TO_INT_MULTIPLIER 100
+#define FLOAT_TO_INT_MULTIPLIER 1000
 
 typedef struct __path_points{
 	Point* ordered_point_arr;
@@ -47,7 +47,8 @@ typedef struct __vertex {
 	//and not being able to find the value we need.
 	//we should multiply lat/long/alt on creation by some constant(defined above)
 	//to maintain precision
-	int latitude, longitude, altitude;
+	unsigned int latitude, longitude;
+	int altitude;
     int x, y;
     adjacencyList* adjList;
 } vertex;
@@ -61,7 +62,7 @@ typedef struct __graph {
 graph* init_graph(int inital_num_vertices);
 void destroy_graph(graph* graph);
 //returns id of added vertex
-vertex* init_vertex(int latitude, int longitude, int altitude, char* name, int x, int y);
+vertex* init_vertex(float latitude, float longitude, float altitude, char* name, int x, int y);
 int add_vertex(graph* graph, vertex* v);
 vertex* get_vertex(graph* graph, int id);
 void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes);
@@ -69,7 +70,8 @@ bool remove_edge(graph* graph, int v0_id, int v1_id);
 bool vertex_has_edge(vertex* v, int v1_id);
 bool graph_has_edge(graph* graph, int v0_id, int v1_id);
 
-//int find_vertex(graph* graph, char* name);
+vertex* find_vertex_by_name(graph* graph, char* name);
+vertex* find_vertex_by_coords(graph* graph, float latitude, float longitude);
 
 int* a_star(graph* graph, int start, int goal);
 void print_path_console(graph* graph, int start, int goal);
