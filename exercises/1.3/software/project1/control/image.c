@@ -17,7 +17,7 @@ extern const unsigned int ColourPalletteData[256];
 //#define IMGHEIGHT 	525
 //#define IMGWIDTH 	717
 #define DISPLAY_HEIGHT	400
-#define DISPLAY_WIDTH 	400
+#define DISPLAY_WIDTH 	600
 #define HEADERSIZE 		54
 #define COLOURTABLESIZE 1024
 
@@ -28,6 +28,8 @@ int** image_pixels; //full_map[bmpWidth][bmpHeight]
 int bmpWidth, bmpHeight;
 
 void load_draw_image(Point topLeft, int xstart, int ystart, char* filename){
+	draw_button(topLeft, DISPLAY_WIDTH, DISPLAY_HEIGHT, 1, 1, BLACK, WHITE, "LOADING...", MEDIUM);
+
 	load_image(filename);
 	draw_image(topLeft, xstart, ystart);
 }
@@ -113,7 +115,7 @@ void get_header (short file){
 void get_pixels(short file){
 	printf("bmp width: %d, bmp height: %d\n", bmpWidth, bmpHeight);
 
-	int width = (bmpWidth % 4 == 0) ? bmpWidth : (bmpWidth + 4 - (bmpWidth % 4));
+	int width = (bmpWidth % 4 == 0) ? bmpWidth : (bmpWidth + 4 - (bmpWidth % 4)); //Width must be divisible by 4. This is to ensure it is.
 	for (int j = 0; j < bmpHeight; j++){
 		for (int i = 0; i < width; i++){
 			image_pixels[i][j] = alt_up_sd_card_read(file);
