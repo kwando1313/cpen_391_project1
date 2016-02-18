@@ -10,6 +10,8 @@ int main(void) {
 	printf("start\n\n");
 
 	init_control();
+
+// TEST KEYBOARD PRESSING
 //	for(int i = 0; i < N_KEYS; i++){
 //		printf("%c: ",keyboard[i].key);
 //		printf("%i - ",keyboard[i].left);
@@ -20,25 +22,46 @@ int main(void) {
 //	s_listen();
 
 
+// TEST DISPLAYING SEARCH QUERY
+//	pop_screen();
+//	reset_query();
+//
+//	keyboard[4].kb_p(keyboard[4].key); //t
+//	keyboard[2].kb_p(keyboard[2].key); //e
+//	keyboard[12].kb_p(keyboard[12].key); //s
+//	keyboard[1].kb_p(keyboard[0].key); //q
+//	DEL_BUTT.p();
+//	keyboard[4].kb_p(keyboard[4].key); //t
+//	SPACE_BUTT.kb_p(SPACE_BUTT.key); // " "
+//	keyboard[7].kb_p(keyboard[7].key); // i
+//
+//	reset_query();
+//
+//	keyboard[16].kb_p(keyboard[16].key); //H
+//	keyboard[19].kb_p(keyboard[19].key); //L
+//	keyboard[9].kb_p(keyboard[9].key); //P
+//	keyboard[24].kb_p(keyboard[24].key); //V
 
-	pop_screen();
-	reset_query();
 
-	keyboard[4].kb_p(keyboard[4].key); //t
-	keyboard[2].kb_p(keyboard[2].key); //e
-	keyboard[12].kb_p(keyboard[12].key); //s
-	keyboard[1].kb_p(keyboard[0].key); //q
-	DEL_BUTT.p();
-	keyboard[4].kb_p(keyboard[4].key); //t
-	SPACE_BUTT.kb_p(SPACE_BUTT.key); // " "
-	keyboard[7].kb_p(keyboard[7].key); // i
+	clear_screen(255);
+	init_control();
+/*
+	for(int i = 0; i < N_KEYS; i++){
+			printf("%c: ",keyboard[i].key);
+			printf("%i - ",keyboard[i].left);
+			printf("%i, ",keyboard[i].right);
+			printf("%i - ",keyboard[i].top);
+			printf("%i\n",keyboard[i].bottom);
+		}
+	s_listen();
+*/
 
-	reset_query();
-
-	keyboard[16].kb_p(keyboard[16].key); //H
-	keyboard[19].kb_p(keyboard[19].key); //L
-	keyboard[9].kb_p(keyboard[9].key); //P
-	keyboard[24].kb_p(keyboard[24].key); //V
+	Point x = {0,0};
+	load_image(x, "ubcfull3.BMP");
+	//load_image(x, "ubc1.BMP");
+	draw_img(x, x.x, x.y);
+	s_listen();
+	printf("\n\nend\n");
 
 	return 0;
 }

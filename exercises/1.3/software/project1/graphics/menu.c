@@ -15,12 +15,14 @@
  * 	HEADERSIZE changes with type of BMP file
  * 	COLOURTABLESIZE = size of colour table containing 256 colours (with BGRA fields)
  */
-#define IMGHEIGHT 	1050
-#define IMGWIDTH 	500
+#define IMGHEIGHT 	855
+#define IMGWIDTH 	1256
 #define BOXHEIGHT	480
 #define BOXWIDTH 	500
 #define HEADERSIZE 	54
 #define COLOURTABLESIZE 1024
+#define SHIFT 30
+
 
 void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart);
 void read_bytes(char* str, int len, short file);
@@ -29,7 +31,8 @@ int rgb_from_pixel_arr(char*** pixel, int x, int y);
 
 // Store the integer values of the colours for each pixel.
 int pixel[IMGHEIGHT][IMGWIDTH];
-
+int xstart = 0, ystart = 0;
+Point start = {0,0};
 /*	Load image from SD Card.
  * 	SD Card must be formatted in FAT16 to work with DE2.
  * 	Length of filenames cannot be longer than 12 characters.
@@ -37,8 +40,6 @@ int pixel[IMGHEIGHT][IMGWIDTH];
  */
 void load_image(Point topLeft, char* filename){
 	bool found_file = false;
-	int ystart = 20;	// where we want to start the y pixels. Prints up from this row.
-	int xstart = 0; 	// where we want to start the x pixels. Prints to the right from this column.
 
 	if (get_device_reference() == NULL || !alt_up_sd_card_is_Present() || !alt_up_sd_card_is_FAT16()){
 		printf("Can't find device, or device not configured properly\n");
@@ -58,7 +59,7 @@ void load_image(Point topLeft, char* filename){
 			short int file = alt_up_sd_card_fopen(found_file_name, false);
 			if (file >= 0){
 				printf("found file %s in SD\n", filename_all_caps);
-				draw_image_wrapper(topLeft, file, 0, ystart);
+				load_image_wrapper(file);
 				found_file = true; //want to close file, so use this rather than returning
 			}
 			alt_up_sd_card_fclose(file);
@@ -66,11 +67,14 @@ void load_image(Point topLeft, char* filename){
 	}while(!found_file && alt_up_sd_card_find_next(found_file_name) == 0);
 }
 
-void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart){
-//	get_header(file);
-//	get_pixels(file);
-//	draw_img(topLeft, file, 0, ystart);
-	draw_image_old(topLeft, file);
+Point ret_start_points(void){
+	Point ret = {xstart, ystart};
+	return ret;
+}
+
+void load_image_wrapper(short file){
+	get_header(file);
+	get_pixels(file);
 }
 
 void draw_image_old(Point topLeft, short file){
@@ -148,6 +152,7 @@ void get_header (short file){
 		header=(unsigned char)(alt_up_sd_card_read(file));
 		printf ("%hhx ",header & 0xff);
 	}
+	printf ("\n");
 	for (int i = 0; i < COLOURTABLESIZE; i++){
 		alt_up_sd_card_read(file);
 	}
@@ -166,7 +171,7 @@ void get_pixels (short file){
  * We're picking the top left point to start from
  * but actually draw from the bottom left first.
  */
-void draw_img (Point topLeft, short file, int xstart, int ystart){
+void draw_img (Point topLeft, int xstart, int ystart){
 	for (int y = 0; y < BOXHEIGHT; y++){
 		for (int x = 0; x < BOXWIDTH; x++){
 			int colour = pixel[ystart + y][xstart + x];
@@ -174,7 +179,41 @@ void draw_img (Point topLeft, short file, int xstart, int ystart){
 		}
 	}
 }
+/*	Move the x and y start points according to button
+ * 	Draw image again.
+ * 	This code is written to not go past the edge of the image.
+ */
+void move_img (int direction){
+	if (direction == UP){
+		if (ystart > IMGHEIGHT - BOXHEIGHT - SHIFT)
+			ystart = IMGHEIGHT - BOXHEIGHT;
+		else ystart += SHIFT;
+		printf ("UP\n");
 
+	}
+	else if (direction == DOWN){
+		if (ystart < SHIFT)
+			ystart = 0;
+		else ystart -= SHIFT;
+		printf ("DOWN\n");
+
+	}
+	else if (direction == RIGHT){
+		if (xstart > IMGWIDTH - BOXWIDTH - SHIFT)
+			xstart = IMGWIDTH - BOXWIDTH;
+		else xstart += SHIFT;
+		printf ("RIGHT\n");
+	}
+	else if (direction == LEFT){
+		if (xstart < SHIFT)
+			xstart = 0;
+		else xstart -= SHIFT;
+		printf ("LEFT\n");
+	}
+	Point printStart = ret_start_points ();
+	printf ("%d, %d", printStart.x, printStart.y);
+	draw_img(start, printStart.x, printStart.y);
+}
 //Text box is left aligned and has text wrapping
 void draw_text_box(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize){
 	int textLength = (int) strlen(text);

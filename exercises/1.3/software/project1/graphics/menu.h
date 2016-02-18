@@ -54,10 +54,14 @@ void draw_image(Point topLeft, short file);//, int bmpWidth, int bmpHeight);
 
 void load_image(Point bottomLeft, char* filename);//, char* filename, int bmpheight, int bmpwidth);
 void draw_keyboard(Point leftCorner, int size);
+Point ret_start_points(void);
+
 
 void get_header (short file);
 void get_pixels (short file);
-void draw_img (Point topLeft, short file, int xstart, int ystart);
+void draw_img (Point topLeft, int xstart, int ystart);
+void move_img (int direction);
+
 
 void draw_button(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize);
 void draw_menu(Point leftCorner, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, int fontSize, char* menuText[]);
