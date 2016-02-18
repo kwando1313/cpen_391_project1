@@ -285,18 +285,16 @@ void do_pop(){
 	kb_listen();
 }
 
-// Draws the character on the search bar (buffer) and updates the search matcher
+// Draws the character on the search bar and updates the search matcher
 void do_key(char key){
-	// TODO:
-	printf("In do_key: %c\n", key);
 	add_letter(key);
+	// TODO: Need to update the search matcher
 }
 
-// Deletes the front of the search bar (buffer) and updates the search matcher
+// Deletes the front of the search bar and updates the search matcher
 void do_del(){
-	// TODO:
-	printf("In do_del\n");
 	del();
+	// TODO: Need to update the search matcher
 }
 
 /* On valid search, go to and highlight the searched node? Re-draw the map.
