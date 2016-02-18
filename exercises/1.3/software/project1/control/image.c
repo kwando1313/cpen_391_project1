@@ -16,8 +16,8 @@ extern const unsigned int ColourPalletteData[256];
  */
 //#define IMGHEIGHT 	525
 //#define IMGWIDTH 	717
-#define DISPLAY_HEIGHT	361
-#define DISPLAY_WIDTH 	373
+#define DISPLAY_HEIGHT	400
+#define DISPLAY_WIDTH 	400
 #define HEADERSIZE 		54
 #define COLOURTABLESIZE 1024
 
@@ -112,11 +112,11 @@ void get_header (short file){
  */
 void get_pixels(short file){
 	printf("bmp width: %d, bmp height: %d\n", bmpWidth, bmpHeight);
+
+	int width = (bmpWidth % 4 == 0) ? bmpWidth : (bmpWidth + 4 - (bmpWidth % 4));
 	for (int j = 0; j < bmpHeight; j++){
-		for (int i = 0; i < 376; i++){ //hardcoding the width because the width is WEIRD right now
-			//image_pixels[i][j] = alt_up_sd_card_read(file);
-			WriteAPixel(i, bmpHeight-j, alt_up_sd_card_read(file));
-			//printf("At column %d\n", j);
+		for (int i = 0; i < width; i++){
+			image_pixels[i][j] = alt_up_sd_card_read(file);
 		}
 
 	}
@@ -128,16 +128,16 @@ void get_pixels(short file){
  */
 void draw_image(Point topLeft, int xstart, int ystart){
 
-//	int height = (bmpHeight < DISPLAY_HEIGHT) ? bmpHeight : DISPLAY_HEIGHT;
-//	int width = (bmpWidth < DISPLAY_WIDTH) ? bmpWidth: DISPLAY_WIDTH;
-//
-//
-//	for (int y = 0; y < height; y++){
-//		for (int x = 0; x < width; x++){
-//			int colour = image_pixels[xstart + x][ystart + y];
-////			if(getPalleteAddr(int RGB);
-////			int getRGB(int addr);
-//			WriteAPixel(topLeft.x + x, topLeft.y + height-y, colour);
-//		}
-//	}
+	int height = (bmpHeight < DISPLAY_HEIGHT) ? bmpHeight : DISPLAY_HEIGHT;
+	int width = (bmpWidth < DISPLAY_WIDTH) ? bmpWidth: DISPLAY_WIDTH;
+
+
+	for (int y = 0; y < height; y++){
+		for (int x = 0; x < width; x++){
+			int colour = image_pixels[xstart + x][ystart + y];
+//			if(getPalleteAddr(int RGB);
+//			int getRGB(int addr);
+			WriteAPixel(topLeft.x + x, topLeft.y + height-y, colour);
+		}
+	}
 }

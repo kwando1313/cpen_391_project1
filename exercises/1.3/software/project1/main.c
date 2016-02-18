@@ -12,7 +12,7 @@ int main(void) {
 	Point x = {0,0};
 
 	//load_draw_image(x, 0, 0, "ubcnew.bmp");
-	load_draw_image(x, 0, 0, "ubcnew4.bmp");
+	load_draw_image(x, 0, 0, "ubcnew.bmp");
 
 	printf("\n\nend\n");
 	return 0;
