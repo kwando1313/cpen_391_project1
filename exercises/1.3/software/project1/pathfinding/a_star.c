@@ -17,6 +17,7 @@ void append_to_path_points_array(path_points* path, int i, Point to_add);
 
 //debugging only
 void print_astar_node(astar_node* node);
+
 /*
  * Notes on datastructures chosen
  *
@@ -35,11 +36,6 @@ void print_astar_node(astar_node* node);
  * - searchable
  * - chosen btree(O(logn) for all). Heap would be O(n) to search, O(logn) for find/remove, O(logn) to add.
  */
-
-void hashmapInsert(hashmap* map, const void* data, unsigned int key);
-
-void* hashmapGet(hashmap* map, unsigned int key);
-
 int* a_star(graph* graph, int start, int goal){
 	hashmap* closed_set = hashmapCreate(DEFAULT_PATH_SIZE);
 	hashmap* path = hashmapCreate(DEFAULT_PATH_SIZE);
