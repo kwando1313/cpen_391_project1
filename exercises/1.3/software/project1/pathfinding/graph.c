@@ -5,9 +5,13 @@
 #include "graphics.h"
 #include "graph.h"
 
+#define GPS_MULTIPLIER 1e6
+
 adjacencyList* init_adjList(void);
 void add_directed_edge(adjacencyList* adjList, int vertex_id, cost cost);
 bool remove_directed_edge(adjacencyList* adjList, int vertex_id);
+int make_latitude_usable(float latitude);
+int make_longitude_usable(float latitude);
 
 graph* init_graph(int inital_max_vertices){
 	graph* new_graph = malloc(sizeof(graph));
@@ -24,8 +28,8 @@ vertex* init_vertex(float latitude, float longitude, float altitude, char* name,
 	new_vertex->adjList = init_adjList();
 
 	//temporary, just for sprint1 since we don't have any actual data yet
-//	new_vertex.latitude = latitude * FLOAT_TO_INT_MULTIPLIER;
-//	new_vertex.longitude = longitude * FLOAT_TO_INT_MULTIPLIER;
+//	new_vertex.latitude = make_latitude_usable(latitude);
+//	new_vertex.longitude = make_longitude_usable(longitude);
 //	new_vertex.altitude = altitude * FLOAT_TO_INT_MULTIPLIER;
 	new_vertex->latitude = x;
 	new_vertex->longitude = y;
@@ -203,16 +207,18 @@ vertex* find_vertex_by_name(graph* graph, char* name){
 //TODO replace this if we have more than >100 nodes or so
 //TODO should this include altitude?
 vertex* find_vertex_by_coords(graph* graph, float latitude, float longitude){
-	unsigned int lat_i = latitude * FLOAT_TO_INT_MULTIPLIER;
-	unsigned int long_i = longitude * FLOAT_TO_INT_MULTIPLIER;
+	make_latitude_usable(49.123456);
+	make_longitude_usable(123.987654);
+	int lat_i = make_latitude_usable(latitude);
+	int long_i = make_longitude_usable(longitude);
 	vertex* min_v = get_vertex(graph, 0);
 
-	unsigned int min_dist = (unsigned int)sqrt(sub_and_sqre(lat_i, min_v->latitude)
+	int min_dist = (int)sqrt(sub_and_sqre(lat_i, min_v->latitude)
 							+ sub_and_sqre(long_i, min_v->longitude));
 
 	for (int i = 1; i<graph->num_vertices; i++) {
 		vertex* v = get_vertex(graph, i);
-		unsigned int dist = (unsigned int)sqrt(sub_and_sqre(lat_i, v->latitude)
+		int dist = (int)sqrt(sub_and_sqre(lat_i, v->latitude)
 							+ sub_and_sqre(long_i, v->longitude));
 		if (dist < min_dist){
 			min_dist = dist;
@@ -221,4 +227,20 @@ vertex* find_vertex_by_coords(graph* graph, float latitude, float longitude){
 	}
 
 	return min_v;
+}
+
+// call these to convert from the lat/long from gps to the lat/long used by the graph
+// latitude of everything on ubc is 49.xxxxxx
+// therefore, we only care about the 6 digits after the decimal
+int make_latitude_usable(float latitude){
+	int lat_i = latitude * GPS_MULTIPLIER;
+	lat_i = lat_i % (int)GPS_MULTIPLIER;
+	return lat_i;
+}
+
+//longitude of everything on ubc is 123.xxxxxx
+int make_longitude_usable(float longitude){
+	int long_i = longitude * GPS_MULTIPLIER;
+	long_i = long_i % (int)GPS_MULTIPLIER;
+	return long_i;
 }

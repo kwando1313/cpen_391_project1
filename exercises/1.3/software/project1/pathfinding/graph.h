@@ -7,7 +7,6 @@
 
 #define DEFAULT_NUM_NEIGHBOURS 4
 #define DEFAULT_GRAPH_SIZE 32
-#define FLOAT_TO_INT_MULTIPLIER 1000
 
 typedef struct __path_points{
 	Point* ordered_point_arr;
@@ -47,8 +46,7 @@ typedef struct __vertex {
 	//and not being able to find the value we need.
 	//we should multiply lat/long/alt on creation by some constant(defined above)
 	//to maintain precision
-	unsigned int latitude, longitude;
-	int altitude;
+	int latitude, longitude, altitude;
     int x, y;
     adjacencyList* adjList;
 } vertex;
