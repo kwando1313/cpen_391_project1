@@ -134,10 +134,19 @@ void draw_image(Point topLeft, int xstart, int ystart){
 
 	for (int y = 0; y < height; y++){
 		for (int x = 0; x < width; x++){
+			int initialX = x;
 			int colour = image_pixels[xstart + x][ystart + y];
+			int colour2 = image_pixels[xstart + x][ystart + y];
+
+			while (colour == colour2 && x < width){
+				x++;
+				colour2 = image_pixels[xstart+x][ystart+y];
+			}
 //			if(getPalleteAddr(int RGB);
 //			int getRGB(int addr);
-			WriteAPixel(topLeft.x + x, topLeft.y + height-y, colour);
+			HLine(topLeft.x + initialX, topLeft.y + height - y, x - initialX, colour);
+			x--;
+			//WriteAPixel(topLeft.x + x, topLeft.y + height-y, colour);
 		}
 	}
 }
