@@ -56,11 +56,6 @@ void VLine(int x1, int y1, int length, int Colour);
 void Line(int x1, int y1, int x2, int y2, int Colour);
 void clear_screen(int colour);
 
-/************************************ Colours *********************************/
-void setUpPallete(void);
-int getPalleteAddr(int RGB);
-int getRGB(int addr);
-
 /************************* Others **************************************/
 void Fill(int _x, int _y, int _FillColour, int _BoundaryColour);
 void OutGraphicsCharFont1(int x, int y, int fontcolour, int backgroundcolour, int c, int Erase);
