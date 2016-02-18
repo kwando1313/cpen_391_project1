@@ -66,5 +66,4 @@ void do_north();
 void do_south();
 
 
-
 #endif /* BUTTON_H_ */

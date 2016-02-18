@@ -284,23 +284,22 @@ void do_south(){
 // Pop up the keyboard
 void do_pop(){
 	pop_screen();
+	reset_query();
 	kb_listen();
 }
 
 // Draws the character on the search bar (buffer) and updates the search matcher
 void do_key(char key){
 	// TODO:
-	printf("%c\n", key);
-//	add_letter(key);
-//	draw_word();
+	printf("In do_key: %c\n", key);
+	add_letter(key);
 }
 
 // Deletes the front of the search bar (buffer) and updates the search matcher
 void do_del(){
 	// TODO:
 	printf("In do_del\n");
-//	del();
-//	draw_word();
+	del();
 }
 
 /* On valid search, go to and highlight the searched node? Re-draw the map.
@@ -316,5 +315,7 @@ bool do_enter(){
 void do_back(){
 	// TODO:
 	printf("In do_back\n");
+	reset_query();
+
 	init_screen(); //replace this
 }

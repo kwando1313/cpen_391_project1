@@ -9,30 +9,36 @@
 int main(void) {
 	printf("start\n\n");
 
-//	for(int i = 0; i<50; i++){
-//		graph* graph = create_test_graph();
-//		printf("created graph\n");
-//		destroy_graph(graph);
-//		printf("destroyed graph\n");
-//	}
-//
-//	printf("\n\nend\n");
-
 	init_control();
-	for(int i = 0; i < N_KEYS; i++){
-			printf("%c: ",keyboard[i].key);
-			printf("%i - ",keyboard[i].left);
-			printf("%i, ",keyboard[i].right);
-			printf("%i - ",keyboard[i].top);
-			printf("%i\n",keyboard[i].bottom);
-		}
-	s_listen();
+//	for(int i = 0; i < N_KEYS; i++){
+//		printf("%c: ",keyboard[i].key);
+//		printf("%i - ",keyboard[i].left);
+//		printf("%i, ",keyboard[i].right);
+//		printf("%i - ",keyboard[i].top);
+//		printf("%i\n",keyboard[i].bottom);
+//	}
+//	s_listen();
 
-//	clear_screen(255);
-//	Point x = {0,0};
-//	load_image(x, "WTF.BMP");
-//
-//	printf("\n\nend\n");
+
+
+	pop_screen();
+	reset_query();
+
+	keyboard[4].kb_p(keyboard[4].key); //t
+	keyboard[2].kb_p(keyboard[2].key); //e
+	keyboard[12].kb_p(keyboard[12].key); //s
+	keyboard[1].kb_p(keyboard[0].key); //q
+	DEL_BUTT.p();
+	keyboard[4].kb_p(keyboard[4].key); //t
+	SPACE_BUTT.kb_p(SPACE_BUTT.key); // " "
+	keyboard[7].kb_p(keyboard[7].key); // i
+
+	reset_query();
+
+	keyboard[16].kb_p(keyboard[16].key); //H
+	keyboard[19].kb_p(keyboard[19].key); //L
+	keyboard[9].kb_p(keyboard[9].key); //P
+	keyboard[24].kb_p(keyboard[24].key); //V
 
 	return 0;
 }
