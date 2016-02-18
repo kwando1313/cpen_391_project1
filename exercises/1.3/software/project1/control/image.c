@@ -24,7 +24,7 @@ extern const unsigned int ColourPalletteData[256];
 void load_image_to_pixels_arr(short file);
 
 // Store the integer values of the colours for each pixel.
-int** image_pixels; //full_map[bmpWidth][bmpHeight]
+char** image_pixels; //full_map[bmpWidth][bmpHeight]
 int bmpWidth, bmpHeight;
 
 void load_draw_image(Point topLeft, int xstart, int ystart, char* filename){
@@ -68,9 +68,9 @@ void get_header (short file){
 	bmpHeight = *(int *) height;
 	printf("bmp width: %d, bmp height: %d\n", bmpWidth, bmpHeight);
 
-	image_pixels = malloc(sizeof(int*)*bmpWidth);
+	image_pixels = malloc(sizeof(char*)*bmpWidth);
 	for(int i = 0; i<bmpWidth; i++){
-		image_pixels[i] = malloc(sizeof(int)*bmpHeight);
+		image_pixels[i] = malloc(sizeof(char)*bmpHeight);
 	}
 
 	unsigned char entry[4];
@@ -110,8 +110,8 @@ void draw_image(Point topLeft, int xstart, int ystart){
 	for (int y = 0; y < height; y++){
 		for (int x = 0; x < width; x++){
 			int initialX = x;
-			int colour = image_pixels[xstart + x][ystart + y];
-			int colour2 = image_pixels[xstart + x][ystart + y];
+			char colour = image_pixels[xstart + x][ystart + y];
+			char colour2 = image_pixels[xstart + x][ystart + y];
 
 			while (colour == colour2 && x < width){
 				x++;
@@ -119,7 +119,7 @@ void draw_image(Point topLeft, int xstart, int ystart){
 			}
 //			if(getPalleteAddr(int RGB);
 //			int getRGB(int addr);
-			HLine(topLeft.x + initialX, topLeft.y + height - y, x - initialX, colour);
+			HLine(topLeft.x + initialX, topLeft.y + height - y, x - initialX, (int)colour);
 			x--;
 			//WriteAPixel(topLeft.x + x, topLeft.y + height-y, colour);
 		}
