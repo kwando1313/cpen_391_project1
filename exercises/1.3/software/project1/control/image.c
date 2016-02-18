@@ -87,9 +87,9 @@ void get_header (short file){
 /* Store pixel colours in 2-D array.
  */
 void get_pixels(short file){
-	printf("bmp width: %d, bmp height: %d\n", bmpWidth, bmpHeight);
+	int width = (bmpWidth % 4 == 0) ? bmpWidth : (bmpWidth + 4 - (bmpWidth % 4));
 	for (int j = 0; j < bmpHeight; j++){
-		for (int i = 0; i < bmpWidth; i++){
+		for (int i = 0; i < width; i++){
 			image_pixels[i][j] = alt_up_sd_card_read(file);
 		}
 	}
