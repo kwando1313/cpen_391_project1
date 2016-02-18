@@ -7,9 +7,7 @@
 #include "touchscreen.h"
 #include <math.h>
 #include "misc_helpers.h"
-#include "control.h"
 #include "button.h"
-
 
 // initialize and load up graphics on touchscreen
 void init_control(){
@@ -17,59 +15,6 @@ void init_control(){
 	init_screen();
 	init_keyboard();
 }
-
-//  DELETE WHEN BUTTON FCNS WORKS
-//// Display accordingly upon successfully pressing a button and return screen mode
-//int get_button(int a, int b){
-//	// Info Button
-//		if(a >= IL && a <= IR && b > IU && b <= ID){
-//			Point p_f = GetRelease();
-//			int c = p_f.x;
-//			int d = p_f.y;
-//			printf("Released Coordinates: (%i, %i)\n", c, d);
-//
-//			if(c >= IL && c <= IR && d > IU && d <= ID){
-//				return INFO;
-//			}
-//		}
-//	// Directions Button
-//		else if(a > DL && a <= DR && b >= DU && b < DD){
-//			Point p_f = GetRelease();
-//			int c = p_f.x;
-//			int d = p_f.y;
-//			printf("Released Coordinates: (%i, %i)\n", c, d);
-//
-//			if(c > DL && c <= DR && d >= DU && d < DD){
-//				return DIR;
-//			}
-//		}
-//
-//		// Photo Button
-//		else if(a >= PL && a <= PR && b >= PU && b <= PD){
-//			Point p_f = GetRelease();
-//			int c = p_f.x;
-//			int d = p_f.y;
-//			printf("Released Coordinates: (%i, %i)\n", c, d);
-//
-//			if(c >= PL && c <= PR && d >= PU && d <= PD){
-//				return PHOTO;
-//			}
-//		}
-//
-//		// About Button
-//		else if(a > AL && a <= AR && b >= AU && b <= AD){
-//			Point p_f = GetRelease();
-//			int c = p_f.x;
-//			int d = p_f.y;
-//			printf("Released Coordinates: (%i, %i)\n", c, d);
-//
-//			if(c > AL && c <= AR && d >= AU && d <= AD){
-//				return ABOUT;
-//			}
-//		}
-//
-//		return NO_RESPONSE;
-//}
 
 // Get the node from where we pressed
 int get_node(graph* graph){
@@ -125,21 +70,22 @@ bool is_kb_butt(Button* butt){
 }
 
 // Listen for button inputs
-void listen(){
-		graph* graph = create_test_graph();
-		draw_graph(graph, YELLOW, RED);
+void s_listen(){
+//		graph* graph = create_test_graph();
+//		draw_graph(graph, YELLOW, RED);
 
 		while(1){
 			// Wait for button input
-			Point p_i = GetPress();
-			printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
 
 			Button* butt;
 			do{
-				butt = get_button(p_i);
+				Point p_i = GetPress();
+				printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
+				butt = get_s_button(p_i);
 			}
-			while(butt == NULL);
-
+			while(butt == NULL );
+			printf("%c: ", butt->key);
+			printf("%i\n", butt->id);
 			butt->p();
 		}
 }
@@ -147,18 +93,19 @@ void listen(){
 // Listen for only keyboard button inputs
 void kb_listen(){
 	while(1){
-		Point p_i = GetPress();
-		printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
 
 		// Wait for keyboard button input
 		Button* butt;
 		do{
-			butt = get_button(p_i);
+			Point p_i = GetPress();
+			printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
+			butt = get_kb_button(p_i);
 		}
-		while(butt != NULL && (!is_kb_butt(butt)));
+		while(butt == NULL );
+		printf("%c: ", butt->key);
+		printf("%i\n", butt->id);
 
-
-		if(butt->id != BACK_BUTT.id || butt->id != ENTER_BUTT.id || butt->id != DEL_BUTT.id)
+		if(butt->id != BACK_BUTT.id && butt->id != ENTER_BUTT.id && butt->id != DEL_BUTT.id)
 			butt->kb_p(butt->key);
 
 		// We are done with the keyboard upon BACK
@@ -175,7 +122,7 @@ void kb_listen(){
 		}
 
 		// Else butt is the delete button
-		else
+		else if(butt->id == DEL_BUTT.id)
 			butt->p();
 	}
 }

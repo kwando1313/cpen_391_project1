@@ -240,7 +240,7 @@ void draw_information_box(char* text){
 	point8.x = 500;
 	point8.y = 0;
 	//255 is WHITE
-	draw_text_box(point8, 300, 330,2, BLACK, 255, BLACK, text, SMALL);
+	draw_text_box(point8, 300, 200, 2, BLACK, 255, BLACK, text, SMALL);
 
 }
 
@@ -354,7 +354,7 @@ void init_screen(){
 		char* firstTextArray[] = {"Info", "Photo", ""};
 		char* secondTextArray[] = {"Directions", "About", ""};
 		char* thirdTextArray[] = {"Search", ""};
-		char* fourthTextArray[] = {"Compass", ""};
+		char* fourthTextArray[] = {" ", ""};
 
 		about_screen();
 
@@ -404,6 +404,7 @@ void pop_screen(){
 	draw_keyboard(p, 40);
 }
 
+// redraw the map when we leave pop_screen
 void map_screen(){
 	// TODO:
 

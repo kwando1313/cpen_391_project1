@@ -37,7 +37,7 @@ Button* keyboard;
 // keyboard variables
 #define N_KEYS 39
 #define KB_KEYS 30
-#define S_KEYS 9
+//#define S_KEYS 9
 
 void init_kb_button(char key, int id);
 void init_s_button(char key, int id);
@@ -47,7 +47,8 @@ void destroy_keyboard();
 
 // Gets the button upon input for control
 int falls_inside(Point p, Button b);
-Button* get_button(Point p);
+Button* get_s_button(Point p);
+Button* get_kb_button(Point p);
 
 // ptr fcns
 void do_key(char key);

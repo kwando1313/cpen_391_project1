@@ -14,7 +14,7 @@
 
 void init_control();
 
-void listen();
+void s_listen();
 void kb_listen();
 
 bool is_kb_butt(Button* butt);
