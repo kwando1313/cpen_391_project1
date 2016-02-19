@@ -381,7 +381,7 @@ void draw_keyboard(Point leftCorner, int size){
 	return;
 }
 
-// Includes the RHS of the screen (i.e everything but the map)
+// Initialises the RHS of the screen (i.e everything but the map)
 void init_screen(){
 		clear_screen(255); // 255 is WHITE
 
@@ -430,6 +430,7 @@ void photo_screen(){
 
 // draw the pop up keyboard on the LHS of the screen
 void pop_screen(){
+	draw_information_box("ENTER YOUR SEARCH:");
 	Point p = {30, 330};
 	Point p1 = {0, 300};
 	Point p2 = {0, 230};
@@ -441,6 +442,27 @@ void pop_screen(){
 	draw_menu(p2, 500, 70, 2 , BLACK, 255, BLACK, SMALL, t);
 	//bounded in (30-470, 330-450)
 	draw_keyboard(p, 40);
+}
+
+// draw the names matched with the query string and highlight the current chosen entry
+void match_screen(){
+	char* t[];
+	Point p;
+
+	int m = mn_count();
+	int incr = 200 / m;
+
+	for(int i = 0; i < m; i++){
+		p.x = 500;
+		p.y = i*incr;
+		t[0] = matched_names[i];
+		t[1] = "";
+
+		if(i != si)
+			draw_menu(p, 300, incr, 2 , BLACK, 255, BLACK, SMALL, t);
+		else if(i == si)
+			draw_menu(p, 300, incr, 2 , 255, BLACK, 255, SMALL, t); // highlighted entry (i.e invert colors)
+	}
 }
 
 // redraw the map when we leave pop_screen

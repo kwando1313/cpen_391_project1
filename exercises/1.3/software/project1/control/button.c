@@ -142,6 +142,7 @@ void init_s_button(char key, int id){
 		NORTH_BUTT.left = NL;
 		NORTH_BUTT.right = NR;
 		NORTH_BUTT.p = do_north;
+		NORTH_BUTT.kb_p = do_up;
 	break;
 
 	case 38:
@@ -150,6 +151,7 @@ void init_s_button(char key, int id){
 		SOUTH_BUTT.left = SL;
 		SOUTH_BUTT.right = SR;
 		SOUTH_BUTT.p = do_south;
+		SOUTH_BUTT.p = do_down;
 	break;
 
 	default:
@@ -159,7 +161,7 @@ void init_s_button(char key, int id){
 }
 
 void init_keyboard(){
-	//keyboard = malloc(sizeof(Button)*N_KEYS);
+	//keyboard = malloc(sizeof(Button)*N_KEYS); // MIGHT NOT NEED THIS
 
 	// KB buttons
 	for(int i = 0; i < KB_KEYS; i++){
@@ -172,12 +174,13 @@ void init_keyboard(){
 	}
 }
 
-void destroy_keyboard(Button* keyboard){
+// MIGHT NOT NEED THIS
+// void destroy_keyboard(Button* keyboard){
 //	for(int i = 0; i < N_KEYS; i++){
 //		free(keyboard[i]);
 //	}
-	//free(keyboard);
-}
+//	free(keyboard);
+//}
 
 /* Assumption: all of our buttons are rectangles. Aside: nodes aren't buttons but they are circles right now.
  * Returns true if the point is inside the button
@@ -201,7 +204,7 @@ Button* get_s_button(Point p){
 				return NULL;
 		}
 	}
-	// Return the invalid button
+
 	return NULL;
 }
 
@@ -218,7 +221,19 @@ Button* get_kb_button(Point p){
 				return NULL;
 		}
 	}
-		// Return the invalid button
+
+	// North and South buttons used in search mode to select matching search entry
+	for(int j = N_KEYS-2; j < N_KEYS; j++){
+		Point p_f = GetRelease();
+		printf("Released Coordinates: (%i, %i)\n", p_f.x, p_f.y);
+
+		if(falls_inside(p_f, keyboard[j])){
+			return &keyboard[j];
+		}
+		else
+			return NULL;
+	}
+
 	return NULL;
 }
 
@@ -281,6 +296,24 @@ void do_south(){
 	move_img (DOWN);
 }
 
+// Select the search match entry above the current selected
+void do_up(char key){
+	//printf("%c is up", key);
+	if(si > 0)
+		si--;
+	else
+		si++;
+}
+
+// Select the search match entry below the current selected
+void do_down(char key){
+	//printf("%c is down", key);
+	if(si < mni)
+		si++;
+	else
+		si--;
+}
+
 // Pop up the keyboard
 void do_pop(){
 	pop_screen();
@@ -291,13 +324,26 @@ void do_pop(){
 // Draws the character on the search bar and updates the search matcher
 void do_key(char key){
 	add_letter(key);
-	// TODO: Need to update the search matcher
+
+	/* Ignore the matcher if the string query length is below the threshhold to provide mathcings
+	   Update and delete matches when we add letters */
+	if(length() > SEARCH_THRESHHOLD){
+		del_matches();
+	}
+	if(length() == SEARCH_THRESHHOLD){
+		add_matches();
+	}
 }
 
 // Deletes the front of the search bar and updates the search matcher
 void do_del(){
-	del();
-	// TODO: Need to update the search matcher
+	del_letter();
+
+	/* Ignore the matcher if the string query is below the threshhold
+	   Update and add matches when we delete letters  */
+	if(length() >= SEARCH_THRESHHOLD){
+		add_matches();
+	}
 }
 
 /* On valid search, go to and highlight the searched node? Re-draw the map.

@@ -10,7 +10,7 @@
 int main(void) {
 	printf("start\n\n");
 
-// TEST KEYBOARD PRESSING -- KEEP THIS FOR NOW
+// TEST KEYBOARD PRESSING -- ADD ALL TESTS TO A TEST DIRECTORY
 //	init_control();
 //	for(int i = 0; i < N_KEYS; i++){
 //		printf("%c: ",keyboard[i].key);
@@ -22,8 +22,8 @@ int main(void) {
 //	s_listen();
 
 
-// TEST DISPLAYING SEARCH QUERY -- KEEP THIS FOR NOW
-//  init_control();
+// TEST DISPLAYING SEARCH QUERY
+//    init_control();
 //	pop_screen();
 //	reset_query();
 //
@@ -44,7 +44,7 @@ int main(void) {
 //	keyboard[24].kb_p(keyboard[24].key); //V
 
 
-// 	ANGELA'S MAIN TESTING -- KEEP THIS FOR NOW I THINK
+// 	ANGELA'S TESTING
 //	clear_screen(255);
 //	init_control();
 
@@ -56,6 +56,6 @@ int main(void) {
 
 //	read_gps();
 
-//	printf("\n\nend\n");
+	printf("\n\nend\n");
 	return 0;
 }

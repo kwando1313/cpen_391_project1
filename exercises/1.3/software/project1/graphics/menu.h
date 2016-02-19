@@ -76,6 +76,7 @@ void directions_screen();
 void photo_screen();
 void init_screen();
 void pop_screen();
+void match_screen();
 //TODO: need fcn to redraw the map after finished with keyboard
 void map_screen();
 

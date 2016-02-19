@@ -38,11 +38,11 @@ Button* keyboard;
 #define N_KEYS 39
 #define KB_KEYS 30
 
+// initialise keyboard
 void init_kb_button(char key, int id);
 void init_s_button(char key, int id);
-
 void init_keyboard();
-void destroy_keyboard();
+//void destroy_keyboard();
 
 // Gets the button upon input for control
 int falls_inside(Point p, Button b);
@@ -62,7 +62,9 @@ void do_pop();
 void do_west();
 void do_east();
 void do_north();
+void do_up(char key);
 void do_south();
+void do_down(char key);
 
 
 #endif /* BUTTON_H_ */

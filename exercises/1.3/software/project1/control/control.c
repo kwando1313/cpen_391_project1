@@ -122,7 +122,7 @@ void kb_listen(){
 			}
 		}
 
-		// Else butt is the delete button
+		// Butt is the delete button
 		else if(butt->id == DEL_BUTT.id)
 			butt->p();
 	}
