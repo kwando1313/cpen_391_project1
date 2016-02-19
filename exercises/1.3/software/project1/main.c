@@ -20,6 +20,6 @@ int main(void) {
 //	//load_image("ubcfull3.bmp");
 //
 //	printf("\n\nend\n");
-	btree_test();
+	alphaBetize_test();
 	return 0;
 }
