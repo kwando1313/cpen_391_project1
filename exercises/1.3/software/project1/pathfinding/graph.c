@@ -12,11 +12,13 @@ void add_directed_edge(adjacencyList* adjList, int vertex_id, cost cost);
 bool remove_directed_edge(adjacencyList* adjList, int vertex_id);
 int make_latitude_usable(float latitude);
 int make_longitude_usable(float latitude);
+void add_name(graph* graph, char* name);
 
 graph* init_graph(int inital_max_vertices){
 	graph* new_graph = malloc(sizeof(graph));
 	new_graph->num_vertices = 0;
 	new_graph->max_vertices = inital_max_vertices;
+	new_graph->names_head = NULL;
 	new_graph->vertices = malloc(inital_max_vertices*sizeof(vertex*));
 	return new_graph;
 }
@@ -30,7 +32,7 @@ vertex* init_vertex(float latitude, float longitude, float altitude, char* name,
 	//temporary, just for sprint1 since we don't have any actual data yet
 //	new_vertex.latitude = make_latitude_usable(latitude);
 //	new_vertex.longitude = make_longitude_usable(longitude);
-//	new_vertex.altitude = altitude * FLOAT_TO_INT_MULTIPLIER;
+//	new_vertex.altitude = altitude;
 	new_vertex->latitude = x;
 	new_vertex->longitude = y;
 	new_vertex->altitude = 0;
@@ -58,6 +60,7 @@ int add_vertex(graph* graph, vertex* v){
 		new_vertices = realloc(graph->vertices, sizeof(vertex*)*graph->max_vertices);
 		graph->vertices = new_vertices;
 	}
+	add_name(graph, v->name);
 	v->id = num_vertices;
 	graph->vertices[num_vertices] = v;
 	graph->num_vertices++;
@@ -243,4 +246,40 @@ int make_longitude_usable(float longitude){
 	int long_i = longitude * GPS_MULTIPLIER;
 	long_i = long_i % (int)GPS_MULTIPLIER;
 	return long_i;
+}
+
+char** search_names(graph* graph, char* search_string){
+	name_list* curr = graph->names_head;
+	while(curr != NULL){
+		printf("%s\n", curr->name);
+		curr = curr->next;
+	}
+	return NULL;
+}
+
+void add_name(graph* graph, char* name){
+	name_list* new_name = malloc(sizeof(name_list));
+	new_name->name = name;
+	new_name->next = NULL;
+
+	if (graph->names_head == NULL) {
+		graph->names_head = new_name;
+		graph->names_tail = new_name;
+	} else if (strcasecmp(graph->names_tail, name) >= 0){
+		graph->names_tail->next = new_name;
+		graph->names_tail = new_name;
+	} else if (strcasecmp(name, graph->names_head) >= 0){
+		new_name->next = graph->names_head;
+		graph->names_head = new_name;
+	} else{
+		name_list* prev = graph->names_head;
+		name_list* curr = prev->next;
+		while(curr && strcasecmp(name, curr->name) >= 0){
+			prev = curr;
+			curr = curr->next;
+		}
+
+		prev->next = new_name;
+		new_name->next = curr;
+	}
 }

@@ -106,12 +106,3 @@ load_file(char* filename, void (*func)(short)){
 		}
 	}while(!found_file && alt_up_sd_card_find_next(found_file_name) == 0);
 }
-
-//https://stackoverflow.com/questions/12646734/how-to-sort-an-array-of-string-alphabetically-case-sensitive-nonstandard-colla
-int alphaBetize (char *a, char *b) {
-    int r = strcasecmp(a, b);
-    if (r) return r;
-    /* if equal ignoring case, use opposite of strcmp() result to get
-     * lower before upper */
-    return -strcmp(a, b); /* aka: return strcmp(b, a); */
-}
