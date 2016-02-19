@@ -162,6 +162,7 @@ C_SRCS += tests/hashmap_test.c
 C_SRCS += tests/graph_test.c
 C_SRCS += control/button.c
 C_SRCS += control/image.c
+C_SRCS += tests/btree_test.c
 CXX_SRCS :=
 ASM_SRCS :=
 
