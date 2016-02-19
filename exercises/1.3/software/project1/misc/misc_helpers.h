@@ -1,6 +1,7 @@
 #ifndef MISC_HELPERS_H_
 #define MISC_HELPERS_H_
 
+#include <stdbool.h>
 #include <altera_up_sd_card_avalon_interface.h>
 
 #define M_PI 3.14159265358979323846264338327
@@ -14,6 +15,8 @@
 #define RADIUS 25
 
 typedef struct{int x, y; } Point;
+
+int alphaBetize (char *a, char *b);
 
 load_file(char* filename, void (*func)(short));
 
@@ -37,5 +40,7 @@ int max(int x, int y);
 
 int abs(int a);
 int sign(int a);
+
+bool str_begins(char* str, char* begins);
 
 #endif /* MISC_HELPERS_H_ */

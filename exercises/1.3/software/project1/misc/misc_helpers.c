@@ -1,5 +1,7 @@
 #include "misc_helpers.h"
 #include "button.h"
+#include <assert.h>
+#include <string.h>
 #include <math.h>
 #include <ctype.h>
 
@@ -105,4 +107,44 @@ load_file(char* filename, void (*func)(short)){
 			alt_up_sd_card_fclose(file);
 		}
 	}while(!found_file && alt_up_sd_card_find_next(found_file_name) == 0);
+}
+
+bool str_begins(char* str, char* begins){
+	if(strlen(str) < strlen(begins)){
+		return false;
+	}
+
+	for(int i = 0; i<strlen(begins); i++){
+		printf("str_begins: %c, %c\n", str[i], begins[i]);
+		if(toupper(str[i]) != toupper(begins[i])) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+//case insensitive, unless equal, then lowercase first
+//shorter == smaller
+//assuming no numbers for now
+int alphaBetize (char *a, char *b) {
+	int i = 0;
+	int j = 0;
+	//printf("len: %d , %d\n", strlen(a), strlen(b));
+	while(i < strlen(a) && j < strlen(b)){
+		char curr_a = (char)tolower(a[i]);
+		char curr_b = (char)tolower(b[j]);
+		if (curr_a != curr_b) {
+			//printf("%c, %c\n", curr_a, curr_b);
+			return curr_a - curr_b;
+		}
+		i++;
+		j++;
+	}
+
+	if (strlen(a) == strlen(b)) {
+		return strcmp(b, a); //makes lowercase < uppercase
+	} else {
+		return strlen(a) - strlen(b);
+	}
 }
