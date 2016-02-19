@@ -109,9 +109,9 @@ load_file(char* filename, void (*func)(short)){
 
 //https://stackoverflow.com/questions/12646734/how-to-sort-an-array-of-string-alphabetically-case-sensitive-nonstandard-colla
 int alphaBetize (char *a, char *b) {
-    int r = strcasecmp(a, b);
-    if (r) return r;
-    /* if equal ignoring case, use opposite of strcmp() result to get
-     * lower before upper */
-    return -strcmp(a, b); /* aka: return strcmp(b, a); */
+    return strcasecmp(a, b);
+//    if (r) return r;
+//    /* if equal ignoring case, use opposite of strcmp() result to get
+//     * lower before upper */
+//    return -strcmp(a, b); /* aka: return strcmp(b, a); */
 }
