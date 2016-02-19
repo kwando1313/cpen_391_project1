@@ -38,4 +38,6 @@ int max(int x, int y);
 int abs(int a);
 int sign(int a);
 
+int alphaBetize (char *a, char *b);
+
 #endif /* MISC_HELPERS_H_ */
