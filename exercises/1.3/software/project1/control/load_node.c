@@ -17,9 +17,9 @@ void handle_nodes(short file, graph* graph, hashmap* hashmap){
 	char* node_name = "A";
 	int x_coord = 0;
 	int y_coord = 0;
-	float altitude = 0;
-	float longitude = 0;
-	float latitude = 0;
+	int altitude = 0;
+	int longitude = 0;
+	int latitude = 0;
 
 	char* text = "";
 	while(data >= 0){
@@ -41,17 +41,17 @@ void handle_nodes(short file, graph* graph, hashmap* hashmap){
 				y_coord = atoi(text);
 			}
 			else if (y == 3){
-				altitude = atof(text);
+				altitude = atoi(text);
 			}
 			else if (y == 4){
-				longitude = atof(text);
+				longitude = atoi(text);
 			}
 			memset(&text[0], 0, sizeof(text));
 			y++;
 		}
 		else if (c == ';'){
-			latitude = atof(text);
-			vertex* v = init_vertex(latitude, longitude, altitude, node_name, x_coord, y_coord-6);
+			latitude = atoi(text);
+			vertex* v = init_vertex(latitude, longitude, altitude, node_name, x_coord, y_coord);
 			int v_id = add_vertex(graph, v);
 			int node_key = keyify(v->name);
 			hashmapInsert(hashmap, v_id, node_key);
