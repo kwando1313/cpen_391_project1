@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <string.h>
 #include "graphics.h"
+#include "misc_helpers.h"
 #include "graph.h"
 
 #define GPS_MULTIPLIER 1e6
@@ -36,8 +37,7 @@ vertex* init_vertex(float latitude, float longitude, float altitude, char* name,
 	new_vertex->latitude = x;
 	new_vertex->longitude = y;
 	new_vertex->altitude = 0;
-	new_vertex->name = malloc(strlen(name));
-	strcpy(new_vertex->name, name);
+	new_vertex->name = strdup(name);
 	new_vertex->x = x;
 	new_vertex->y = y;
 	return new_vertex;
@@ -248,16 +248,49 @@ int make_longitude_usable(float longitude){
 	return long_i;
 }
 
-char** search_names(graph* graph, char* search_string){
+//size is set to # of strings that match
+char** search_names(graph* graph, char* search_string, int* size){
 	name_list* curr = graph->names_head;
-	while(curr != NULL){
-		printf("%s\n", curr->name);
+	name_list* start;
+	int ct = 0;
+
+	if ((alphaBetize(graph->names_tail->name, search_string) < 0)
+		|| (alphaBetize(graph->names_head->name, search_string) > 0)){
+		*size = 0;
+		return NULL;
+	}
+
+	while(alphaBetize(curr->name, search_string) < 0){
+		curr = curr->next;
+		start = curr;
+		printf("curr: %s\n", curr->name);
+	}
+
+	while(curr != NULL && str_begins(curr->name, search_string)){
+		ct++;
 		curr = curr->next;
 	}
-	return NULL;
+
+	if (ct == 0){
+		*size = 0;
+		return NULL;
+	}
+
+	*size = ct;
+	char** names = malloc(sizeof(char*)*ct);
+	for (int i = 0; i<ct; i++){
+		names[i] = start->name;
+		start = start->next;
+	}
+
+	return names;
 }
 
 void add_name(graph* graph, char* name){
+	if (name == NULL || name == ""){
+		return;
+	}
+
 	name_list* new_name = malloc(sizeof(name_list));
 	new_name->name = name;
 	new_name->next = NULL;
@@ -265,21 +298,33 @@ void add_name(graph* graph, char* name){
 	if (graph->names_head == NULL) {
 		graph->names_head = new_name;
 		graph->names_tail = new_name;
-	} else if (strcasecmp(graph->names_tail, name) >= 0){
+	} else if (alphaBetize(graph->names_tail, name) <= 0){
 		graph->names_tail->next = new_name;
 		graph->names_tail = new_name;
-	} else if (strcasecmp(name, graph->names_head) >= 0){
+	} else if (alphaBetize(graph->names_head, name) >= 0){
 		new_name->next = graph->names_head;
 		graph->names_head = new_name;
 	} else{
 		name_list* prev = graph->names_head;
 		name_list* curr = prev->next;
-		while(curr && strcasecmp(name, curr->name) >= 0){
+		while(curr && alphaBetize(curr->name, name) < 0){
 			prev = curr;
 			curr = curr->next;
 		}
 
 		prev->next = new_name;
 		new_name->next = curr;
+		if (curr == NULL){
+			graph->names_tail = new_name;
+		}
+	}
+}
+
+void print_names(graph* graph){
+	name_list* curr = graph->names_head;
+	printf("names:\n");
+	while(curr != NULL){
+		printf("%s\n", curr->name);
+		curr = curr->next;
 	}
 }

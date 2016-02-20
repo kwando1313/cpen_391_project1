@@ -115,7 +115,6 @@ bool str_begins(char* str, char* begins){
 	}
 
 	for(int i = 0; i<strlen(begins); i++){
-		printf("str_begins: %c, %c\n", str[i], begins[i]);
 		if(toupper(str[i]) != toupper(begins[i])) {
 			return false;
 		}

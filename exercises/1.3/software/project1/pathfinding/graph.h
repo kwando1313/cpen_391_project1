@@ -87,6 +87,7 @@ vertex* find_vertex_by_name(graph* graph, char* name);
 vertex* find_vertex_by_coords(graph* graph, float latitude, float longitude);
 void draw_graph(graph* graph, int v_colour, int edge_colour);
 void draw_node(int colour, vertex* v);
-char** search_names(graph* graph, char* search_string);
+char** search_names(graph* graph, char* search_string, int* size);
+void print_names(graph* graph);
 
 #endif
