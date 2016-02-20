@@ -23,19 +23,19 @@ graph* init_graph(int inital_max_vertices){
 	return new_graph;
 }
 
-vertex* init_vertex(float latitude, float longitude, float altitude, char* name,
+vertex* init_vertex(int latitude, int longitude, int altitude, char* name,
 		int x, int y){
 	vertex* new_vertex = malloc(sizeof(vertex));
 	new_vertex->id = -1;
 	new_vertex->adjList = init_adjList();
 
 	//temporary, just for sprint1 since we don't have any actual data yet
-//	new_vertex.latitude = make_latitude_usable(latitude);
-//	new_vertex.longitude = make_longitude_usable(longitude);
-//	new_vertex.altitude = altitude;
-	new_vertex->latitude = x;
-	new_vertex->longitude = y;
-	new_vertex->altitude = 0;
+	new_vertex->latitude = latitude;
+	new_vertex->longitude = longitude;
+	new_vertex->altitude = altitude;
+//	new_vertex->latitude = x;
+//	new_vertex->longitude = y;
+//	new_vertex->altitude = 0;
 	new_vertex->name = malloc(strlen(name));
 	strcpy(new_vertex->name, name);
 	new_vertex->x = x;
@@ -72,7 +72,7 @@ void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes){
 	assert(v0_id < graph->num_vertices && v1_id < graph->num_vertices);
 
 	if (v0_id == v1_id) {
-		printf("ERROR: trying add connect node to itself. Exiting.");
+		printf("ERROR: trying add connect node (%d) to itself. Exiting.", v0_id);
 		return;
 	}
 
@@ -180,7 +180,7 @@ void draw_graph(graph* graph, int v_colour, int edge_colour){
 
 	for(int i = 0; i<graph->num_vertices; i++) {
 		vertex* v = get_vertex(graph, i);
-		draw_node(v_colour, v);
+		//draw_node(v_colour, v);
 		adjacencyList* adjList = v->adjList;
 		int num_edges = adjList->num_neighbours;
 		for (int j = 0; j<num_edges; j++) {

@@ -20,6 +20,10 @@ int main(void) {
 //	//load_image("ubcfull3.bmp");
 //
 //	printf("\n\nend\n");
-	btree_test();
+	clear_screen(255);
+	Point p1 = {0,0};
+	load_draw_image(p1, 0, 0, "zoomout.bmp");
+	//Line(0, 0, 800, 200, BLUE);
+	load_graph("nozoom.txt");
 	return 0;
 }
