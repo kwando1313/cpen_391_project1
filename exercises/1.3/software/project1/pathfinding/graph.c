@@ -31,9 +31,9 @@ vertex* init_vertex(int latitude, int longitude, float altitude, char* name,
 	new_vertex->adjList = init_adjList();
 
 	//temporary, just for sprint1 since we don't have any actual data yet
-	new_vertex.latitude = latitude;//make_latitude_usable(latitude);
-	new_vertex.longitude = longitude;//make_longitude_usable(longitude);
-	new_vertex.altitude = altitude;
+	new_vertex->latitude = latitude;//make_latitude_usable(latitude);
+	new_vertex->longitude = longitude;//make_longitude_usable(longitude);
+	new_vertex->altitude = altitude;
 //	new_vertex->latitude = x;
 //	new_vertex->longitude = y;
 //	new_vertex->altitude = 0;
