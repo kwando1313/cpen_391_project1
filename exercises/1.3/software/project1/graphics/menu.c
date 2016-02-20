@@ -8,29 +8,32 @@
 #include <altera_up_sd_card_avalon_interface.h>
 #include "Directions.h"
 
-/*	IMGHEIGHT 	: Full height of our BMP
- * 	IMGWIDTH 	: Full width of our BMP
+/*	INHEIGHT 	: Full height of our zoomed in map
+ * 	INWIDTH 	: Full width of our zoomed in map
+ *  OUTHEIGHT 	: Full height of our zoomed out map
+ * 	OUTWIDTH 	: Full width of our zoomed out map
  * 	BOXHEIGHT 	: Height of the box we print our image.
  * 	BOXWIDTH 	: Width of the box we print our image.
  * 	HEADERSIZE changes with type of BMP file
  * 	COLOURTABLESIZE = size of colour table containing 256 colours (with BGRA fields)
  */
-#define IMGHEIGHT 	855
-#define IMGWIDTH 	1256
+#define INHEIGHT 	855
+#define INWIDTH 	1256
+#define OUTHEIGHT	408
+#define OUTWIDTH	600
 #define BOXHEIGHT	480
 #define BOXWIDTH 	500
 #define HEADERSIZE 	54
 #define COLOURTABLESIZE 1024
 #define SHIFT 30
 
-
-void draw_image_wrapper(Point topLeft, short file, int xstart, int ystart);
 void read_bytes(char* str, int len, short file);
 void draw_image_old(Point topLeft, short file);
 int rgb_from_pixel_arr(char*** pixel, int x, int y);
 
 // Store the integer values of the colours for each pixel.
-int pixel[IMGHEIGHT][IMGWIDTH];
+int zoomin[INHEIGHT][INWIDTH];
+int zoomout[OUTHEIGHT][OUTWIDTH];
 int xstart = 0, ystart = 0;
 Point start = {0,0};
 /*	Load image from SD Card.
@@ -38,8 +41,9 @@ Point start = {0,0};
  * 	Length of filenames cannot be longer than 12 characters.
  * 	including file extension (i.e. "abcdefghi.bmp" is invalid.
  */
-void load_image(Point topLeft, char* filename){
+void load_image(Point topLeft, char* filename, char* filename2){
 	bool found_file = false;
+	bool found_file2 = false;
 
 	if (get_device_reference() == NULL || !alt_up_sd_card_is_Present() || !alt_up_sd_card_is_FAT16()){
 		printf("Can't find device, or device not configured properly\n");
@@ -47,8 +51,14 @@ void load_image(Point topLeft, char* filename){
 	}
 
 	char filename_all_caps[strlen(filename)];
+	char filename2_all_caps[strlen(filename2)];
+
 	to_caps(filename, filename_all_caps);
+	to_caps(filename2, filename2_all_caps);
+
 	char found_file_name[13];
+	char found_file2_name[13];
+
 	if (alt_up_sd_card_find_first(".", found_file_name) != 0){
 		printf("Couldn't find root dir\n");
 		return;
@@ -59,12 +69,31 @@ void load_image(Point topLeft, char* filename){
 			short int file = alt_up_sd_card_fopen(found_file_name, false);
 			if (file >= 0){
 				printf("found file %s in SD\n", filename_all_caps);
-				load_image_wrapper(file);
+				load_zoomin_wrapper(file);
 				found_file = true; //want to close file, so use this rather than returning
 			}
 			alt_up_sd_card_fclose(file);
 		}
 	}while(!found_file && alt_up_sd_card_find_next(found_file_name) == 0);
+
+
+
+	if (alt_up_sd_card_find_first(".", found_file2_name) != 0){
+		printf("Couldn't find root dir\n");
+		return;
+	}
+
+	do {
+		if (strcmp(found_file2_name, filename2_all_caps)== 0){
+			short int file2 = alt_up_sd_card_fopen(found_file2_name, false);
+			if (file2 >= 0){
+				printf("found file %s in SD\n", filename2_all_caps);
+				load_zoomout_wrapper(file2);
+				found_file2 = true; //want to close file, so use this rather than returning
+			}
+			alt_up_sd_card_fclose(file2);
+		}
+	}while(!found_file2 && alt_up_sd_card_find_next(found_file2_name) == 0);
 }
 
 Point ret_start_points(void){
@@ -72,11 +101,16 @@ Point ret_start_points(void){
 	return ret;
 }
 
-void load_image_wrapper(short file){
+void load_zoomin_wrapper(short file){
 	get_header(file);
 	get_pixels(file);
 }
 
+void load_zoomout_wrapper(short file){
+	get_header(file);
+	get_pixels(file);
+}
+/*
 void draw_image_old(Point topLeft, short file){
 	setUpPallete(); //TODO doesn't need to be called more than once. Should be done in some general init() function
 	char header;
@@ -136,6 +170,7 @@ void draw_image_old(Point topLeft, short file){
 		}
 	}
 }
+*/
 
 int rgb_from_pixel_arr(char*** pixel, int x, int y){
 	int rgb = (0xff & pixel[y][x][0]) << 16 | (0xff & pixel[y][x][1]) << 8 | (0xff & pixel[y][x][2]);
@@ -160,22 +195,43 @@ void get_header (short file){
 /* Store pixel colours in 2-D array.
  */
 void get_pixels (short file){
-	for (int j = 0; j < IMGHEIGHT; j++){
-		for (int i = 0; i < IMGWIDTH; i++){
-			pixel[j][i] = alt_up_sd_card_read(file);
+	for (int j = 0; j < INHEIGHT; j++){
+		for (int i = 0; i < INWIDTH; i++){
+			zoomin[j][i] = alt_up_sd_card_read(file);
 		}
 	}
 }
 
-/* Draw the pictures in the range we want.
+void get_zoomout (short file){
+	for (int j = 0; j < OUTHEIGHT; j++){
+		for (int i = 0; i < OUTWIDTH; i++){
+			zoomout[j][i] = alt_up_sd_card_read(file);
+		}
+	}
+}
+/* Draw the zoomed in map in the range we want.
  * We're picking the top left point to start from
  * but actually draw from the bottom left first.
  */
-void draw_img (Point topLeft, int xstart, int ystart){
+void draw_zoomin (Point topLeft, int xstart, int ystart){
+	printf("drawing zoomin\n");
 	for (int y = 0; y < BOXHEIGHT; y++){
 		for (int x = 0; x < BOXWIDTH; x++){
-			int colour = pixel[ystart + y][xstart + x];
+			int colour = zoomin[ystart + y][xstart + x];
 			WriteAPixel(topLeft.x + x, topLeft.y + BOXHEIGHT-y, colour);
+		}
+	}
+}
+/* Draw the zoomed out map.
+ * We're picking the top left point to start from
+ * but actually draw from the bottom left first.
+ */
+void draw_zoomout (){
+	printf("drawing zoomout\n");
+	for (int y = 0; y < BOXHEIGHT; y++){
+		for (int x = 0; x < BOXWIDTH; x++){
+			int colour = zoomout[y][x];
+			WriteAPixel(x, BOXHEIGHT-y, colour);
 		}
 	}
 }
@@ -185,8 +241,8 @@ void draw_img (Point topLeft, int xstart, int ystart){
  */
 void move_img (int direction){
 	if (direction == UP){
-		if (ystart > IMGHEIGHT - BOXHEIGHT - SHIFT)
-			ystart = IMGHEIGHT - BOXHEIGHT;
+		if (ystart > INHEIGHT - BOXHEIGHT - SHIFT)
+			ystart = INHEIGHT - BOXHEIGHT;
 		else ystart += SHIFT;
 		printf ("UP\n");
 
@@ -199,8 +255,8 @@ void move_img (int direction){
 
 	}
 	else if (direction == RIGHT){
-		if (xstart > IMGWIDTH - BOXWIDTH - SHIFT)
-			xstart = IMGWIDTH - BOXWIDTH;
+		if (xstart > INWIDTH - BOXWIDTH - SHIFT)
+			xstart = INWIDTH - BOXWIDTH;
 		else xstart += SHIFT;
 		printf ("RIGHT\n");
 	}
@@ -212,7 +268,7 @@ void move_img (int direction){
 	}
 	Point printStart = ret_start_points ();
 	printf ("%d, %d", printStart.x, printStart.y);
-	draw_img(start, printStart.x, printStart.y);
+	draw_zoomin(start, printStart.x, printStart.y);
 }
 //Text box is left aligned and has text wrapping
 void draw_text_box(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize){

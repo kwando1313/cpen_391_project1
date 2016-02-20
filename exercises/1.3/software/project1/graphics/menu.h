@@ -52,14 +52,16 @@
 
 void draw_image(Point topLeft, short file);//, int bmpWidth, int bmpHeight);
 
-void load_image(Point bottomLeft, char* filename);//, char* filename, int bmpheight, int bmpwidth);
+void load_image(Point bottomLeft, char* filename, char* filename2);//, char* filename, int bmpheight, int bmpwidth);
 void draw_keyboard(Point leftCorner, int size);
 Point ret_start_points(void);
 
 
 void get_header (short file);
 void get_pixels (short file);
-void draw_img (Point topLeft, int xstart, int ystart);
+void get_zoomout (short file);
+void draw_zoomin (Point topLeft, int xstart, int ystart);
+void draw_zoomout ();
 void move_img (int direction);
 
 
