@@ -24,19 +24,19 @@ graph* init_graph(int inital_max_vertices){
 	return new_graph;
 }
 
-vertex* init_vertex(float latitude, float longitude, float altitude, char* name,
+vertex* init_vertex(int latitude, int longitude, float altitude, char* name,
 		int x, int y){
 	vertex* new_vertex = malloc(sizeof(vertex));
 	new_vertex->id = -1;
 	new_vertex->adjList = init_adjList();
 
 	//temporary, just for sprint1 since we don't have any actual data yet
-//	new_vertex.latitude = make_latitude_usable(latitude);
-//	new_vertex.longitude = make_longitude_usable(longitude);
-//	new_vertex.altitude = altitude;
-	new_vertex->latitude = x;
-	new_vertex->longitude = y;
-	new_vertex->altitude = 0;
+	new_vertex.latitude = latitude;//make_latitude_usable(latitude);
+	new_vertex.longitude = longitude;//make_longitude_usable(longitude);
+	new_vertex.altitude = altitude;
+//	new_vertex->latitude = x;
+//	new_vertex->longitude = y;
+//	new_vertex->altitude = 0;
 	new_vertex->name = strdup(name);
 	new_vertex->x = x;
 	new_vertex->y = y;
@@ -209,11 +209,9 @@ vertex* find_vertex_by_name(graph* graph, char* name){
 
 //TODO replace this if we have more than >100 nodes or so
 //TODO should this include altitude?
-vertex* find_vertex_by_coords(graph* graph, float latitude, float longitude){
-	make_latitude_usable(49.123456);
-	make_longitude_usable(123.987654);
-	int lat_i = make_latitude_usable(latitude);
-	int long_i = make_longitude_usable(longitude);
+vertex* find_vertex_by_coords(graph* graph, int latitude, int longitude){
+	int lat_i = latitude; //make_latitude_usable(latitude);
+	int long_i = longitude; //make_longitude_usable(longitude);
 	vertex* min_v = get_vertex(graph, 0);
 
 	int min_dist = (int)sqrt(sub_and_sqre(lat_i, min_v->latitude)
