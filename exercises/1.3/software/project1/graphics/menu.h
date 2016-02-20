@@ -58,7 +58,7 @@ Point ret_start_points(void);
 
 
 void get_header (short file);
-void get_pixels (short file);
+void get_zoomin (short file);
 void get_zoomout (short file);
 void draw_zoomin (Point topLeft, int xstart, int ystart);
 void draw_zoomout ();

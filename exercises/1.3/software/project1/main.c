@@ -19,5 +19,6 @@ int main(void) {
 	draw_zoomin(x, x.x, x.y);
 	s_listen();
 	//read_gps();
+
 	return 0;
 }
