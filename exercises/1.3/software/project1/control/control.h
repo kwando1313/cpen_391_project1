@@ -23,7 +23,4 @@ int get_valid_vertex(graph* graph, Point p);
 
 void load_from_sd();
 
-//TODO: remove after sprint 1
-graph* create_test_graph(void);
-
 #endif /* CONTROL_H_ */
