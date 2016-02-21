@@ -3,21 +3,18 @@
 
 #include "Directions.h"
 
-typedef enum {
-	IN,
-	OUT
-} zoom;
+#define ZOOM_IN 0
+#define ZOOM_OUT 1
 
-zoom zoom_level;
+int zoom_level;
 
-void load_draw_image(Point topLeft, int xstart, int ystart, char* filename);
+// Store the 8bit values of the colours for each pixel.
+char** image_pixels[2]; //[zoom_level][bmpWidth][bmpHeight]
+int image_width[2];
+int image_height[2];
 
-void load_image(char* filename);//, char* filename, int bmpheight, int bmpwidth);
+void load_image(char* filename);
 void move_img (Direction direction);
-Point ret_start_points(void);
-void get_header(short file);
-void get_pixels(short file);
 void draw_image(Point topLeft, int xstart, int ystart);
-
 
 #endif /* IMAGE_H_ */

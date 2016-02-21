@@ -31,19 +31,11 @@ vertex* init_vertex(int latitude, int longitude, float altitude, char* name,
 	new_vertex->id = -1;
 	new_vertex->adjList = init_adjList();
 
-	//temporary, just for sprint1 since we don't have any actual data yet
 	new_vertex->latitude = latitude;
 	new_vertex->longitude = longitude;
 	new_vertex->altitude = altitude;
-//	new_vertex->latitude = x;
-//	new_vertex->longitude = y;
-//	new_vertex->altitude = 0;
 	new_vertex->name = malloc(strlen(name));
 	strcpy(new_vertex->name, name);
-
-	new_vertex->latitude = latitude;//make_latitude_usable(latitude);
-	new_vertex->longitude = longitude;//make_longitude_usable(longitude);
-	new_vertex->altitude = altitude;
 
 	new_vertex->name = strdup(name);
 	new_vertex->zo_x = zoomed_out_x;
@@ -306,7 +298,7 @@ void print_names(graph* graph){
 
 Point get_vertex_xy(vertex* v){
 	Point p;
-	if (zoom_level == OUT){
+	if (zoom_level == ZOOM_OUT){
 		p.x = v->zo_x;
 		p.y = v->zo_y;
 	} else {

@@ -145,7 +145,6 @@ void test_read_gps(void){
 	}
 }
 void read_gps(void) {
-	Init_GPS();
 	gps_data* data = get_gps_data();
 
 	double lati;

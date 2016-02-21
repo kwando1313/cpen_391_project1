@@ -10,18 +10,15 @@
 extern const unsigned int ColourPalletteData[256];
 
 /*
- * 	BOXHEIGHT 	: Height of the box we print our image.
- * 	BOXWIDTH 	: Width of the box we print our image.
- * 	HEADERSIZE changes with type of BMP file
- * 	COLOURTABLESIZE = size of colour table containing 256 colours (with BGRA fields)
+ * 	DISPLAY_HEIGHT 	: Height of the box we print our image.
+ * 	DISPLAY_WIDTH 	: Width of the box we print our image.
+ * 	COLOURTABLESIZE : size of colour table containing 256 colours (with BGRA fields)
+ * 	SHIFT			: how much picture shifts on each
  */
 #define DISPLAY_HEIGHT	480
 #define DISPLAY_WIDTH 	500
-#define HEADERSIZE 		54
 #define COLOURTABLESIZE 1024
 #define SHIFT 30
-
-
 
 int xstart = 0, ystart = 0;
 Point start = {0,0};
@@ -31,39 +28,41 @@ Point ret_start_points(void){
 	return ret;
 }
 
-void load_image_to_pixels_arr(short file);
-
-// Store the integer values of the colours for each pixel.
-char** image_pixels; //full_map[bmpWidth][bmpHeight]
-int bmpWidth, bmpHeight;
-
-void load_draw_image(Point topLeft, int xstart, int ystart, char* filename){
-	draw_button(topLeft, DISPLAY_WIDTH, DISPLAY_HEIGHT, 1, 1, BLACK, WHITE, "LOADING...", MEDIUM);
-
-	load_image(filename);
-	draw_image(topLeft, xstart, ystart);
-}
+void load_zoom_in_pixels(short file);
+void load_zoom_out_pixels(short file);
+void get_header(short file, int zoom);
+void get_pixels(short file, int zoom);
 
 /*	Load image from SD Card.
  * 	SD Card must be formatted in FAT16 to work with DE2.
  * 	Length of filenames cannot be longer than 12 characters.
  * 	including file extension (i.e. "abcdefghi.bmp" is invalid.
  */
-void load_image(char* filename){
-	void (*func)(short) = &load_image_to_pixels_arr;
+void load_zoom_out_image(char* filename){
+	void (*func)(short) = &load_zoom_out_pixels;
 	load_file(filename, func);
 }
 
-void load_image_to_pixels_arr(short file){
-	get_header(file);
-	get_pixels(file);
+void load_zoom_in_image(char* filename){
+	void (*func)(short) = &load_zoom_in_pixels;
+	load_file(filename, func);
+}
+
+void load_zoom_out_pixels(short file){
+	get_header(file, ZOOM_OUT);
+	get_pixels(file, ZOOM_OUT);
+}
+
+void load_zoom_in_pixels(short file){
+	get_header(file, ZOOM_IN);
+	get_pixels(file, ZOOM_IN);
 }
 
 /* Get header information.
  * Iterate and print bitmap file header + Windows Bitmap Info Header.
  * Iterate and do not print the colour table.
  */
-void get_header (short file){
+void get_header (short file, int zoom){
 	unsigned char height[4];
 	unsigned char width[4];
 	unsigned char buf[30];
@@ -73,13 +72,16 @@ void get_header (short file){
 	read_bytes_from_file(height, 4, file);
 	read_bytes_from_file(buf, 28, file);
 
-	bmpWidth = *(int *) width;
-	bmpHeight = *(int *) height;
+	int bmpWidth = *(int *)width;
+	int bmpHeight = *(int *)height;
+	image_width[zoom] = bmpWidth;
+	image_height[zoom] = bmpHeight;
+
 	printf("bmp width: %d, bmp height: %d\n", bmpWidth, bmpHeight);
 
-	image_pixels = malloc(sizeof(char*)*bmpWidth);
+	image_pixels[zoom] = malloc(sizeof(char*)*bmpWidth);
 	for(int i = 0; i<bmpWidth; i++){
-		image_pixels[i] = malloc(sizeof(char)*bmpHeight);
+		image_pixels[zoom][i] = malloc(sizeof(char)*bmpHeight);
 	}
 
 	unsigned char entry[4];
@@ -87,22 +89,22 @@ void get_header (short file){
 	for (int i = 0; i < COLOURTABLESIZE; i+=4){
 		read_bytes_from_file(entry, 4, file);
 		int rgb = *(int*)entry;
+		// sanity checking we have all the colours we need
 		if(ColourPalletteData[i/4] != rgb){
-			printf("entry: %d, rgb: %x\n", i/4, rgb);
+			printf("entry: %d, rgb: %x is missing from colour pallette!\n", i/4, rgb);
 		}
 	}
 }
 
 /* Store pixel colours in 2-D array.
  */
-void get_pixels(short file){
+void get_pixels(short file, int zoom){
 	//width must be divisible by 4
-	int width = (bmpWidth % 4 == 0) ? bmpWidth : (bmpWidth + 4 - (bmpWidth % 4));
-	for (int j = 0; j < bmpHeight; j++){
+	int width = (image_width[zoom] % 4 == 0) ? image_width[zoom] : (image_width[zoom] + 4 - (image_width[zoom] % 4));
+	for (int j = 0; j < image_height[zoom]; j++){
 		for (int i = 0; i < width; i++){
-			image_pixels[i][j] = alt_up_sd_card_read(file);
+			image_pixels[zoom][i][j] = alt_up_sd_card_read(file);
 		}
-
 	}
 }
 
@@ -111,18 +113,18 @@ void get_pixels(short file){
  * but actually draw from the bottom left first.
  */
 void draw_image(Point topLeft, int xstart, int ystart){
-	int height = (bmpHeight < DISPLAY_HEIGHT) ? bmpHeight : DISPLAY_HEIGHT;
-	int width = (bmpWidth < DISPLAY_WIDTH) ? bmpWidth: DISPLAY_WIDTH;
+	int height = (image_height[zoom_level] < DISPLAY_HEIGHT) ? image_height[zoom_level] : DISPLAY_HEIGHT;
+	int width = (image_width[zoom_level] < DISPLAY_WIDTH) ? image_width[zoom_level]: DISPLAY_WIDTH;
 
 	for (int y = 0; y < height; y++){
 		for (int x = 0; x < width; x++){
 			int initialX = x;
-			char colour = image_pixels[xstart + x][ystart + y];
-			char colour2 = image_pixels[xstart + x][ystart + y];
+			char colour = image_pixels[zoom_level][xstart + x][ystart + y];
+			char colour2 = image_pixels[zoom_level][xstart + x][ystart + y];
 
 			while (colour == colour2 && x < width){
 				x++;
-				colour2 = image_pixels[xstart+x][ystart+y];
+				colour2 = image_pixels[zoom_level][xstart+x][ystart+y];
 			}
 			HLine(topLeft.x + initialX, topLeft.y + height - y, x - initialX, (int)colour);
 			x--;
@@ -136,8 +138,8 @@ void draw_image(Point topLeft, int xstart, int ystart){
  */
 void move_img (Direction direction){
 	if (direction == UP){
-		if (ystart > bmpHeight - DISPLAY_HEIGHT - SHIFT)
-			ystart = bmpHeight - DISPLAY_HEIGHT;
+		if (ystart > image_height[zoom_level] - DISPLAY_HEIGHT - SHIFT)
+			ystart = image_height[zoom_level] - DISPLAY_HEIGHT;
 		else ystart += SHIFT;
 		printf ("UP\n");
 	}
@@ -149,8 +151,8 @@ void move_img (Direction direction){
 
 	}
 	else if (direction == RIGHT){
-		if (xstart > bmpWidth - DISPLAY_WIDTH - SHIFT)
-			xstart = bmpWidth - DISPLAY_WIDTH;
+		if (xstart > image_width[zoom_level] - DISPLAY_WIDTH - SHIFT)
+			xstart = image_width[zoom_level] - DISPLAY_WIDTH;
 		else xstart += SHIFT;
 		printf ("RIGHT\n");
 	}

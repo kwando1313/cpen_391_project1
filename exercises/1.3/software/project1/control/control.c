@@ -6,11 +6,13 @@
 #include "graphics.h"
 #include "touchscreen.h"
 #include <math.h>
+#include "load_node.h"
 #include "misc_helpers.h"
 #include "button.h"
 
 // initialize and load up graphics on touchscreen
 void init_control(){
+	Init_GPS();
 	init_touch();
 	init_screen();
 	init_keyboard();
@@ -128,6 +130,14 @@ void kb_listen(){
 	}
 }
 
+void load_from_sd(){
+	load_zoom_in_image("zoomin.bmp");
+	load_zoom_out_image("zoomout.bmp");
+	zoom_level = ZOOM_OUT;
+	Point p = {0,0};
+	draw_image(p, 0, 0);
+	load_graph("nodes.txt");
+}
 
 // remove after sprint 1;
 graph* create_test_graph(){

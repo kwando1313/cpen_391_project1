@@ -10,21 +10,6 @@
 #include "Directions.h"
 #include "search.h"
 
-/*	IMGHEIGHT 	: Full height of our BMP
- * 	IMGWIDTH 	: Full width of our BMP
- * 	BOXHEIGHT 	: Height of the box we print our image.
- * 	BOXWIDTH 	: Width of the box we print our image.
- * 	HEADERSIZE changes with type of BMP file
- * 	COLOURTABLESIZE = size of colour table containing 256 colours (with BGRA fields)
- */
-#define IMGHEIGHT 	855
-#define IMGWIDTH 	1256
-#define BOXHEIGHT	480
-#define BOXWIDTH 	500
-#define HEADERSIZE 	54
-#define COLOURTABLESIZE 1024
-
-
 //Text box is left aligned and has text wrapping
 void draw_text_box(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize){
 	int textLength = (int) strlen(text);
