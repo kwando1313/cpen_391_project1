@@ -80,7 +80,7 @@ int sign(int a)
         return 1 ;
 }
 
-load_file(char* filename, void (*func)(short)){
+void load_file(char* filename, void (*func)(short)){
 	bool found_file = false;
 
 	if (get_device_reference() == NULL || !alt_up_sd_card_is_Present() || !alt_up_sd_card_is_FAT16()){
@@ -115,7 +115,6 @@ bool str_begins(char* str, char* begins){
 	}
 
 	for(int i = 0; i<strlen(begins); i++){
-		printf("str_begins: %c, %c\n", str[i], begins[i]);
 		if(toupper(str[i]) != toupper(begins[i])) {
 			return false;
 		}
@@ -130,12 +129,10 @@ bool str_begins(char* str, char* begins){
 int alphaBetize (char *a, char *b) {
 	int i = 0;
 	int j = 0;
-	//printf("len: %d , %d\n", strlen(a), strlen(b));
 	while(i < strlen(a) && j < strlen(b)){
 		char curr_a = (char)tolower(a[i]);
 		char curr_b = (char)tolower(b[j]);
 		if (curr_a != curr_b) {
-			//printf("%c, %c\n", curr_a, curr_b);
 			return curr_a - curr_b;
 		}
 		i++;

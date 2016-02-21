@@ -5,16 +5,12 @@
 #include "FontSize.h"
 #include "misc_helpers.h"
 
+extern const unsigned int ColourPalletteData[256];
+
 #define FONT2_XPIXELS	10				// width of Font2 characters in pixels (no spacing)
 #define FONT2_YPIXELS	14				// height of Font2 characters in pixels (no spacing)
 
-// defined constants representing colours pre-programmed into colour palette
-// there are 256 colours but only 8 are shown below, we write these to the colour registers
-// Add more defines below for more colours as you like - just make sure they match up with ColourPallete.h
-//
-// the header files "Colours.h" contains constants for all 256 colours
-// while the course file ColourPaletteData.c contains the 24 bit RGB data
-// that is pre-programmed into the palette
+#define WHITE 255
 
 // should redo these for the touchscreen -> these numbers are for the lab's monitors
 #define XRES 800

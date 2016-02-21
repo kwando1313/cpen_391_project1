@@ -63,6 +63,7 @@ void handle_nodes(short file, graph* graph){
 		else if (c == ';'){
 			latitude = atoi(text);
 			vertex* v = init_vertex(latitude, longitude, altitude, node_name, x_zoomed_out_coord, y_zoomed_out_coord, x_zoomed_in_coord, y_zoomed_in_coord);
+
 			int v_id = add_vertex(graph, v);
 			int node_key = keyify(v->name);
 			memset(&text[0], 0, sizeof(text));

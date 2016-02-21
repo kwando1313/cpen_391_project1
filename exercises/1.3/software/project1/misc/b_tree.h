@@ -21,6 +21,7 @@ void* get_data(bnode* root, int key);
 bnode* get_min_bnode(bnode* root);
 bnode* get_max_bnode(bnode* root);
 
+//TODO do we still need free_data?
 void free_bnode(bnode* root, bool free_data);
 void free_tree(bnode* root, bool free_data);
 
