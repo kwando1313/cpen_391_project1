@@ -6,8 +6,6 @@
 #include "misc_helpers.h"
 #include "graph.h"
 
-#define GPS_MULTIPLIER 1e6
-
 adjacencyList* init_adjList(void);
 void add_directed_edge(adjacencyList* adjList, int vertex_id, cost cost);
 bool remove_directed_edge(adjacencyList* adjList, int vertex_id);

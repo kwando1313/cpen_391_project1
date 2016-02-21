@@ -18,6 +18,8 @@
 #define GPS_RxData 		(*(volatile unsigned char *)(0x84000212))
 #define GPS_Baud    	(*(volatile unsigned char *)(0x84000214))
 
+#define GPS_TO_GRAPH_MULTIPLIER 1e6
+
 void wait_for_header(void);
 gps_data* get_new_gps_data(void);
 
@@ -286,10 +288,8 @@ void degrees_to_graph(double lati, double longi, int *latitude, int * longitude)
 	tempLong = longi + 123;
 	tempLat = lati - 49;
 
-	*longitude = (int) (tempLong * 1000000);
-	*latitude = (int) (tempLat * 1000000);
-
-	return;
+	*longitude = (int) (tempLong * GPS_TO_GRAPH_MULTIPLIER);
+	*latitude = (int) (tempLat * GPS_TO_GRAPH_MULTIPLIER);
 }
 
 void minutes_to_degrees (char* latitude, char* longitude, double *lati, double *longi){
