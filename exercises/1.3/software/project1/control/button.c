@@ -367,6 +367,7 @@ bool do_enter(){
 void do_back(){
 	printf("In do_back\n");
 	reset_query();
+	destroy_matches();
 
 	about_screen();
 	map_screen();

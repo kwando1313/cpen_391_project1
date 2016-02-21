@@ -59,49 +59,69 @@ bool is_matched(char* name){
 	return matches;
 }
 
-// Initialise the head of the matched names if there is one and return the head
-name_list* init_matches(name_list* nl){
-	name_list* mn_h = matched_names.head;
-	mn_h = NULL;
+//// Initialise the head of the matched names if there is one and return the head
+//name_list* init_matches(name_list* nl){
+//	name_list* mn_h = matched_names.head = malloc(sizeof(name_list));
+//	mn_h = NULL;
+//
+//	while(nl != NULL){
+//		if(is_matched(nl->name)){
+//			mn_h->name = nl->name;
+//			mn_h->next = NULL;
+//			mn_count++;
+//			nl = nl->next;
+//			return mn_h;
+//		}
+//		nl = nl->next;
+//	}
+//
+//	return mn_h;
+//}
 
-	while(nl != NULL){
-		if(is_matched(nl->name)){
-			mn_h = nl;
-			mn_h->next = NULL;
-			mn_count++;
-			nl = nl->next;
-			return mn_h;
-		}
-		nl = nl->next;
-	}
-
-	return mn_h;
-}
-/* Adds names that match; nl is the graph name list
- * Pre: m_nl is matched and not NULL
- */
-void add_matches_helper(name_list* nl, name_list* m_nl){
-	while(nl != NULL){
-		if(is_matched(nl->name)){
-			m_nl->next = nl;
-			m_nl = m_nl->next;
-			mn_count++;
-		}
-		nl = nl->next;
-	}
-	m_nl->next == NULL;
-}
+///* Adds names that match; nl is the graph name list
+// * Pre: m_nl is matched and not NULL
+// */
+//void add_matches_helper(name_list* nl, name_list* m_nl){
+//	while(nl != NULL){
+//		if(is_matched(nl->name)){
+//			m_nl->next = nl;
+//			m_nl = m_nl->next;
+//			mn_count++;
+//		}
+//		nl = nl->next;
+//		//print_nl(nl);
+//	}
+//	m_nl->next = NULL;
+//}
 
 // Get all the names that match with the query string
 void add_matches(){
 	mn_count = 0;
-	graph* graph = create_test_graph(); //obvs change to access the real graph name list
+
+	graph* graph = get_graph();
 	name_list* nl = get_names(graph);
-	name_list* m_nl = init_matches(nl);
 
-	if(m_nl != NULL)
-		add_matches_helper(nl, m_nl);
+	matched_names.head = NULL;
+	name_list* m_nl;
+	name_list* curr;
 
+	while(nl != NULL){
+			if(is_matched(nl->name)){
+				m_nl = malloc(sizeof(name_list));
+				m_nl->name = nl->name;
+				m_nl->next = NULL;
+
+				if(matched_names.head == NULL){
+					matched_names.head = m_nl;
+				}
+				else{
+					curr->next = m_nl;
+				}
+				curr = m_nl;
+				mn_count++;
+			}
+			nl = nl->next;
+		}
 	match_screen(sel, mn_count);
 }
 
@@ -139,6 +159,15 @@ void del_matches(){
 		del_matches_helper(&m_nl);
 
 	match_screen(sel, mn_count);
+}
+
+void destroy_matches(){
+	name_list* nl = matched_names.head;
+	while(nl != NULL){
+		name_list* temp = nl->next;
+		free(nl);
+		nl = temp;
+	}
 }
 
 // Search ready to be entered if we have at least one matching entry

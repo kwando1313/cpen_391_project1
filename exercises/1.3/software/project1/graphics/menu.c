@@ -40,34 +40,34 @@ Point start = {0,0};
  * 	Length of filenames cannot be longer than 12 characters.
  * 	including file extension (i.e. "abcdefghi.bmp" is invalid.
  */
-void load_image(Point topLeft, char* filename){
-	bool found_file = false;
-
-	if (get_device_reference() == NULL || !alt_up_sd_card_is_Present() || !alt_up_sd_card_is_FAT16()){
-		printf("Can't find device, or device not configured properly\n");
-		return;
-	}
-
-	char filename_all_caps[strlen(filename)];
-	to_caps(filename, filename_all_caps);
-	char found_file_name[13];
-	if (alt_up_sd_card_find_first(".", found_file_name) != 0){
-		printf("Couldn't find root dir\n");
-		return;
-	}
-
-	do {
-		if (strcmp(found_file_name, filename_all_caps)== 0){
-			short int file = alt_up_sd_card_fopen(found_file_name, false);
-			if (file >= 0){
-				printf("found file %s in SD\n", filename_all_caps);
-				load_image_wrapper(file);
-				found_file = true; //want to close file, so use this rather than returning
-			}
-			alt_up_sd_card_fclose(file);
-		}
-	}while(!found_file && alt_up_sd_card_find_next(found_file_name) == 0);
-}
+//void load_image(Point topLeft, char* filename){
+//	bool found_file = false;
+//
+//	if (get_device_reference() == NULL || !alt_up_sd_card_is_Present() || !alt_up_sd_card_is_FAT16()){
+//		printf("Can't find device, or device not configured properly\n");
+//		return;
+//	}
+//
+//	char filename_all_caps[strlen(filename)];
+//	to_caps(filename, filename_all_caps);
+//	char found_file_name[13];
+//	if (alt_up_sd_card_find_first(".", found_file_name) != 0){
+//		printf("Couldn't find root dir\n");
+//		return;
+//	}
+//
+//	do {
+//		if (strcmp(found_file_name, filename_all_caps)== 0){
+//			short int file = alt_up_sd_card_fopen(found_file_name, false);
+//			if (file >= 0){
+//				printf("found file %s in SD\n", filename_all_caps);
+//				load_image_wrapper(file);
+//				found_file = true; //want to close file, so use this rather than returning
+//			}
+//			alt_up_sd_card_fclose(file);
+//		}
+//	}while(!found_file && alt_up_sd_card_find_next(found_file_name) == 0);
+//}
 
 Point ret_start_points(void){
 	Point ret = {xstart, ystart};
@@ -80,7 +80,7 @@ void load_image_wrapper(short file){
 }
 
 void draw_image_old(Point topLeft, short file){
-	setUpPallete(); //TODO doesn't need to be called more than once. Should be done in some general init() function
+	//setUpPallete(); //TODO doesn't need to be called more than once. Should be done in some general init() function
 	char header;
 	unsigned char height[4];
 	unsigned char width[4];
@@ -89,10 +89,10 @@ void draw_image_old(Point topLeft, short file){
 	printf("Reading file...\n");
 	//54
 
-	read_bytes(buf, 18, file);
-	read_bytes(width, 4, file);
-	read_bytes(height, 4, file);
-	read_bytes(buf, 28, file);
+//	read_bytes(buf, 18, file);
+//	read_bytes(width, 4, file);
+//	read_bytes(height, 4, file);
+//	read_bytes(buf, 28, file);
 
 	int bmpWidth = *(int *) width;
 	int bmpHeight = *(int *) height;
@@ -124,13 +124,13 @@ void draw_image_old(Point topLeft, short file){
 		for (int x = 0; x < bmpWidth; x++){
 			int initialX = x;
 			int rgb = rgb_from_pixel_arr(pixel, x, y);
-			int colour = getPalleteAddr(rgb);
+			//int colour = getPalleteAddr(rgb);
 			int curr_rgb = rgb;
 			while(rgb == curr_rgb && x < bmpWidth){
 				x++;
 				curr_rgb = rgb_from_pixel_arr(pixel, x, y);
 			}
-
+			int colour = 1;
 			HLine(topLeft.x + initialX, topLeft.y + bmpHeight-y, x - initialX, colour);
 			//WriteAPixel(topLeft.x + x, topLeft.y + bmpHeight-y, colour);
 			printf("rgb: %x\n", rgb);
@@ -148,26 +148,26 @@ int rgb_from_pixel_arr(char*** pixel, int x, int y){
  * Iterate and print bitmap file header + Windows Bitmap Info Header.
  * Iterate and do not print the colour table.
  */
-void get_header (short file){
-	char header;
-	for(int x=0 ; x < HEADERSIZE ; x++){
-		header=(unsigned char)(alt_up_sd_card_read(file));
-		printf ("%hhx ",header & 0xff);
-	}
-	printf ("\n");
-	for (int i = 0; i < COLOURTABLESIZE; i++){
-		alt_up_sd_card_read(file);
-	}
-}
-/* Store pixel colours in 2-D array.
- */
-void get_pixels (short file){
-	for (int j = 0; j < IMGHEIGHT; j++){
-		for (int i = 0; i < IMGWIDTH; i++){
-			pixel[j][i] = alt_up_sd_card_read(file);
-		}
-	}
-}
+//void get_header (short file){
+//	char header;
+//	for(int x=0 ; x < HEADERSIZE ; x++){
+//		header=(unsigned char)(alt_up_sd_card_read(file));
+//		printf ("%hhx ",header & 0xff);
+//	}
+//	printf ("\n");
+//	for (int i = 0; i < COLOURTABLESIZE; i++){
+//		alt_up_sd_card_read(file);
+//	}
+//}
+///* Store pixel colours in 2-D array.
+// */
+//void get_pixels (short file){
+//	for (int j = 0; j < IMGHEIGHT; j++){
+//		for (int i = 0; i < IMGWIDTH; i++){
+//			pixel[j][i] = alt_up_sd_card_read(file);
+//		}
+//	}
+//}
 
 /* Draw the pictures in the range we want.
  * We're picking the top left point to start from
@@ -434,7 +434,7 @@ void photo_screen(){
 
 // draw the pop up keyboard on the LHS of the screen
 void pop_screen(){
-	draw_information_box("ENTER YOUR SEARCH:");
+	draw_information_box("ENTER YOUR SEARCH!");
 
 	Point p = {30, 330};
 	Point p1 = {0, 300};
@@ -466,9 +466,9 @@ void match_screen(int sel, int mn_count){
 
 		nl = nl->next;
 
-		if(i != sel)
+		if(i != (sel-1))
 			draw_menu(p, 300, incr, 2 , BLACK, 255, BLACK, SMALL, t);
-		else if(i == sel)
+		else if(i == (sel-1))
 			draw_menu(p, 300, incr, 2 , 255, BLACK, 255, SMALL, t); // highlighted entry (i.e invert colors)
 	}
 }

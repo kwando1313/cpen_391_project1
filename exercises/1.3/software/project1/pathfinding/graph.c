@@ -247,10 +247,18 @@ int make_longitude_usable(float longitude){
 	return long_i;
 }
 
-void add_name(graph* graph, char* name){
-	if (name == NULL || name == ""){
-		return;
-	}
+// Create a graph for testing; TODO should replace this to actually return an initialised graph
+graph* get_graph(){
+	graph* graph = create_test_graph();
+	add_name(graph, "BUC");
+	add_name(graph, "BUCH");
+	add_name(graph, "BUCHAN");
+	add_name(graph, "BUCHANAN");
+	add_name(graph, "BUCK");
+	add_name(graph, "BUCKANAN");
+	add_name(graph, "BUCKYNAN");
+	return graph;
+}
 
 name_list* get_names(graph* graph){
 	return graph->names_head;
@@ -293,5 +301,13 @@ void print_names(graph* graph){
 	while(curr != NULL){
 		printf("%s\n", curr->name);
 		curr = curr->next;
+	}
+}
+
+void print_nl(name_list* nl){
+	printf("name list:\n");
+	while(nl != NULL){
+		printf("%s\n", nl->name);
+		nl = nl->next;
 	}
 }
