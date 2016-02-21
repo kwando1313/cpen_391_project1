@@ -259,10 +259,10 @@ void add_name(graph* graph, char* name){
 	if (graph->names_head == NULL) {
 		graph->names_head = new_name;
 		graph->names_tail = new_name;
-	} else if (alphaBetize(graph->names_tail, name) <= 0){
+	} else if (alphaBetize(graph->names_tail->name, name) <= 0){
 		graph->names_tail->next = new_name;
 		graph->names_tail = new_name;
-	} else if (alphaBetize(graph->names_head, name) >= 0){
+	} else if (alphaBetize(graph->names_head->name, name) >= 0){
 		new_name->next = graph->names_head;
 		graph->names_head = new_name;
 	} else{
