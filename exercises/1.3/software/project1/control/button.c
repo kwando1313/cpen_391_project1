@@ -9,6 +9,9 @@
 #include "Directions.h"
 #include "search.h"
 #include "gps.h"
+#include <stdbool.h>
+
+bool zoom = false;
 
 const char KEYS[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '-',
 			  	  	'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '+',
@@ -98,11 +101,11 @@ void init_s_button(char key, int id){
 	break;
 
 	case 32:
-		PHOTO_BUTT.top = PT;
-		PHOTO_BUTT.bottom = PB;
-		PHOTO_BUTT.left = PL;
-		PHOTO_BUTT.right = PR;
-		PHOTO_BUTT.p = do_photo;
+		ZOOM_BUTT.top = PT;
+		ZOOM_BUTT.bottom = PB;
+		ZOOM_BUTT.left = PL;
+		ZOOM_BUTT.right = PR;
+		ZOOM_BUTT.p = do_zoom;
 	break;
 
 	case 33:
@@ -250,11 +253,25 @@ void do_dir(){
 
 }
 
-// Display photo of the next node touched
-void do_photo(void* nothing){
-	// TODO: Need to load up a photo for each node
-	photo_screen();
-	//int node = get_node();
+//Toggle between zoom in and zoom out
+void do_zoom(){
+	if (zoom){
+		draw_zoomout();
+		zoom = false;
+	}
+	else {
+		Point sel = GetPress();
+		if(sel.x < BOXWIDTH/2)
+			sel.x = BOXWIDTH/2;
+		else if(sel.x > INWIDTH - (BOXWIDTH/2))
+			sel.x = INWIDTH - (BOXWIDTH/2);
+		else if(sel.y < BOXHEIGHT/2)
+			sel.y = BOXHEIGHT/2;
+		else if(sel.y > INHEIGHT - (BOXHEIGHT/2))
+			sel.y = INHEIGHT - (BOXHEIGHT/2);
+		draw_zoomin(sel.x,sel.y);
+		zoom = true;
+	}
 }
 
 // Display app about
@@ -264,22 +281,26 @@ void do_about(void* nothing){
 
 // Translate the map left
 void do_west(){
-	move_img (LEFT);
+	if (zoom)
+		move_img (LEFT);
 }
 
 // Translate the map east
 void do_east(){
-	move_img (RIGHT);
+	if (zoom)
+		move_img (RIGHT);
 }
 
 // Translate the map north
 void do_north(){
-	move_img (UP);
+	if (zoom)
+		move_img (UP);
 }
 
 // Translate the map south
 void do_south(){
-	move_img (DOWN);
+	if (zoom)
+		move_img (DOWN);
 }
 
 // Pop up the keyboard

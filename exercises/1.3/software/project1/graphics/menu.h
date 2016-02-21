@@ -50,6 +50,13 @@
 #define ST 270
 #define SB 320
 
+#define INHEIGHT 	855
+#define INWIDTH 	1256
+#define OUTHEIGHT	408
+#define OUTWIDTH	600
+#define BOXHEIGHT	480
+#define BOXWIDTH 	500
+
 void draw_image(Point topLeft, short file);//, int bmpWidth, int bmpHeight);
 
 void load_image(Point bottomLeft, char* filename, char* filename2);//, char* filename, int bmpheight, int bmpwidth);
@@ -60,10 +67,9 @@ Point ret_start_points(void);
 void get_header (short file);
 void get_zoomin (short file);
 void get_zoomout (short file);
-void draw_zoomin (Point topLeft, int xstart, int ystart);
+void draw_zoomin (int xstart, int ystart);
 void draw_zoomout ();
 void move_img (int direction);
-
 
 void draw_button(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize);
 void draw_menu(Point leftCorner, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, int fontSize, char* menuText[]);

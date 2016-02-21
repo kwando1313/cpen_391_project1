@@ -17,12 +17,7 @@
  * 	HEADERSIZE changes with type of BMP file
  * 	COLOURTABLESIZE = size of colour table containing 256 colours (with BGRA fields)
  */
-#define INHEIGHT 	855
-#define INWIDTH 	1256
-#define OUTHEIGHT	408
-#define OUTWIDTH	600
-#define BOXHEIGHT	480
-#define BOXWIDTH 	500
+
 #define HEADERSIZE 	54
 #define COLOURTABLESIZE 1024
 #define SHIFT 30
@@ -153,12 +148,12 @@ void get_zoomout (short file){
  * We're picking the top left point to start from
  * but actually draw from the bottom left first.
  */
-void draw_zoomin (Point topLeft, int xstart, int ystart){
+void draw_zoomin (int xstart, int ystart){
 	printf("drawing zoomin\n");
 	for (int y = 0; y < BOXHEIGHT; y++){
 		for (int x = 0; x < BOXWIDTH; x++){
 			int colour = zoomin[ystart + y][xstart + x];
-			WriteAPixel(topLeft.x + x, topLeft.y + BOXHEIGHT-y, colour);
+			WriteAPixel(x, BOXHEIGHT-y, colour);
 		}
 	}
 }
@@ -208,7 +203,7 @@ void move_img (int direction){
 	}
 	Point printStart = ret_start_points ();
 	printf ("%d, %d", printStart.x, printStart.y);
-	draw_zoomin(start, printStart.x, printStart.y);
+	draw_zoomin(printStart.x, printStart.y);
 }
 //Text box is left aligned and has text wrapping
 void draw_text_box(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize){

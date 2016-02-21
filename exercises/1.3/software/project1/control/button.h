@@ -26,7 +26,7 @@ Button* keyboard;
 #define BACK_BUTT keyboard[29]
 #define INFO_BUTT keyboard[30]
 #define DIR_BUTT keyboard[31]
-#define PHOTO_BUTT keyboard[32]
+#define ZOOM_BUTT keyboard[32]
 #define ABOUT_BUTT keyboard[33]
 #define POP_BUTT keyboard[34]
 #define WEST_BUTT keyboard[35]
@@ -57,7 +57,7 @@ void do_back();
 bool do_enter();
 void do_info();
 void do_dir();
-void do_photo();
+void do_zoom();
 void do_about();
 void do_pop();
 void do_west();
