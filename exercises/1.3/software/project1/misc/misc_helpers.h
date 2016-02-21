@@ -1,10 +1,23 @@
 #ifndef MISC_HELPERS_H_
 #define MISC_HELPERS_H_
 
+#include <altera_up_sd_card_avalon_interface.h>
+
 #define M_PI 3.14159265358979323846264338327
-#define RADIUS 25
+
+#define NO_RESPONSE 0
+#define INFO 1
+#define DIR 2
+#define PHOTO 3
+#define ABOUT 4
+
+#define RADIUS 6.0827
 
 typedef struct{int x, y; } Point;
+
+load_file(char* filename, void (*func)(short));
+
+void read_bytes_from_file(unsigned char* str, int len, short file);
 
 double convert_to_radians(double angle);
 

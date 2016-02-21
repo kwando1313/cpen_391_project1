@@ -16,25 +16,6 @@
 // while the course file ColourPaletteData.c contains the 24 bit RGB data
 // that is pre-programmed into the palette
 
-#define	BLACK			0
-#define	WHITE			1
-#define	RED				2
-#define	LIME			3
-#define	BLUE			4
-#define	YELLOW			5
-#define	CYAN			6
-#define	MAGENTA			7
-#define SILVER			8
-#define GRAY			9
-#define MAROON			10
-#define OLIVE			11
-#define GREEN			12
-#define PURPLE			13
-#define TEAL			14
-#define NAVY			15
-#define DARKRED			16
-#define BROWN			17
-
 // should redo these for the touchscreen -> these numbers are for the lab's monitors
 #define XRES 800
 #define YRES 479
@@ -74,11 +55,6 @@ void HLine(int x1, int y1, int length, int Colour);
 void VLine(int x1, int y1, int length, int Colour);
 void Line(int x1, int y1, int x2, int y2, int Colour);
 void clear_screen(int colour);
-
-/************************************ Colours *********************************/
-void setUpPallete(void);
-int getPalleteAddr(int RGB);
-int getRGB(int addr);
 
 /************************* Others **************************************/
 void Fill(int _x, int _y, int _FillColour, int _BoundaryColour);

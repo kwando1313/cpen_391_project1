@@ -2,11 +2,13 @@
 #include "FontSize.h"
 #include "menu.h"
 #include "Colours.h"
+#include "Directions.h"
 #include <stdio.h>
 #include <string.h>
 #include <touchscreen.h>
 #include <altera_up_sd_card_avalon_interface.h>
 #include "Directions.h"
+#include "search.h"
 
 /*	IMGHEIGHT 	: Full height of our BMP
  * 	IMGWIDTH 	: Full width of our BMP
@@ -189,7 +191,6 @@ void move_img (int direction){
 			ystart = IMGHEIGHT - BOXHEIGHT;
 		else ystart += SHIFT;
 		printf ("UP\n");
-
 	}
 	else if (direction == DOWN){
 		if (ystart < SHIFT)
@@ -410,7 +411,10 @@ void init_screen(){
 }
 
 void about_screen(){
-	draw_information_box("Pathfinding Map (CPEN 391 Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nThis is our project!");
+	draw_information_box("Pathfinding Map (CPEN 391 Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nWelcome and thank you for using [insert name here].\n Below this menu, you may:\n"
+			"																																						      Search for directions by name\n from your current location "
+			"																																							  Get directions from any chosen starting and destination point"
+			"																																							  Other bs, let's write this shit at the very end");
 }
 
 void info_screen(){
@@ -431,6 +435,7 @@ void photo_screen(){
 // draw the pop up keyboard on the LHS of the screen
 void pop_screen(){
 	draw_information_box("ENTER YOUR SEARCH:");
+
 	Point p = {30, 330};
 	Point p1 = {0, 300};
 	Point p2 = {0, 230};
@@ -445,22 +450,25 @@ void pop_screen(){
 }
 
 // draw the names matched with the query string and highlight the current chosen entry
-void match_screen(){
-	char* t[];
+void match_screen(int sel, int mn_count){
+	char* t[2];
 	Point p;
 
-	int m = mn_count();
-	int incr = 200 / m;
+	int incr = 200 / mn_count;
+	name_list* nl = matched_names.head;
 
-	for(int i = 0; i < m; i++){
+	for(int i = 0; i < mn_count; i++){
 		p.x = 500;
 		p.y = i*incr;
-		t[0] = matched_names[i];
+
+		t[0] = nl->name;
 		t[1] = "";
 
-		if(i != si)
+		nl = nl->next;
+
+		if(i != sel)
 			draw_menu(p, 300, incr, 2 , BLACK, 255, BLACK, SMALL, t);
-		else if(i == si)
+		else if(i == sel)
 			draw_menu(p, 300, incr, 2 , 255, BLACK, 255, SMALL, t); // highlighted entry (i.e invert colors)
 	}
 }
@@ -534,11 +542,4 @@ void draw_arrows(){
 	draw_arrow(UPOINT, 50, 50, 1, BLACK, 255, UP);
 
 	draw_arrow(DPOINT, 50, 50, 1, BLACK, 255, DOWN);
-}
-
-
-void read_bytes(char* str, int len, short file){
-	for(int x=0 ; x<len ; x++){
-		str[x]=(unsigned char)(alt_up_sd_card_read(file));
-	}
 }

@@ -44,6 +44,7 @@ void init_s_button(char key, int id);
 void init_keyboard();
 //void destroy_keyboard();
 
+
 // Gets the button upon input for control
 int falls_inside(Point p, Button b);
 Button* get_s_button(Point p);

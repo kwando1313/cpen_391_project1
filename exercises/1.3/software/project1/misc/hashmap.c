@@ -1,192 +1,157 @@
-//stolen from http://www2.informatik.hu-berlin.de/~weber/slipOff/hashmap_c.html
-//hope it works.....
-
 #include "hashmap.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-/* this should be prime */
-#define TABLE_STARTSIZE 53
+//this can be played with, just don't make too high(ie > 5)
+#define LOAD_FACTOR 2
 
-#define ACTIVE 1
+void rehash(hashmap* map);
+void free_bucket(hash_entry* head);
 
-static unsigned long isPrime(unsigned long val)
-{
-  int i, p, exp, a;
-
-  for (i = 9; i--;)
-  {
-    a = (rand() % (val-4)) + 2;
-    p = 1;
-    exp = val-1;
-    while (exp)
-    {
-      if (exp & 1)
-        p = (p*a)%val;
-
-      a = (a*a)%val;
-      exp >>= 1;
-    }
-
-    if (p != 1)
-      return 0;
-  }
-
-  return 1;
+hashmap* hashmapCreate(int start_size){
+	hashmap* map = malloc(sizeof(hashmap));
+	map->size = start_size;
+	map->count = 0;
+	map->buckets = malloc(sizeof(hash_entry*)*start_size);
+	for (int i = 0; i<map->size; i++){
+		map->buckets[i] = NULL;
+	}
+	return map;
 }
 
-static int findPrimeGreaterThan(int val)
-{
-  if (val & 1)
-    val+=2;
-  else
-    val++;
-
-  while (!isPrime(val))
-    val+=2;
-
-  return val;
+unsigned int hash(unsigned int key){
+	//https://stackoverflow.com/questions/664014/what-integer-hash-function-are-good-that-accepts-an-integer-hash-key
+	return (key*2654435761 % 0xffffffff);
 }
 
-static void rehash(hashmap* hm)
-{
-  long size = hm->size;
-  hEntry* table = hm->table;
-
-  hm->size = findPrimeGreaterThan(size<<1);
-  hm->table = (hEntry*)calloc(sizeof(hEntry), hm->size);
-  hm->count = 0;
-
-  while(--size >= 0)
-    if (table[size].flags == ACTIVE)
-      hashmapInsert(hm, table[size].data, table[size].key);
-
-  free(table);
+hash_entry* init_hash_entry(unsigned int key, const void* data){
+	hash_entry* entry = malloc(sizeof(hash_entry));
+	entry->key = key;
+	entry->next = NULL;
+	entry->data = data;
+	return entry;
 }
 
-hashmap* hashmapCreate(int startsize)
-{
-  hashmap* hm = (hashmap*)malloc(sizeof(hashmap));
+void hashmapInsert(hashmap* map, const void* data, unsigned int key){
+	if ((map->count/map->size) > LOAD_FACTOR){
+		rehash(map);
+	}
 
-  if (!startsize)
-    startsize = TABLE_STARTSIZE;
-  else
-    startsize = findPrimeGreaterThan(startsize-2);
+	int index = hash(key) % map->size;
+	hash_entry* prev_entry = map->buckets[index];
+	hash_entry* curr_entry = prev_entry;
+	while(curr_entry != NULL) {
+		if (curr_entry->key == key) {
+			curr_entry->data = data;
+			return;
+		}
+		prev_entry = curr_entry;
+		curr_entry = curr_entry->next;
+	}
 
-  hm->table = (hEntry*)calloc(sizeof(hEntry), startsize);
-  hm->size = startsize;
-  hm->count = 0;
+	hash_entry* new_entry = init_hash_entry(key, data);
 
-  return hm;
+	if (prev_entry == NULL) {
+		//first entry in bucket
+		map->buckets[index] = new_entry;
+	} else {
+		prev_entry->next = new_entry;
+	}
+
+	map->count++;
 }
 
-void hashmapInsert(hashmap* hash, const void* data, unsigned long key)
-{
-  long index, i, step;
+void* hashmapGet(hashmap* map, unsigned int key){
+	int index = hash(key) % map->size;
+	hash_entry* curr_entry = map->buckets[index];
+	while(true){
+		if (curr_entry == NULL) {
+			return HASHMAP_ERROR;
+		}
 
-  if (hash->size <= hash->count)
-    rehash(hash);
+		if (curr_entry->key == key) {
+			return curr_entry->data;
+		}
 
-  do
-  {
-    index = key % hash->size;
-    step = (key % (hash->size-2)) + 1;
-
-    for (i = 0; i < hash->size; i++)
-    {
-      if (hash->table[index].flags & ACTIVE)
-      {
-        if (hash->table[index].key == key)
-        {
-          hash->table[index].data = (void*)data;
-          return;
-        }
-      }
-      else
-      {
-        hash->table[index].flags |= ACTIVE;
-        hash->table[index].data = (void*)data;
-        hash->table[index].key = key;
-        ++hash->count;
-        return;
-      }
-
-      index = (index + step) % hash->size;
-    }
-
-    /* it should not be possible that we EVER come this far, but unfortunately
-       not every generated prime number is prime (Carmichael numbers...) */
-    rehash(hash);
-  }
-  while (1);
+		curr_entry = curr_entry->next;
+	}
 }
 
-void* hashmapRemove(hashmap* hash, unsigned long key)
-{
-  long index, i, step;
+void* hashmapRemove(hashmap* map, unsigned int key){
+	int index = hash(key) % map->size;
+	hash_entry* curr_entry = map->buckets[index];
+	hash_entry* prev_entry = map->buckets[index];
+	while(true){
+		if (curr_entry == NULL) {
+			return HASHMAP_ERROR;
+		}
 
-  index = key % hash->size;
-  step = (key % (hash->size-2)) + 1;
+		if (curr_entry->key == key) {
+			void* data = curr_entry->data;
 
-  for (i = 0; i < hash->size; i++)
-  {
-    if (hash->table[index].data)
-    {
-      if (hash->table[index].key == key)
-      {
-        if (hash->table[index].flags & ACTIVE)
-        {
-          hash->table[index].flags &= ~ACTIVE;
-          --hash->count;
-          return hash->table[index].data;
-        }
-        else /* in, but not active (i.e. deleted) */
-          return HASHMAP_ERROR;
-      }
-    }
-    else /* found an empty place (can't be in) */
-      return HASHMAP_ERROR;
+			if (prev_entry == curr_entry) {
+				// first entry in bucket
+				map->buckets[index] = curr_entry->next;
+			} else {
+				prev_entry->next = curr_entry->next;
+			}
 
-    index = (index + step) % hash->size;
-  }
-  /* everything searched through, but not in */
-  return HASHMAP_ERROR;
+			free(curr_entry);
+			map->count--;
+			return data;
+		}
+
+		prev_entry = curr_entry;
+		curr_entry = curr_entry->next;
+	}
 }
 
-void* hashmapGet(hashmap* hash, unsigned long key)
-{
-  if (hash->count)
-  {
-    long index, i, step;
-    index = key % hash->size;
-    step = (key % (hash->size-2)) + 1;
-
-    for (i = 0; i < hash->size; i++)
-    {
-      if (hash->table[index].key == key)
-      {
-        if (hash->table[index].flags & ACTIVE)
-          return hash->table[index].data;
-        break;
-      }
-      else
-        if (!hash->table[index].data)
-          break;
-
-      index = (index + step) % hash->size;
-    }
-  }
-
-  return HASHMAP_ERROR;
+int hashmapCount(hashmap* map){
+	return map->count;
 }
 
-long hashmapCount(hashmap* hash)
-{
-  return hash->count;
+void hashmapDelete(hashmap* map){
+	for (int i = 0; i<map->size; i++) {
+		free_bucket(map->buckets[i]);
+	}
+	free(map->buckets);
+	free(map);
 }
 
-void hashmapDelete(hashmap* hash)
-{
-  free(hash->table);
-  free(hash);
+
+void rehash(hashmap* map){
+	int old_size = map->size;
+	hash_entry** old_buckets = map->buckets;
+	map->size *= 2;
+	map->count = 0;
+	map->buckets = malloc(sizeof(hash_entry*)*map->size);
+	for (int i = 0; i<map->size; i++){
+		map->buckets[i] = NULL;
+	}
+
+	for(int i = 0; i<old_size; i++){
+		hash_entry* curr = old_buckets[i];
+		while(curr != NULL) {
+			hashmapInsert(map, curr->data, curr->key);
+			curr = curr->next;
+		}
+		free_bucket(old_buckets[i]);
+	}
+
+	free(old_buckets);
+}
+
+void free_bucket(hash_entry* head){
+	if (head == NULL){
+		return;
+	}
+	hash_entry* prev = head;
+	head = head->next;
+	while (head != NULL) {
+		free(prev);
+		prev = head;
+		head = head->next;
+	}
+	free(prev); // frees last entry
 }

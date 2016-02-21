@@ -9,6 +9,7 @@
 #include "Directions.h"
 #include "search.h"
 #include "gps.h"
+#include "graph.h"
 
 const char KEYS[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '-',
 			  	  	'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '+',
@@ -161,26 +162,27 @@ void init_s_button(char key, int id){
 }
 
 void init_keyboard(){
-	//keyboard = malloc(sizeof(Button)*N_KEYS); // MIGHT NOT NEED THIS
+	keyboard = malloc(sizeof(Button)*N_KEYS);
 
 	// KB buttons
 	for(int i = 0; i < KB_KEYS; i++){
+		//keyboard[i] = malloc(sizeof(Button));
 		init_kb_button(KEYS[i], i);
 	}
 
 	// Screen buttons
 	for(int i = KB_KEYS; i < N_KEYS; i++){
+		//keyboard[i] = malloc(sizeof(Button));
 		init_s_button(KEYS[i], i);
 	}
 }
 
-// MIGHT NOT NEED THIS
-// void destroy_keyboard(Button* keyboard){
+ void destroy_keyboard(Button* keyboard){
 //	for(int i = 0; i < N_KEYS; i++){
 //		free(keyboard[i]);
 //	}
-//	free(keyboard);
-//}
+	free(keyboard);
+}
 
 /* Assumption: all of our buttons are rectangles. Aside: nodes aren't buttons but they are circles right now.
  * Returns true if the point is inside the button
@@ -299,19 +301,19 @@ void do_south(){
 // Select the search match entry above the current selected
 void do_up(char key){
 	//printf("%c is up", key);
-	if(si > 0)
-		si--;
+	if(sel > 1)
+		sel--;
 	else
-		si++;
+		sel = mn_count;
 }
 
 // Select the search match entry below the current selected
 void do_down(char key){
 	//printf("%c is down", key);
-	if(si < mni)
-		si++;
+	if(sel < mn_count)
+		sel++;
 	else
-		si--;
+		sel = 1;
 }
 
 // Pop up the keyboard
@@ -325,12 +327,12 @@ void do_pop(){
 void do_key(char key){
 	add_letter(key);
 
-	/* Ignore the matcher if the string query length is below the threshhold to provide mathcings
+	/* Ignore the matcher if the string query length is below the threshhold to provide matchings
 	   Update and delete matches when we add letters */
-	if(length() > SEARCH_THRESHHOLD){
+	if(qs_length() > SEARCH_THRESHHOLD){
 		del_matches();
 	}
-	if(length() == SEARCH_THRESHHOLD){
+	if(qs_length() == SEARCH_THRESHHOLD){
 		add_matches();
 	}
 }
@@ -341,7 +343,7 @@ void do_del(){
 
 	/* Ignore the matcher if the string query is below the threshhold
 	   Update and add matches when we delete letters  */
-	if(length() >= SEARCH_THRESHHOLD){
+	if(qs_length() >= SEARCH_THRESHHOLD){
 		add_matches();
 	}
 }
@@ -349,17 +351,23 @@ void do_del(){
 /* On valid search, go to and highlight the searched node? Re-draw the map.
 	On invalid search, display invalid search and keep listening for keyboard inputs */
 bool do_enter(){
-	// TODO: first check validity of search, add a name for every node and check if the input hits a match
 	printf("In do_enter\n");
-	do_back();
-	return 1;
+	if(ready()){
+		name_list* nl = matched_names.head;
+		for(int i = 0; i < sel; i++){
+			nl = nl->next;
+		}
+		//TODO  Now do something using the name of the selected search entry
+		do_back();
+	}
+	return false;
 }
 
 // Redraw the map
 void do_back(){
-	// TODO:
 	printf("In do_back\n");
 	reset_query();
 
-	init_screen(); //replace this
+	about_screen();
+	map_screen();
 }

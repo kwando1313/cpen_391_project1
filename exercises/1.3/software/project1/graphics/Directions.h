@@ -1,8 +1,8 @@
 /*
  * Directions.h
  *
- *  Created on: 2016-02-02
- *      Author: kwando1313
+ *  Created on: 2016-02-16
+ *      Author: Alex
  */
 
 #ifndef DIRECTIONS_H_

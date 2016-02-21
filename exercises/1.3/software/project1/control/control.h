@@ -1,7 +1,6 @@
 #ifndef CONTROL_H_
 #define CONTROL_H_
 
-
 #define NO_RESPONSE 0
 #define INFO 1
 #define DIR 2

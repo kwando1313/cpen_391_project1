@@ -7,12 +7,14 @@
 #include "button.h"
 #include "search.h"
 #include <string.h>
+#include "graph.h"
 
 
 // Reset the query string to be empty
 void reset_query(){
+	sel = 1;
 	while(qs_length() > 0){
-		del();
+		del_letter();
 	}
 }
 
@@ -50,47 +52,97 @@ void draw_word(){
 }
 
 // A match occurs when the string query maps to a name by substring
-bool is_matched(char name[]){
+bool is_matched(char* name){
 	bool matches = true;
 	if(strstr(name, query_string) == NULL)
 		matches = false;
 	return matches;
 }
 
-// Return the current number of matched names
-int mn_count(){
-	return mni+1;
+// Initialise the head of the matched names if there is one and return the head
+name_list* init_matches(name_list* nl){
+	name_list* mn_h = matched_names.head;
+	mn_h = NULL;
+
+	while(nl != NULL){
+		if(is_matched(nl->name)){
+			mn_h = nl;
+			mn_h->next = NULL;
+			mn_count++;
+			nl = nl->next;
+			return mn_h;
+		}
+		nl = nl->next;
+	}
+
+	return mn_h;
+}
+/* Adds names that match; nl is the graph name list
+ * Pre: m_nl is matched and not NULL
+ */
+void add_matches_helper(name_list* nl, name_list* m_nl){
+	while(nl != NULL){
+		if(is_matched(nl->name)){
+			m_nl->next = nl;
+			m_nl = m_nl->next;
+			mn_count++;
+		}
+		nl = nl->next;
+	}
+	m_nl->next == NULL;
 }
 
 // Get all the names that match with the query string
 void add_matches(){
-	FILE* f = fopen(FILENAME, "r");
-	int line = 0;
-	mni = 0;
+	mn_count = 0;
+	graph* graph = create_test_graph(); //obvs change to access the real graph name list
+	name_list* nl = get_names(graph);
+	name_list* m_nl = init_matches(nl);
 
-	char name[MAX_CHAR];
+	if(m_nl != NULL)
+		add_matches_helper(nl, m_nl);
 
-	while(fgets(name, MAX_CHAR, f)){
-		if(is_matched(name)){
-			matched_names[mni] = name;
-			mni++;
-		}
-		line++;
-	}
-
-	match_screen();
-	fclose(f);
+	match_screen(sel, mn_count);
 }
 
-// Update and delete names that no longer match
-void del_matches(){
-	for(int i = 0; i < mn_count(); i++){
-		if(!is_matched(matched_names[i])){
-			matched_names[i] = "\0";
-			//sort
-			mni--;
-		}
+/* Delete names that no longer match
+ * Pre: nl is matched and not NULL
+ */
+void del_matches_helper(name_list* nl){
+	if(nl->next == NULL)
+		return;
+
+	// Set the next matched name in the matched list
+	name_list* temp = nl->next;
+	while(!(is_matched(temp)) && temp != NULL){
+		temp = temp->next;
+		mn_count--;
 	}
-	match_screen();
+	nl->next = temp;
+
+	if(temp != NULL)
+		del_matches_helper(temp);
+}
+
+void del_matches(){
+	name_list* m_nl = matched_names.head;
+
+	// Updates the head to be the first match in matched list
+	while(!(is_matched(m_nl->name)) && m_nl != NULL ){
+		m_nl = m_nl->next;
+		mn_count--;
+	}
+
+	matched_names.head = m_nl;
+
+	if(m_nl != NULL)
+		del_matches_helper(&m_nl);
+
+	match_screen(sel, mn_count);
+}
+
+// Search ready to be entered if we have at least one matching entry
+bool ready(){
+	return(mn_count > 0);
 }
 
