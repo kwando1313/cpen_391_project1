@@ -22,8 +22,8 @@ void init_kb_button(char key, int id){
 	keyboard[id].id = id;
 
 	// We can use the id to know where to draw
-	int i;
-	int j;
+	int i = 0;
+	int j = 0;
 	// Del, Enter, Space, and Back are special cases
 	if(id < DEL_BUTT.id){
 		i = id;

@@ -10,7 +10,6 @@
 #include "graph.h"
 #include "button.h"
 
-
 void init_control();
 
 void s_listen();

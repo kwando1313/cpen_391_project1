@@ -89,7 +89,7 @@ void add_matches_helper(name_list* nl, name_list* m_nl){
 		}
 		nl = nl->next;
 	}
-	m_nl->next == NULL;
+	m_nl->next = NULL;
 }
 
 // Get all the names that match with the query string

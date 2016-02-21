@@ -56,8 +56,8 @@ int graph_test(void){
 
 	for (int x = 0; x < 100; x++){
 		vertex* v = init_vertex(x, x, x, "TEST", x, x);
-		int id = add_vertex(g, v);
-		vertex* v2 = get_vertex(g, id);
+		int id = add_vertex(g2, v);
+		vertex* v2 = get_vertex(g2, id);
 		if (v->id != v2->id){
 			printf("\nTest failed: Vertex ids do not match.");
 			return -1;
@@ -65,10 +65,10 @@ int graph_test(void){
 	}
 
 	for (int x = 0; x < 50; x++){
-		vertex* v1 = get_vertex(g, 2*x);
-		vertex* v2 = get_vertex(g, (2*x) + 1);
+		vertex* v1 = get_vertex(g2, 2*x);
+		vertex* v2 = get_vertex(g2, (2*x) + 1);
 		cost c = {1};
-		add_edge(g, v1->id, v2->id, c);
+		add_edge(g2, v1->id, v2->id, c);
 		if (!vertex_has_edge(v1, v2->id)){
 			printf("\nTest failed: Vertex does not have edge.");
 			return -1;
@@ -77,11 +77,11 @@ int graph_test(void){
 			printf("\nTest failed: Vertex does not have edge.");
 			return -1;
 		}
-		if (!graph_has_edge(g, v1->id, v2->id)){
+		if (!graph_has_edge(g2, v1->id, v2->id)){
 			printf("\nTest failed: Vertex does not have edge.");
 			return -1;
 		}
-		if(!remove_edge(g, v1->id, v2->id)){
+		if(!remove_edge(g2, v1->id, v2->id)){
 			printf("\nTest failed: Remove edge didn't work.");
 			return -1;
 		}
@@ -93,7 +93,7 @@ int graph_test(void){
 			printf("\nTest failed: Vertex has edge.");
 			return -1;
 		}
-		if (graph_has_edge(g, v1->id, v2->id)){
+		if (graph_has_edge(g2, v1->id, v2->id)){
 			printf("\nTest failed: Vertex has edge.");
 			return -1;
 		}
