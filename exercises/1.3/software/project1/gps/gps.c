@@ -151,6 +151,11 @@ void read_gps(void) {
 	double longi;
 	//convert the latitude and longitude data to completely be in degrees
 	minutes_to_degrees (data->lati, data->longi, &lati, &longi);
+
+	int latitude;
+	int longitude;
+
+	degrees_to_graph (lati, longi, &latitude, &longitude);
 	printf ("Lati: %lf, Longi: %lf\n", lati, longi);
 	return;
 }
@@ -272,6 +277,19 @@ gps_data* init_gps_data (void){
 	data->geoUnit[1] = 0;
 
 	return data;
+}
+
+void degrees_to_graph(double lati, double longi, int *latitude, int * longitude){
+	double tempLong;
+	double tempLat;
+
+	tempLong = longi + 123;
+	tempLat = lati - 49;
+
+	*longitude = (int) (tempLong * 1000000);
+	*latitude = (int) (tempLat * 1000000);
+
+	return;
 }
 
 void minutes_to_degrees (char* latitude, char* longitude, double *lati, double *longi){
