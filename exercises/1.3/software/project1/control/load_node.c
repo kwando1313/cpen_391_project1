@@ -9,7 +9,7 @@
 
 int keyify(char* name);
 
-void handle_nodes(short file, graph* graph, hashmap* hashmap){
+void handle_nodes(short file, graph* graph){
 	char c = "";
 	int x = 0;
 	int y = 0;
@@ -54,7 +54,6 @@ void handle_nodes(short file, graph* graph, hashmap* hashmap){
 			vertex* v = init_vertex(latitude, longitude, altitude, node_name, x_coord, y_coord);
 			int v_id = add_vertex(graph, v);
 			int node_key = keyify(v->name);
-			hashmapInsert(hashmap, v_id, node_key);
 			memset(&text[0], 0, sizeof(text));
 			y=0;
 			x++;
@@ -65,7 +64,7 @@ void handle_nodes(short file, graph* graph, hashmap* hashmap){
 	}
 }
 
-void handle_edges(short file, graph* graph, hashmap* hashmap){
+void handle_edges(short file, graph* graph){
 	int x = 0;
 	int y = 0;
 	int v1_id = 0;
@@ -115,9 +114,9 @@ void handle_edges(short file, graph* graph, hashmap* hashmap){
 void handle_data(short file){
 	//clear_screen(255);
 	graph* graph = init_graph(DEFAULT_GRAPH_SIZE);
-	hashmap* hashmap = hashmapCreate(DEFAULT_GRAPH_SIZE);
-	handle_nodes(file, graph, hashmap);
-	handle_edges(file, graph, hashmap);
+	//hashmap* hashmap = hashmapCreate(DEFAULT_GRAPH_SIZE);
+	handle_nodes(file, graph);
+	handle_edges(file, graph);
 	//clear_screen(255);
 	draw_graph(graph, BLUE, RED);
 	printf("Graph loaded.\n");
