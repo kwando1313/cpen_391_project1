@@ -7,10 +7,6 @@
 #include <altera_up_sd_card_avalon_interface.h>
 #include "graphics.h"
 
-
-graph* zoomout;
-graph* zoomin;
-
 int keyify(char* name);
 
 void handle_nodes(short file, graph* graph){
@@ -122,12 +118,15 @@ void handle_edges(short file, graph* graph){
 
 void handle_data(short file){
 	//clear_screen(255);
-	graph* graph = init_graph(DEFAULT_GRAPH_SIZE);
+	if (map != NULL){
+		destroy_graph(map);
+	}
+	map = init_graph(DEFAULT_GRAPH_SIZE);
 	//hashmap* hashmap = hashmapCreate(DEFAULT_GRAPH_SIZE);
-	handle_nodes(file, graph);
-	handle_edges(file, graph);
+	handle_nodes(file, map);
+	handle_edges(file, map);
 	//clear_screen(255);
-	draw_graph(graph, BLUE, RED);
+	draw_graph(map, BLUE, RED);
 	printf("Graph loaded.\n");
 }
 
