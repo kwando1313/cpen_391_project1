@@ -7,6 +7,10 @@
 #include <altera_up_sd_card_avalon_interface.h>
 #include "graphics.h"
 
+
+graph* zoomout;
+graph* zoomin;
+
 int keyify(char* name);
 
 void handle_nodes(short file, graph* graph){
@@ -15,8 +19,10 @@ void handle_nodes(short file, graph* graph){
 	int y = 0;
 	short data = 0;
 	char* node_name = "A";
-	int x_coord = 0;
-	int y_coord = 0;
+	int x_zoomed_in_coord = 0;
+	int y_zoomed_in_coord = 0;
+	int	x_zoomed_out_coord = 0;
+	int y_zoomed_out_coord = 0;
 	int altitude = 0;
 	int longitude = 0;
 	int latitude = 0;
@@ -25,25 +31,30 @@ void handle_nodes(short file, graph* graph){
 	while(data >= 0){
 		data = alt_up_sd_card_read(file);
 		c = (char)data;
-
 		if (c == '$'){
 			data = -1;
 		}
 
-		if (c == ','){
+		else if (c == ','){
 			if (y == 0){
 				strcpy(node_name, text);
 			}
 			else if (y == 1){
-				x_coord = atoi(text);
+				x_zoomed_out_coord = atoi(text);
 			}
 			else if (y == 2){
-				y_coord = atoi(text);
+				y_zoomed_out_coord = atoi(text);
 			}
 			else if (y == 3){
-				altitude = atoi(text);
+				x_zoomed_in_coord = atoi(text);
 			}
 			else if (y == 4){
+				y_zoomed_in_coord = atoi(text);
+			}
+			else if (y == 5){
+				altitude = atoi(text);
+			}
+			else if (y == 6){
 				longitude = atoi(text);
 			}
 			memset(&text[0], 0, sizeof(text));
@@ -51,7 +62,7 @@ void handle_nodes(short file, graph* graph){
 		}
 		else if (c == ';'){
 			latitude = atoi(text);
-			vertex* v = init_vertex(latitude, longitude, altitude, node_name, x_coord, y_coord);
+			vertex* v = init_vertex(latitude, longitude, altitude, node_name, x_zoomed_out_coord, y_zoomed_out_coord, x_zoomed_in_coord, y_zoomed_in_coord);
 			int v_id = add_vertex(graph, v);
 			int node_key = keyify(v->name);
 			memset(&text[0], 0, sizeof(text));
@@ -94,9 +105,6 @@ void handle_edges(short file, graph* graph){
 			weight = atoi(text);
 			cost cost1 = {weight};
 			if (v1_id != -1 && v2_id != -1){
-				if (v1_id == 2530 || v2_id == 2530){
-					printf("On line %d\n", x);
-				}
 				add_edge(graph, v1_id, v2_id, cost1);
 			}
 			memset(&text[0], 0, sizeof(text));
