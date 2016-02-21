@@ -43,7 +43,10 @@ int main(void) {
 	Point p1 = {0,0};
 	load_draw_image(p1, 0, 455, "ubcfull3.bmp");
 	//Line(0, 0, 800, 200, BLUE);
-	load_graph("zoom.txt");
+	load_graph("nodes.txt");
+	vertex* v = find_vertex_by_coords(graph_nodes,2700750,2590055);
+
+	printf ("%s", v->name);
 
 //	keyboard[16].kb_p(keyboard[16].key); //H
 //	keyboard[19].kb_p(keyboard[19].key); //L

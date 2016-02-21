@@ -66,6 +66,9 @@ typedef struct __graph {
     vertex** vertices;
 } graph;
 
+graph* graph_nodes;
+
+
 /* basics */
 graph* init_graph(int inital_num_vertices);
 void destroy_graph(graph* graph);

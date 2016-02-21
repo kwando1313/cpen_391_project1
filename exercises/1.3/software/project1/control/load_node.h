@@ -8,7 +8,7 @@
 #ifndef LOAD_NODE_H_
 #define LOAD_NODE_H_
 
-graph* map = NULL;
+
 void handle_nodes(short file);
 void handle_edges(short file);
 void handle_data(short file);
