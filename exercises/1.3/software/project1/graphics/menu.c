@@ -411,10 +411,7 @@ void init_screen(){
 }
 
 void about_screen(){
-	draw_information_box("Pathfinding Map (CPEN 391 Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nWelcome and thank you for using [insert name here].\n Below this menu, you may:\n"
-			"																																						      Search for directions by name\n from your current location "
-			"																																							  Get directions from any chosen starting and destination point"
-			"																																							  Other bs, let's write this shit at the very end");
+	draw_information_box("Pathfinding Map (CPEN 391 Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nWelcome to [insert name here].\n Below this menu you may:\nSearch for directions\nGet directions between two points\nOther bs, let's write this shit at the end");
 }
 
 void info_screen(){

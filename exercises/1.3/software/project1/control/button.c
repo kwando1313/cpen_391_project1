@@ -152,7 +152,7 @@ void init_s_button(char key, int id){
 		SOUTH_BUTT.left = SL;
 		SOUTH_BUTT.right = SR;
 		SOUTH_BUTT.p = do_south;
-		SOUTH_BUTT.p = do_down;
+		SOUTH_BUTT.kb_p = do_down;
 	break;
 
 	default:
@@ -203,10 +203,11 @@ Button* get_s_button(Point p){
 				return &keyboard[i];
 			}
 			else
+				printf("Invalid button\n");
 				return NULL;
 		}
 	}
-
+	printf("Invalid button\n");
 	return NULL;
 }
 
@@ -220,8 +221,10 @@ Button* get_kb_button(Point p){
 				return &keyboard[i];
 			}
 			else
+				printf("Invalid button\n");
 				return NULL;
 		}
+
 	}
 
 	// North and South buttons used in search mode to select matching search entry
@@ -261,7 +264,7 @@ void do_dir(){
 //	draw_information_box("HAVE A FUN TRIP!");
 	printf("start do dir\n");
 	directions_screen();
-	read_gps();
+	//read_gps();
 	printf("done do dir\n");
 
 }
@@ -300,20 +303,26 @@ void do_south(){
 
 // Select the search match entry above the current selected
 void do_up(char key){
-	//printf("%c is up", key);
+	printf("%c is up", key);
+	if(mn_count < SEARCH_THRESHHOLD)
+		return;
 	if(sel > 1)
 		sel--;
 	else
 		sel = mn_count;
+	match_screen(sel, mn_count);
 }
 
 // Select the search match entry below the current selected
 void do_down(char key){
-	//printf("%c is down", key);
+	printf("%c is down", key);
+	if(mn_count < SEARCH_THRESHHOLD)
+		return;
 	if(sel < mn_count)
 		sel++;
 	else
 		sel = 1;
+	match_screen(sel, mn_count);
 }
 
 // Pop up the keyboard
