@@ -98,7 +98,7 @@ bool is_matched(char* name){
 void add_matches(){
 	mn_count = 0;
 
-	graph* graph = get_graph();
+	graph* graph = full_map_graph;
 	name_list* nl = get_names(graph);
 
 	matched_names.head = NULL;
@@ -106,22 +106,22 @@ void add_matches(){
 	name_list* curr;
 
 	while(nl != NULL){
-			if(is_matched(nl->name)){
-				m_nl = malloc(sizeof(name_list));
-				m_nl->name = nl->name;
-				m_nl->next = NULL;
+		if(is_matched(nl->name)){
+			m_nl = malloc(sizeof(name_list));
+			m_nl->name = nl->name;
+			m_nl->next = NULL;
 
-				if(matched_names.head == NULL){
-					matched_names.head = m_nl;
-				}
-				else{
-					curr->next = m_nl;
-				}
-				curr = m_nl;
-				mn_count++;
+			if(matched_names.head == NULL){
+				matched_names.head = m_nl;
 			}
-			nl = nl->next;
+			else{
+				curr->next = m_nl;
+			}
+			curr = m_nl;
+			mn_count++;
 		}
+			nl = nl->next;
+	}
 	match_screen(sel, mn_count);
 }
 

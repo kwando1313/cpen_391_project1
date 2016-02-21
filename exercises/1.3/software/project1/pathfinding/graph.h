@@ -91,13 +91,11 @@ void destroy_path_points(path_points* path);
 /* other */
 vertex* find_vertex_by_name(graph* graph, char* name);
 vertex* find_vertex_by_coords(graph* graph, int latitude, int longitude);
+
 void draw_graph(graph* graph, int v_colour, int edge_colour);
 void draw_node(int colour, vertex* v);
-void print_names(graph* graph);
-void print_nl(name_list* nl);
-void add_name(graph* graph, char* name);
-name_list* get_names(graph* graph);
-graph* get_graph();
 
+void print_name_list(name_list* nl);
+name_list* get_names(graph* graph);
 
 #endif

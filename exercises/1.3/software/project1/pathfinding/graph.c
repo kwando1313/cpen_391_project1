@@ -248,19 +248,6 @@ int make_longitude_usable(float longitude){
 	return long_i;
 }
 
-// Create a graph for testing; TODO should replace this to actually return an initialised graph
-graph* get_graph(){
-	graph* graph = create_test_graph();
-	add_name(graph, "BUC");
-	add_name(graph, "BUCH");
-	add_name(graph, "BUCHAN");
-	add_name(graph, "BUCHANAN");
-	add_name(graph, "BUCK");
-	add_name(graph, "BUCKANAN");
-	add_name(graph, "BUCKYNAN");
-	return graph;
-}
-
 name_list* get_names(graph* graph){
 	return graph->names_head;
 }
@@ -300,15 +287,6 @@ void add_name(graph* graph, char* name){
 	}
 }
 
-void print_names(graph* graph){
-	name_list* curr = graph->names_head;
-	printf("node names:\n");
-	while(curr != NULL){
-		printf("%s\n", curr->name);
-		curr = curr->next;
-	}
-}
-
 Point get_vertex_xy(vertex* v){
 	Point p;
 	if (zoom_level == ZOOM_OUT){
@@ -321,7 +299,7 @@ Point get_vertex_xy(vertex* v){
 	return p;
 }
 
-void print_nl(name_list* nl){
+void print_name_list(name_list* nl){
 	printf("name list:\n");
 	while(nl != NULL){
 		printf("%s\n", nl->name);
