@@ -203,10 +203,7 @@ void init_screen(){
 }
 
 void about_screen(){
-	draw_information_box("Pathfinding Map (CPEN 391 Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nWelcome and thank you for using [insert name here].\n Below this menu, you may:\n"
-			"																																						      Search for directions by name\n from your current location "
-			"																																							  Get directions from any chosen starting and destination point"
-			"																																							  Other bs, let's write this shit at the very end");
+	draw_information_box("Pathfinding Map (CPEN 391 Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nWelcome to [insert name here].\n Below this menu you may:\nSearch for directions\nGet directions between two points\nOther bs, let's write this shit at the end");
 }
 
 void info_screen(){
@@ -226,7 +223,7 @@ void photo_screen(){
 
 // draw the pop up keyboard on the LHS of the screen
 void pop_screen(){
-	draw_information_box("ENTER YOUR SEARCH:");
+	draw_information_box("ENTER YOUR SEARCH!");
 
 	Point p = {30, 330};
 	Point p1 = {0, 300};
@@ -258,10 +255,10 @@ void match_screen(int sel, int mn_count){
 
 		nl = nl->next;
 
-		if(i != sel)
-			draw_menu(p, 300, incr, 2 , BLACK, WHITE, BLACK, SMALL, t);
-		else if(i == sel)
-			draw_menu(p, 300, incr, 2 , WHITE, BLACK, WHITE, SMALL, t); // highlighted entry (i.e invert colors)
+		if(i != (sel-1))
+			draw_menu(p, 300, incr, 2 , BLACK, 255, BLACK, SMALL, t);
+		else if(i == (sel-1))
+			draw_menu(p, 300, incr, 2 , 255, BLACK, 255, SMALL, t); // highlighted entry (i.e invert colors)
 	}
 }
 

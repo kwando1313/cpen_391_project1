@@ -164,6 +164,7 @@ C_SRCS += control/button.c
 C_SRCS += search/search.c
 C_SRCS += control/image.c
 C_SRCS += tests/btree_test.c
+C_SRCS += tests/general_tests.c
 CXX_SRCS :=
 ASM_SRCS :=
 
