@@ -4,22 +4,31 @@
 #include "graphics.h"
 #include "misc_helpers.h"
 #include "image.h"
+#include "directions.h"
 
 extern const unsigned int ColourPalletteData[256];
 
-/*	IMGHEIGHT 	: Full height of our BMP
- * 	IMGWIDTH 	: Full width of our BMP
+/*
  * 	BOXHEIGHT 	: Height of the box we print our image.
  * 	BOXWIDTH 	: Width of the box we print our image.
  * 	HEADERSIZE changes with type of BMP file
  * 	COLOURTABLESIZE = size of colour table containing 256 colours (with BGRA fields)
  */
-//#define IMGHEIGHT 	525
-//#define IMGWIDTH 	717
-#define DISPLAY_HEIGHT	400
-#define DISPLAY_WIDTH 	600
+#define DISPLAY_HEIGHT	480
+#define DISPLAY_WIDTH 	500
 #define HEADERSIZE 		54
 #define COLOURTABLESIZE 1024
+#define SHIFT 30
+
+
+
+int xstart = 0, ystart = 0;
+Point start = {0,0};
+
+Point ret_start_points(void){
+	Point ret = {xstart, ystart};
+	return ret;
+}
 
 void load_image_to_pixels_arr(short file);
 
@@ -48,7 +57,6 @@ void load_image_to_pixels_arr(short file){
 	get_header(file);
 	get_pixels(file);
 }
-	//draw_img(topLeft, file, 0, ystart);
 
 /* Get header information.
  * Iterate and print bitmap file header + Windows Bitmap Info Header.
@@ -102,10 +110,8 @@ void get_pixels(short file){
  * but actually draw from the bottom left first.
  */
 void draw_image(Point topLeft, int xstart, int ystart){
-
 	int height = (bmpHeight < DISPLAY_HEIGHT) ? bmpHeight : DISPLAY_HEIGHT;
 	int width = (bmpWidth < DISPLAY_WIDTH) ? bmpWidth: DISPLAY_WIDTH;
-
 
 	for (int y = 0; y < height; y++){
 		for (int x = 0; x < width; x++){
@@ -117,11 +123,43 @@ void draw_image(Point topLeft, int xstart, int ystart){
 				x++;
 				colour2 = image_pixels[xstart+x][ystart+y];
 			}
-//			if(getPalleteAddr(int RGB);
-//			int getRGB(int addr);
 			HLine(topLeft.x + initialX, topLeft.y + height - y, x - initialX, (int)colour);
 			x--;
-			//WriteAPixel(topLeft.x + x, topLeft.y + height-y, colour);
 		}
 	}
+}
+
+/*	Move the x and y start points according to button
+ * 	Draw image again.
+ * 	This code is written to not go past the edge of the image.
+ */
+void move_img (int direction){
+	if (direction == UP){
+		if (ystart > bmpHeight - DISPLAY_HEIGHT - SHIFT)
+			ystart = bmpHeight - DISPLAY_HEIGHT;
+		else ystart += SHIFT;
+		printf ("UP\n");
+	}
+	else if (direction == DOWN){
+		if (ystart < SHIFT)
+			ystart = 0;
+		else ystart -= SHIFT;
+		printf ("DOWN\n");
+
+	}
+	else if (direction == RIGHT){
+		if (xstart > bmpWidth - DISPLAY_WIDTH - SHIFT)
+			xstart = bmpWidth - DISPLAY_WIDTH;
+		else xstart += SHIFT;
+		printf ("RIGHT\n");
+	}
+	else if (direction == LEFT){
+		if (xstart < SHIFT)
+			xstart = 0;
+		else xstart -= SHIFT;
+		printf ("LEFT\n");
+	}
+	Point printStart = ret_start_points ();
+	printf ("%d, %d", printStart.x, printStart.y);
+	draw_image(start, printStart.x, printStart.y);
 }

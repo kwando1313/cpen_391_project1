@@ -18,7 +18,7 @@ typedef struct{int x, y; } Point;
 
 int alphaBetize (char *a, char *b);
 
-load_file(char* filename, void (*func)(short));
+void load_file(char* filename, void (*func)(short));
 
 void read_bytes_from_file(unsigned char* str, int len, short file);
 
