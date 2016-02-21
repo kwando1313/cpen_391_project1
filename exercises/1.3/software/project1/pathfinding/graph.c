@@ -20,6 +20,7 @@ graph* init_graph(int inital_max_vertices){
 	new_graph->num_vertices = 0;
 	new_graph->max_vertices = inital_max_vertices;
 	new_graph->names_head = NULL;
+	new_graph->names_tail = NULL;
 	new_graph->vertices = malloc(inital_max_vertices*sizeof(vertex*));
 	return new_graph;
 }
@@ -30,13 +31,13 @@ vertex* init_vertex(int latitude, int longitude, float altitude, char* name,
 	new_vertex->id = -1;
 	new_vertex->adjList = init_adjList();
 
-	//temporary, just for sprint1 since we don't have any actual data yet
 	new_vertex->latitude = latitude;//make_latitude_usable(latitude);
 	new_vertex->longitude = longitude;//make_longitude_usable(longitude);
 	new_vertex->altitude = altitude;
 //	new_vertex->latitude = x;
 //	new_vertex->longitude = y;
 //	new_vertex->altitude = 0;
+
 	new_vertex->name = strdup(name);
 	new_vertex->x = x;
 	new_vertex->y = y;
@@ -246,51 +247,13 @@ int make_longitude_usable(float longitude){
 	return long_i;
 }
 
-//size is set to # of strings that match
-char** search_names(graph* graph, char* search_string, int* size){
-	name_list* curr = graph->names_head;
-	name_list* start;
-	int ct = 0;
-
-	if ((alphaBetize(graph->names_tail->name, search_string) < 0)
-		|| (alphaBetize(graph->names_head->name, search_string) > 0)){
-		*size = 0;
-		return NULL;
-	}
-
-	while(alphaBetize(curr->name, search_string) < 0){
-		curr = curr->next;
-		start = curr;
-		printf("curr: %s\n", curr->name);
-	}
-
-	while(curr != NULL && str_begins(curr->name, search_string)){
-		ct++;
-		curr = curr->next;
-	}
-
-	if (ct == 0){
-		*size = 0;
-		return NULL;
-	}
-
-	*size = ct;
-	char** names = malloc(sizeof(char*)*ct);
-	for (int i = 0; i<ct; i++){
-		names[i] = start->name;
-		start = start->next;
-	}
-
-	return names;
-}
-
 void add_name(graph* graph, char* name){
 	if (name == NULL || name == ""){
 		return;
 	}
 
 	name_list* new_name = malloc(sizeof(name_list));
-	new_name->name = name;
+	new_name->name = strdup(name);
 	new_name->next = NULL;
 
 	if (graph->names_head == NULL) {
@@ -315,12 +278,13 @@ void add_name(graph* graph, char* name){
 		if (curr == NULL){
 			graph->names_tail = new_name;
 		}
+
 	}
 }
 
 void print_names(graph* graph){
 	name_list* curr = graph->names_head;
-	printf("names:\n");
+	printf("node names:\n");
 	while(curr != NULL){
 		printf("%s\n", curr->name);
 		curr = curr->next;
