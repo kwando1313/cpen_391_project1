@@ -9,7 +9,7 @@
 #ifndef COLOURS_H_
 #define COLOURS_H_
 
-typedef enum  {
+typedef enum {
 BLACK,
 REDWINE,
 FOREST,

@@ -201,9 +201,7 @@ path_points* get_path_points(graph* graph, int start, int goal){
 
 	while(1) {
 		vertex* v = get_vertex(graph, path_ids[curr]);
-		Point to_add;
-		to_add.x = v->x;
-		to_add.y = v->y;
+		Point to_add = get_vertex_xy(v);
 		append_to_path_points_array(path, curr, to_add);
 		if (path_ids[curr] == start) {
 			break;

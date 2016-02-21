@@ -24,9 +24,8 @@ graph* init_graph(int inital_max_vertices){
 	new_graph->vertices = malloc(inital_max_vertices*sizeof(vertex*));
 	return new_graph;
 }
-
 vertex* init_vertex(int latitude, int longitude, float altitude, char* name,
-		int x, int y){
+		int zoomed_in_x, int zoomed_in_y, int zoomed_out_x, int zoomed_out_y){
 	vertex* new_vertex = malloc(sizeof(vertex));
 	new_vertex->id = -1;
 	new_vertex->adjList = init_adjList();
@@ -34,13 +33,12 @@ vertex* init_vertex(int latitude, int longitude, float altitude, char* name,
 	new_vertex->latitude = latitude;//make_latitude_usable(latitude);
 	new_vertex->longitude = longitude;//make_longitude_usable(longitude);
 	new_vertex->altitude = altitude;
-//	new_vertex->latitude = x;
-//	new_vertex->longitude = y;
-//	new_vertex->altitude = 0;
 
 	new_vertex->name = strdup(name);
-	new_vertex->x = x;
-	new_vertex->y = y;
+	new_vertex->zo_x = zoomed_out_x;
+	new_vertex->zo_y = zoomed_out_y;
+	new_vertex->zi_x = zoomed_in_x;
+	new_vertex->zi_y = zoomed_in_y;
 	return new_vertex;
 }
 
@@ -178,7 +176,6 @@ void destroy_path_points(path_points* path){
 
 // Draws the edges and nodes of the graph
 void draw_graph(graph* graph, int v_colour, int edge_colour){
-
 	for(int i = 0; i<graph->num_vertices; i++) {
 		vertex* v = get_vertex(graph, i);
 		draw_node(v_colour, v);
@@ -186,15 +183,16 @@ void draw_graph(graph* graph, int v_colour, int edge_colour){
 		int num_edges = adjList->num_neighbours;
 		for (int j = 0; j<num_edges; j++) {
 			vertex* w = get_vertex(graph, adjList->neighbours[j]);
-			Line(v->x, v->y, w->x, w->y, edge_colour);
+			Point p_v = get_vertex_xy(v);
+			Point p_w = get_vertex_xy(w);
+			Line(p_v.x, p_v.y, p_w.x, p_w.y, edge_colour);
 		}
 	}
 }
 
 // Draws a filled-in circle with fixed a radius at a node
 void draw_node(int colour, vertex* v){
-	Point p = {v->x, v->y};
-	draw_filled_circle(p, RADIUS, colour);
+	draw_filled_circle(get_vertex_xy(v), RADIUS, colour);
 }
 
 //TODO replace these with some hashmap thing
@@ -293,4 +291,16 @@ void print_names(graph* graph){
 		printf("%s\n", curr->name);
 		curr = curr->next;
 	}
+}
+
+Point get_vertex_xy(vertex* v){
+	Point p;
+	if (zoom_level == OUT){
+		p.x = v->zo_x;
+		p.y = v->zo_y;
+	} else {
+		p.x = v->zi_x;
+		p.y = v->zi_y;
+	}
+	return p;
 }

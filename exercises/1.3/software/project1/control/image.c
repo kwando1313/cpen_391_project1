@@ -5,6 +5,7 @@
 #include "misc_helpers.h"
 #include "image.h"
 #include "directions.h"
+#include "ColourPallette.h"
 
 extern const unsigned int ColourPalletteData[256];
 
@@ -133,7 +134,7 @@ void draw_image(Point topLeft, int xstart, int ystart){
  * 	Draw image again.
  * 	This code is written to not go past the edge of the image.
  */
-void move_img (int direction){
+void move_img (Direction direction){
 	if (direction == UP){
 		if (ystart > bmpHeight - DISPLAY_HEIGHT - SHIFT)
 			ystart = bmpHeight - DISPLAY_HEIGHT;

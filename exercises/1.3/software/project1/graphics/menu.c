@@ -89,8 +89,7 @@ void draw_information_box(char* text){
 
 	point8.x = 500;
 	point8.y = 0;
-	//255 is WHITE
-	draw_text_box(point8, 300, 200, 2, BLACK, 255, BLACK, text, SMALL);
+	draw_text_box(point8, 300, 200, 2, BLACK, WHITE, BLACK, text, SMALL);
 
 }
 
@@ -158,42 +157,41 @@ void draw_keyboard(Point leftCorner, int size){
 	while(topRow[x] != '\0'){
 		char* c = "A";
 		strncpy(c, &topRow[x], 1);
-		//255 is WHITE
-		draw_button(leftCorner, size, size, 1, BLACK, 255, BLACK, c, MEDIUM);
+		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
 		leftCorner.x += size;
 		x++;
 	}
-	draw_button(leftCorner, size, size, 1, BLACK, 255, BLACK, "<-", MEDIUM);
+	draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, "<-", MEDIUM);
 	x = 0;
 	leftCorner.x = initialLeftCorner.x;
 	leftCorner.y = initialLeftCorner.y + size;
 	while(homeRow[x] != '\0'){
 		char* c = "A";
 		strncpy(c, &homeRow[x], 1);
-		draw_button(leftCorner, size, size, 1, BLACK, 255, BLACK, c, MEDIUM);
+		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
 		leftCorner.x += size;
 		x++;
 	}
-	draw_button(leftCorner, 2*size, size, 1, BLACK, 255, BLACK, "ENTER", MEDIUM);
+	draw_button(leftCorner, 2*size, size, 1, BLACK, WHITE, BLACK, "ENTER", MEDIUM);
 	leftCorner.x = initialLeftCorner.x;
 	leftCorner.y = initialLeftCorner.y + 2*size;
 	x = 0;
 	while(bottomRow[x] != '\0'){
 		char* c = "A";
 		strncpy(c, &bottomRow[x], 1);
-		draw_button(leftCorner, size, size, 1, BLACK, 255, BLACK, c, MEDIUM);
+		draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, c, MEDIUM);
 		leftCorner.x += size;
 		x++;
 	}
-	draw_button(leftCorner, 2*size, size, 1, BLACK, 255, BLACK, "SPACE", MEDIUM);
+	draw_button(leftCorner, 2*size, size, 1, BLACK, WHITE, BLACK, "SPACE", MEDIUM);
 	leftCorner.x += 2*size;
-	draw_button(leftCorner, 2*size, size, 1, BLACK, 255, BLACK, "BACK", MEDIUM);
+	draw_button(leftCorner, 2*size, size, 1, BLACK, WHITE, BLACK, "BACK", MEDIUM);
 	return;
 }
 
 // Initialises the RHS of the screen (i.e everything but the map)
 void init_screen(){
-		clear_screen(255); // 255 is WHITE
+		clear_screen(WHITE);
 
 		Point point6 = {500, 380};
 		Point point7 = {650, 380}; //Adjust these to fit within the margins...
@@ -207,13 +205,13 @@ void init_screen(){
 
 		about_screen();
 
-		draw_menu(point6, 150, 50, 2, BLACK, 255, BLACK, SMALL, firstTextArray);
+		draw_menu(point6, 150, 50, 2, BLACK, WHITE, BLACK, SMALL, firstTextArray);
 
-		draw_menu(point7, 150, 50, 2, BLACK, 255, BLACK, SMALL, secondTextArray);
+		draw_menu(point7, 150, 50, 2, BLACK, WHITE, BLACK, SMALL, secondTextArray);
 
-		draw_menu(point8, 300, 50, 2 , BLACK, 255, BLACK, SMALL, thirdTextArray);
+		draw_menu(point8, 300, 50, 2 , BLACK, WHITE, BLACK, SMALL, thirdTextArray);
 
-		draw_menu(point9, 300, 130, 2 , BLACK, 255, BLACK, SMALL, fourthTextArray);
+		draw_menu(point9, 300, 130, 2 , BLACK, WHITE, BLACK, SMALL, fourthTextArray);
 
 		draw_arrows();
 
@@ -251,9 +249,9 @@ void pop_screen(){
 	char* t[] = {" ", ""};
 
 	//bounded in (0-500, 300-480)
-	draw_menu(p1, 500, 180, 2 , BLACK, 255, BLACK, SMALL, t);
+	draw_menu(p1, 500, 180, 2 , BLACK, WHITE, BLACK, SMALL, t);
 	//bounded in (0-500, 230-300)
-	draw_menu(p2, 500, 70, 2 , BLACK, 255, BLACK, SMALL, t);
+	draw_menu(p2, 500, 70, 2 , BLACK, WHITE, BLACK, SMALL, t);
 	//bounded in (30-470, 330-450)
 	draw_keyboard(p, 40);
 }
@@ -276,9 +274,9 @@ void match_screen(int sel, int mn_count){
 		nl = nl->next;
 
 		if(i != sel)
-			draw_menu(p, 300, incr, 2 , BLACK, 255, BLACK, SMALL, t);
+			draw_menu(p, 300, incr, 2 , BLACK, WHITE, BLACK, SMALL, t);
 		else if(i == sel)
-			draw_menu(p, 300, incr, 2 , 255, BLACK, 255, SMALL, t); // highlighted entry (i.e invert colors)
+			draw_menu(p, 300, incr, 2 , WHITE, BLACK, WHITE, SMALL, t); // highlighted entry (i.e invert colors)
 	}
 }
 
@@ -288,7 +286,7 @@ void map_screen(){
 
 }
 
-void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int direction){
+void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, Direction direction){
 	Point topRight = {topLeft.x + width, topLeft.y};
 	Point bottomLeft = {topLeft.x, topLeft.y + height};
 	Point bottomRight = {topLeft.x + width, topLeft.y + height};
@@ -315,7 +313,6 @@ void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borde
 		cornerThree.y = topLeft.y + height/2;
 	}
 	else if (direction == DOWN){
-
 		cornerOne.x = topLeft.x + width/3;
 		cornerOne.y = topLeft.y + height/3;
 		cornerTwo.x = topLeft.x + 2*width/3;
@@ -324,7 +321,6 @@ void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borde
 		cornerThree.y = topLeft.y + 2*height/3;
 	}
 	else{
-
 		cornerOne.x = topLeft.x + width/3;
 		cornerOne.y = topLeft.y + height/2;
 		cornerTwo.x = topLeft.x + 2*width/3;
@@ -343,12 +339,11 @@ void draw_arrows(){
 	Point UPOINT = {625, 210};
 	Point DPOINT = {625, 270};
 
-	// 255 is WHITE
-	draw_arrow(LPOINT, 50, 50, 1, BLACK, 255, LEFT);
+	draw_arrow(LPOINT, 50, 50, 1, BLACK, WHITE, LEFT);
 
-	draw_arrow(RPOINT, 50, 50, 1, BLACK, 255, RIGHT);
+	draw_arrow(RPOINT, 50, 50, 1, BLACK, WHITE, RIGHT);
 
-	draw_arrow(UPOINT, 50, 50, 1, BLACK, 255, UP);
+	draw_arrow(UPOINT, 50, 50, 1, BLACK, WHITE, UP);
 
-	draw_arrow(DPOINT, 50, 50, 1, BLACK, 255, DOWN);
+	draw_arrow(DPOINT, 50, 50, 1, BLACK, WHITE, DOWN);
 }

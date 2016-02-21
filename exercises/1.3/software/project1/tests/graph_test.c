@@ -6,7 +6,7 @@ int graph_test(void){
 	graph* g = init_graph(10);
 
 	for (int x = 0; x < 100; x++){
-		vertex* v = init_vertex(x, x, x, "TEST", x, x);
+		vertex* v = init_vertex(x, x, x, "TEST", x, x, x, x);
 		int id = add_vertex(g, v);
 		vertex* v2 = get_vertex(g, id);
 		if (v->id != v2->id){
@@ -55,7 +55,7 @@ int graph_test(void){
 	graph* g2 = init_graph(100);
 
 	for (int x = 0; x < 100; x++){
-		vertex* v = init_vertex(x, x, x, "TEST", x, x);
+		vertex* v = init_vertex(x, x, x, "TEST", x, x, x, x);
 		int id = add_vertex(g2, v);
 		vertex* v2 = get_vertex(g2, id);
 		if (v->id != v2->id){

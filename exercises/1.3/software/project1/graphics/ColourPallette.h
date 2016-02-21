@@ -2,22 +2,14 @@
 #define COLOURPALLETTE_H_
 
 // see --http://www.rapidtables.com/web/color/RGB_Color.htm for example colours
-//
-// Constants for each pallette number using the name for the colour can be found in the header file "Colours.h"
+// Constants for some pallette numbers are in "Colours.h"
 
-// Davies included this - what is it?
-// #include "General.h"
-
-//
 // this data represent the RGB values of all pallettes. It is set up in hardware in a ROM file in Quartus
 // but the software (C) version of the data is also given below and can be used
 // as a reference to the original data in graphics chip ROM
-//
+
 // when calling ProgramPallette() it is the hardware ROM on the FPGA that is programmed to display a different colour
 // not the table below which is constant
-//
-
-// Note that ~half of the values in this array are repeats. The start of this is marked below
 
 const unsigned int ColourPalletteData[256] = {
 		0x00000000,
@@ -272,10 +264,10 @@ const unsigned int ColourPalletteData[256] = {
 		0x00FF0000,
 		0x0000FF00,
 		0x00FFFF00,
-		0x000000FF,	// blue
-		0x00FF00FF,	// magenta
-		0x0000FFFF,	// cyan
-		0x00FFFFFF	// white
+		0x000000FF,
+		0x00FF00FF,
+		0x0000FFFF,
+		0x00FFFFFF
 };
 
 #endif /* COLOURPALLETTE_H_ */

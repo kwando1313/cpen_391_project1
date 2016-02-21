@@ -40,7 +40,7 @@ void handle_nodes(short file, graph* graph, hashmap* hashmap){
 		}
 		else if (c == ';' && y == 2){
 			y_coord = atoi(text);
-			vertex* v = init_vertex(x_coord, y_coord, 0, node_name, x_coord, y_coord);
+			vertex* v = init_vertex(x_coord, y_coord, 0, node_name, x_coord, y_coord, x_coord, y_coord);
 			int v_id = add_vertex(graph, v);
 			int node_key = keyify(v->name);
 			hashmapInsert(hashmap, v_id, node_key);

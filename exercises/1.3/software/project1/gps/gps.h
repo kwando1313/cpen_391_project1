@@ -2,10 +2,9 @@
 #define GPS_H_
 #include "altera_up_avalon_character_lcd.h"
 
-//TODO: some kind of error-handling
+// TODO: some kind of error-handling
 // if we lose gps connection, and stuck in a while loop,
 // is there a way to detect this?
-
 typedef struct __gps_data{
 	char time[11];
 	char lati[10];

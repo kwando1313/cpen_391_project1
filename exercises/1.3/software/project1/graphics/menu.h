@@ -2,6 +2,7 @@
 #define MENU_H_
 
 #include "graphics.h"
+#include "Directions.h"
 
 //button coords
 //info
@@ -52,12 +53,11 @@
 
 void draw_keyboard(Point leftCorner, int size);
 
-
 void draw_button(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize);
 void draw_menu(Point leftCorner, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, int fontSize, char* menuText[]);
 void draw_text_box(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize);
 void draw_information_box(char* text);
-void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int direction);
+void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, Direction direction);
 void draw_arrows();
 
 void about_screen();
