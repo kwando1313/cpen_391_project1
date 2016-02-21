@@ -252,6 +252,11 @@ void add_name(graph* graph, char* name){
 		return;
 	}
 
+name_list* get_names(graph* graph){
+	return graph->names_head;
+}
+
+void add_name(graph* graph, char* name){
 	name_list* new_name = malloc(sizeof(name_list));
 	new_name->name = strdup(name);
 	new_name->next = NULL;
