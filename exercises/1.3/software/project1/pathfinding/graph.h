@@ -7,7 +7,7 @@
 #include "image.h"
 
 #define DEFAULT_NUM_NEIGHBOURS 4
-#define DEFAULT_GRAPH_SIZE 32
+#define DEFAULT_GRAPH_SIZE 64
 
 typedef struct __name_list{
 	char* name;
@@ -66,8 +66,7 @@ typedef struct __graph {
     vertex** vertices;
 } graph;
 
-graph* graph_nodes;
-
+graph* full_map_graph;
 
 /* basics */
 graph* init_graph(int inital_num_vertices);

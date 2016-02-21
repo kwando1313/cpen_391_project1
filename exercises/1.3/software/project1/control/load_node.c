@@ -7,7 +7,6 @@
 #include <altera_up_sd_card_avalon_interface.h>
 #include "graphics.h"
 
-
 int keyify(char* name);
 
 void handle_nodes(short file, graph* graph){
@@ -118,17 +117,14 @@ void handle_edges(short file, graph* graph){
 }
 
 void handle_data(short file){
-	//clear_screen(255);
-	if (graph_nodes != NULL){
-		destroy_graph(graph_nodes);
+	if (full_map_graph != NULL){
+		printf("Replacing full_map_graph\n");
+		destroy_graph(full_map_graph);
 	}
-	graph_nodes = init_graph(DEFAULT_GRAPH_SIZE);
-	//hashmap* hashmap = hashmapCreate(DEFAULT_GRAPH_SIZE);
-	handle_nodes(file, graph_nodes);
-	handle_edges(file, graph_nodes);
-	//clear_screen(255);
-	draw_graph(graph_nodes, BLUE, RED);
-	printf("Graph loaded.\n");
+
+	full_map_graph = init_graph(DEFAULT_GRAPH_SIZE);
+	handle_nodes(file, full_map_graph);
+	handle_edges(file, full_map_graph);
 }
 
 int keyify(char* name){
