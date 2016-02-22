@@ -85,7 +85,7 @@ void add_matches(){
 		}
 		nl = nl->next;
 	}
-	print_nl(matched_names.head);
+	print_name_list(matched_names.head);
 	printf("%i\n", MN_COUNT);
 	match_screen(sel, MN_COUNT);
 }
@@ -140,7 +140,7 @@ void del_matches(){
 		curr = prev->next;
 	}
 
-	print_nl(matched_names.head);
+	print_name_list(matched_names.head);
 	printf("%i\n", MN_COUNT);
 	match_screen(sel, MN_COUNT);
 }
