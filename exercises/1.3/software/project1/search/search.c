@@ -59,45 +59,9 @@ bool is_matched(char* name){
 	return matches;
 }
 
-//// Initialise the head of the matched names if there is one and return the head
-//name_list* init_matches(name_list* nl){
-//	name_list* mn_h = matched_names.head = malloc(sizeof(name_list));
-//	mn_h = NULL;
-//
-//	while(nl != NULL){
-//		if(is_matched(nl->name)){
-//			mn_h->name = nl->name;
-//			mn_h->next = NULL;
-//			mn_count++;
-//			nl = nl->next;
-//			return mn_h;
-//		}
-//		nl = nl->next;
-//	}
-//
-//	return mn_h;
-//}
-
-///* Adds names that match; nl is the graph name list
-// * Pre: m_nl is matched and not NULL
-// */
-//void add_matches_helper(name_list* nl, name_list* m_nl){
-//	while(nl != NULL){
-//		if(is_matched(nl->name)){
-//			m_nl->next = nl;
-//			m_nl = m_nl->next;
-//			mn_count++;
-//		}
-//		nl = nl->next;
-//		//print_nl(nl);
-//	}
-//	m_nl->next = NULL;
-//}
-
 // Get all the names that match with the query string
 void add_matches(){
-	mn_count = 0;
-
+	sel = 1;
 	graph* graph = full_map_graph;
 	name_list* nl = get_names(graph);
 
@@ -118,53 +82,74 @@ void add_matches(){
 				curr->next = m_nl;
 			}
 			curr = m_nl;
-			mn_count++;
 		}
-			nl = nl->next;
+		nl = nl->next;
 	}
-	match_screen(sel, mn_count);
+	print_nl(matched_names.head);
+	printf("%i\n", MN_COUNT);
+	match_screen(sel, MN_COUNT);
 }
 
-/* Delete names that no longer match
- * Pre: nl is matched and not NULL
- */
-void del_matches_helper(name_list* nl){
-	if(nl->next == NULL)
-		return;
-
-	// Set the next matched name in the matched list
-	name_list* temp = nl->next;
-	while(!(is_matched(temp)) && temp != NULL){
-		temp = temp->next;
-		mn_count--;
-	}
-	nl->next = temp;
-
-	if(temp != NULL)
-		del_matches_helper(temp);
-}
+///* Delete names that no longer match
+// * Pre: nl is matched and not NULL
+// */
+//void del_matches_helper(name_list* nl){
+//	if(nl->next == NULL)
+//		return;
+//
+//	// Set the next matched name in the matched list
+//	name_list* curr = nl->next;
+//	printf("%s\n", curr->name);
+//	name_list* temp;
+//	while(curr != NULL && !(is_matched(curr))){
+//		temp = curr->next;
+//		//print_nl(curr);
+//		free(curr);
+//		curr = temp;
+//	}
+//	nl->next = curr;
+//
+//	if(curr != NULL)
+//		del_matches_helper(curr);
+//}
 
 void del_matches(){
-	name_list* m_nl = matched_names.head;
+	sel = 1;
+	name_list* curr = matched_names.head;
+	name_list* prev;
+	name_list* temp;
 
 	// Updates the head to be the first match in matched list
-	while(!(is_matched(m_nl->name)) && m_nl != NULL ){
-		m_nl = m_nl->next;
-		mn_count--;
+	while(curr != NULL && !(is_matched(curr->name)) ){
+		temp = curr->next;
+		free(curr);
+		curr = temp;
+	}
+	matched_names.head = curr;
+	prev = curr;
+	curr = curr->next;
+
+	while(curr != NULL){
+		if(!is_matched(curr->name)){
+			prev->next = curr->next;
+			free(curr);
+		}
+		else{
+			prev = prev->next;
+		}
+		curr = prev->next;
 	}
 
-	matched_names.head = m_nl;
-
-	if(m_nl != NULL)
-		del_matches_helper(&m_nl);
-
-	match_screen(sel, mn_count);
+	print_nl(matched_names.head);
+	printf("%i\n", MN_COUNT);
+	match_screen(sel, MN_COUNT);
 }
 
 void destroy_matches(){
 	name_list* nl = matched_names.head;
+	name_list* temp;
 	while(nl != NULL){
-		name_list* temp = nl->next;
+		temp = nl->next;
 		free(nl);
 		nl = temp;
 	}
@@ -172,6 +157,16 @@ void destroy_matches(){
 
 // Search ready to be entered if we have at least one matching entry
 bool ready(){
-	return(mn_count > 0);
+	return(MN_COUNT > 0);
+}
+
+// Return the number of names in the name list
+int mn_count(name_list* nl){
+	int count = 0;
+	while(nl != NULL){
+		nl = nl->next;
+		count++;
+	}
+	return count;
 }
 

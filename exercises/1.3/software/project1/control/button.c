@@ -209,6 +209,7 @@ Button* get_s_button(Point p){
 			}
 		}
 	}
+
 	printf("Invalid button\n");
 	return NULL;
 }
@@ -227,21 +228,34 @@ Button* get_kb_button(Point p){
 				return NULL;
 			}
 		}
-
 	}
-
 	// North and South buttons used in search mode to select matching search entry
-	for(int j = N_KEYS-2; j < N_KEYS; j++){
+	if(falls_inside(p, NORTH_BUTT)){
 		Point p_f = GetRelease();
 		printf("Released Coordinates: (%i, %i)\n", p_f.x, p_f.y);
 
-		if(falls_inside(p_f, keyboard[j])){
-			return &keyboard[j];
+		if(falls_inside(p_f, NORTH_BUTT)){
+			return &NORTH_BUTT;
 		}
-		else
+		else{
+			printf("Invalid button\n");
 			return NULL;
+		}
+	}
+	else if(falls_inside(p, SOUTH_BUTT)){
+		Point p_f = GetRelease();
+		printf("Released Coordinates: (%i, %i)\n", p_f.x, p_f.y);
+
+		if(falls_inside(p_f, SOUTH_BUTT)){
+			return &SOUTH_BUTT;
+		}
+		else{
+			printf("Invalid button\n");
+			return NULL;
+		}
 	}
 
+	printf("Invalid button\n");
 	return NULL;
 }
 
@@ -328,26 +342,28 @@ void do_south(){
 
 // Select the search match entry above the current selected
 void do_up(char key){
-	printf("%c is up", key);
-	if(mn_count < SEARCH_THRESHHOLD)
+	printf("%c is up\n", key);
+	if(MN_COUNT < SEARCH_THRESHHOLD)
 		return;
 	if(sel > 1)
 		sel--;
 	else
-		sel = mn_count;
-	match_screen(sel, mn_count);
+		sel = MN_COUNT;
+	printf("sel moved up to %i\n", sel);
+	match_screen(sel, MN_COUNT);
 }
 
 // Select the search match entry below the current selected
 void do_down(char key){
-	printf("%c is down", key);
-	if(mn_count < SEARCH_THRESHHOLD)
+	printf("%c is down\n", key);
+	if(MN_COUNT < SEARCH_THRESHHOLD)
 		return;
-	if(sel < mn_count)
+	if(sel < MN_COUNT)
 		sel++;
 	else
 		sel = 1;
-	match_screen(sel, mn_count);
+	printf("sel moved down to %i\n", sel);
+	match_screen(sel, MN_COUNT);
 }
 
 // Pop up the keyboard
@@ -363,6 +379,9 @@ void do_key(char key){
 
 	/* Ignore the matcher if the string query length is below the threshhold to provide matchings
 	   Update and delete matches when we add letters */
+	if(qs_length() < SEARCH_THRESHHOLD){
+		draw_information_box("ENTER YOUR SEARCH!");
+	}
 	if(qs_length() > SEARCH_THRESHHOLD){
 		del_matches();
 	}
@@ -377,6 +396,9 @@ void do_del(){
 
 	/* Ignore the matcher if the string query is below the threshhold
 	   Update and add matches when we delete letters  */
+	if(qs_length() < SEARCH_THRESHHOLD){
+		draw_information_box("ENTER YOUR SEARCH!");
+	}
 	if(qs_length() >= SEARCH_THRESHHOLD){
 		add_matches();
 	}
@@ -403,6 +425,6 @@ void do_back(){
 	reset_query();
 	destroy_matches();
 
-	about_screen();
-	map_screen();
+	init_screen();
+	//map_screen();
 }

@@ -285,4 +285,5 @@ void print_name_list(name_list* nl){
 		printf("%s\n", nl->name);
 		nl = nl->next;
 	}
+	printf("\n");
 }

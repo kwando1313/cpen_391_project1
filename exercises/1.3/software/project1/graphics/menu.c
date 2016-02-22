@@ -206,6 +206,13 @@ void directions_screen(){
 	draw_information_box("DIRECTIONS");
 }
 
+void zoom_screen(){
+//	char* name = "PIC.BMP";
+//	Point point = {500, 0};
+//	load_image(point, name, 330, 300);
+	draw_information_box("ZOOMING");
+}
+
 // draw the pop up keyboard on the LHS of the screen
 void pop_screen(){
 	draw_information_box("ENTER YOUR SEARCH!");
@@ -225,6 +232,11 @@ void pop_screen(){
 
 // draw the names matched with the query string and highlight the current chosen entry
 void match_screen(int sel, int mn_count){
+	if(mn_count == 0){
+		draw_information_box("NO SEARCH RESULTS FOUND");
+		return;
+	}
+
 	char* t[2];
 	Point p;
 
