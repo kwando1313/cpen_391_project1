@@ -9,7 +9,6 @@
 #include <string.h>
 #include "graph.h"
 
-
 // Reset the query string to be empty
 void reset_query(){
 	sel = 1;
@@ -89,29 +88,6 @@ void add_matches(){
 	printf("%i\n", MN_COUNT);
 	match_screen(sel, MN_COUNT);
 }
-
-///* Delete names that no longer match
-// * Pre: nl is matched and not NULL
-// */
-//void del_matches_helper(name_list* nl){
-//	if(nl->next == NULL)
-//		return;
-//
-//	// Set the next matched name in the matched list
-//	name_list* curr = nl->next;
-//	printf("%s\n", curr->name);
-//	name_list* temp;
-//	while(curr != NULL && !(is_matched(curr))){
-//		temp = curr->next;
-//		//print_nl(curr);
-//		free(curr);
-//		curr = temp;
-//	}
-//	nl->next = curr;
-//
-//	if(curr != NULL)
-//		del_matches_helper(curr);
-//}
 
 void del_matches(){
 	sel = 1;
