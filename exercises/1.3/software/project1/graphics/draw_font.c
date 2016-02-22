@@ -1,5 +1,6 @@
 #include "graphics.h"
 #include "fonts.h"
+#include "FontSize.h"
 
 /*************************************************************************************************
 ** This function draws a single ASCII character at the coord and colour specified
@@ -10,6 +11,40 @@
 ** character to the background colour
 **
 *************************************************************************************************/
+
+void OutGraphicsCharFont1(int x, int y, int fontcolour, int backgroundcolour, int c, int Erase);
+void OutGraphicsCharFont2a(int x, int y, int fontcolour, int backgroundcolour, int c, int Erase);
+
+void draw_font(int x, int y, int fontcolour, int backgroundcolour, int c, int Erase, FontSize size){
+	//turn into switch/case if we add more fonts
+	if (size == SMALL){
+		OutGraphicsCharFont1(x, y, fontcolour, backgroundcolour, c, Erase);
+	} else if(size == MEDIUM){
+		OutGraphicsCharFont2a(x, y, fontcolour, backgroundcolour, c, Erase);
+	}
+}
+
+int get_font_width(FontSize size){
+	//turn into switch/case if we add more fonts
+	if (size == SMALL){
+		return 5;
+	} else if(size == MEDIUM){
+		return 10;
+	}
+
+	return -1;
+}
+int get_font_height(FontSize size){
+	//turn into switch/case if we add more fonts
+	if (size == SMALL){
+		return 7;
+	} else if(size == MEDIUM){
+		return 14;
+	}
+
+	return -1;
+}
+
 void OutGraphicsCharFont1(int x, int y, int fontcolour, int backgroundcolour, int c, int Erase)
 {
 // using register variables (as opposed to stack based ones) may make execution faster

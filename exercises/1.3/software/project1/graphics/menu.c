@@ -12,7 +12,7 @@
 
 //Text box is left aligned and has text wrapping
 void draw_text_box(Point topLeft, int width, int height, int borderWidth,
-		int borderColour, int fillColour, int textColour, char* text, int fontSize){
+		int borderColour, int fillColour, int textColour, char* text, FontSize fontSize){
 	Point topRight = {topLeft.x + width, topLeft.y};
 	Point bottomLeft = {topLeft.x, topLeft.y + height};
 	Point bottomRight = {topLeft.x + width, topLeft.y + height};
@@ -21,8 +21,8 @@ void draw_text_box(Point topLeft, int width, int height, int borderWidth,
 	int initialX = topLeft.x + 10; //give 10 pixels margin
 	int initialY = topLeft.y + 10; //May make this an adjustable variable
 
-	int fontSizePixelsWidth = (fontSize == MEDIUM ? 10 : 5);
-	int fontSizePixelsHeight = (fontSize == MEDIUM ? 14 : 7);
+	int fontSizePixelsWidth = get_font_width(fontSize);
+	int fontSizePixelsHeight = get_font_height(fontSize);
 
 	char* temp_text;
 	strcpy(temp_text, text);
@@ -40,20 +40,10 @@ void draw_text_box(Point topLeft, int width, int height, int borderWidth,
 				initialX = topLeft.x + 4;
 				initialY = initialY + fontSizePixelsHeight + 1;
 			}
-			if (fontSize == MEDIUM){
-				OutGraphicsCharFont2a(initialX, initialY, textColour, textColour, (int)token[x], 0);
-			}
-			else {
-				OutGraphicsCharFont1(initialX, initialY, textColour, textColour, (int)token[x], 0);
-			}
+			draw_font(initialX, initialY, textColour, textColour, (int)token[x], 0, fontSize);
 			initialX = initialX + fontSizePixelsWidth + 1;
 		}
-		if (fontSize == MEDIUM){
-			OutGraphicsCharFont2a(initialX, initialY, textColour, textColour, (int)" ", 0);
-		}
-		else {
-			OutGraphicsCharFont1(initialX, initialY, textColour, textColour, (int)" ", 0);
-		}
+		draw_font(initialX, initialY, textColour, textColour, (int)" ", 0, fontSize);
 		initialX = initialX + fontSizePixelsWidth + 1;
 		token = strtok(NULL, " ");
 	}
@@ -71,7 +61,8 @@ void draw_information_box(char* text){
 }
 
 //button is center aligned and has no text wrapping
-void draw_button(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize){
+void draw_button(Point topLeft, int width, int height, int borderWidth,
+		int borderColour, int fillColour, int textColour, char* text, FontSize fontSize){
 	int textLength = (int) strlen(text);
 
 	Point topRight = {topLeft.x + width, topLeft.y};
@@ -79,40 +70,22 @@ void draw_button(Point topLeft, int width, int height, int borderWidth, int bord
 	Point bottomRight = {topLeft.x + width, topLeft.y + height};
 
 	draw_filled_rectangle_border(topLeft, topRight, bottomLeft, bottomRight, fillColour, borderColour, borderWidth);
-	int initialX = 0;
-	int initialY = 0;
 
+	int fontSizePixelsWidth = get_font_width(fontSize);
+	int fontSizePixelsHeight = get_font_height(fontSize);
 
-	int fontSizePixelsWidth = 5;
-	int fontSizePixelsHeight = 7;
-
-	if (fontSize == MEDIUM){
-		fontSizePixelsWidth = 10;
-		fontSizePixelsHeight = 14;
-	}
-
-	if (textLength %2 == 0){
-		initialX = topLeft.x + width/2 - (textLength * (fontSizePixelsWidth + 1))/2;
-	}
-	else {
-		initialX = topLeft.x + width/2 - (textLength * (fontSizePixelsWidth + 1))/2;
-	}
-
-	initialY = topLeft.y + height/2 - fontSizePixelsHeight/2;
+	int initialX = topLeft.x + width/2 - (textLength * (fontSizePixelsWidth + 1))/2;
+	int initialY = topLeft.y + height/2 - fontSizePixelsHeight/2;
 
 	for (int x = 0; x < textLength; x++){
-		if (fontSize == MEDIUM){
-			OutGraphicsCharFont2a(initialX, initialY, textColour, textColour, (int)text[x], 0);
-		}
-		else {
-			OutGraphicsCharFont1(initialX, initialY, textColour, textColour, (int)text[x], 0);
-		}
+		draw_font(initialX, initialY, textColour, textColour, (int)text[x], 0, fontSize);
 		initialX = initialX + fontSizePixelsWidth + 1;
 	}
 }
 
 //menu is buttons from top down
-void draw_menu(Point leftCorner, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, int fontSize, char** menuText){
+void draw_menu(Point leftCorner, int width, int height, int borderWidth,
+		int borderColour, int fillColour, int textColour, FontSize fontSize, char** menuText){
 	int x = 0;
 	while (menuText[x] != ""){
 		draw_button(leftCorner, width, height, borderWidth, borderColour, fillColour, textColour, menuText[x], fontSize);

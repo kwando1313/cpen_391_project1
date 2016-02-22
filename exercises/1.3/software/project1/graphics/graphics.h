@@ -54,8 +54,9 @@ void clear_screen(int colour);
 
 /************************* Others **************************************/
 void Fill(int _x, int _y, int _FillColour, int _BoundaryColour);
-void OutGraphicsCharFont1(int x, int y, int fontcolour, int backgroundcolour, int c, int Erase);
-void OutGraphicsCharFont2a(int x, int y, int colour, int backgroundcolour, int c, int Erase);
+void draw_font(int x, int y, int colour, int backgroundcolour, int c, int Erase, FontSize size);
+int get_font_width(FontSize size);
+int get_font_height(FontSize size);
 
 //useless methods
 void LineSW(int x1, int y1, int x2, int y2, int Colour);
