@@ -61,8 +61,6 @@ void get_header (short file, int zoom){
 	image_width[zoom] = bmpWidth;
 	image_height[zoom] = bmpHeight;
 
-	printf("bmp width: %d, bmp height: %d\n", bmpWidth, bmpHeight);
-
 	image_pixels[zoom] = malloc(sizeof(char*)*bmpWidth);
 	for(int i = 0; i<bmpWidth; i++){
 		image_pixels[zoom][i] = malloc(sizeof(char)*bmpHeight);
@@ -93,7 +91,6 @@ void get_pixels(short file, int zoom){
 }
 
 void clear_extra_map_space(int height, int width){
-	printf("clear extra: %d, %d\n", height, width);
 	for (int y = height; y<DISPLAY_HEIGHT; y++){
 		HLine(0, y, DISPLAY_WIDTH, WHITE);
 	}
@@ -120,7 +117,7 @@ void draw_image(Point start){
 				x++;
 				colour2 = image_pixels[zoom_level][start.x+x][start.y+y];
 			}
-			HLine(initialX, height - y, x - initialX, (int)colour);
+			HLine(initialX, height - y - 1, x - initialX, (int)colour);
 			x--;
 		}
 	}
