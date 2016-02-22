@@ -83,12 +83,12 @@ void s_listen(){
 			Button* butt;
 			do{
 				Point p_i = GetPress();
-				printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
+				//printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
 				butt = get_s_button(p_i);
 			}
 			while(butt == NULL);
-			printf("%c: ", butt->key);
-			printf("%i\n", butt->id);
+//			printf("%c: ", butt->key);
+//			printf("%i\n", butt->id);
 			butt->p();
 		}
 }

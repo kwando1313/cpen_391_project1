@@ -9,13 +9,7 @@
 
 extern const unsigned int ColourPalletteData[256];
 
-Point start = {0,0};
-int startx = 0, ystart = 0;
-
-Point ret_start_points(void){
-	Point ret = {start.x, ystart};
-	return ret;
-}
+Point curr_image_pos = {0,0};
 
 void load_zoom_in_pixels(short file);
 void load_zoom_out_pixels(short file);
@@ -105,6 +99,8 @@ void draw_image(Point start){
 	int height = (image_height[zoom_level] < DISPLAY_HEIGHT) ? image_height[zoom_level] : DISPLAY_HEIGHT;
 	int width = (image_width[zoom_level] < DISPLAY_WIDTH) ? image_width[zoom_level]: DISPLAY_WIDTH;
 
+	printf("startx: %d, starty: %d\n", start.x, start.y);
+
 	for (int y = 0; y < height; y++){
 		for (int x = 0; x < width; x++){
 			int initialX = x;
@@ -127,31 +123,31 @@ void draw_image(Point start){
  */
 void move_img (Direction direction){
 	if (direction == UP){
-		if (ystart > image_height[zoom_level] - DISPLAY_HEIGHT - SHIFT)
-			ystart = image_height[zoom_level] - DISPLAY_HEIGHT;
-		else ystart += SHIFT;
+		if (curr_image_pos.y > image_height[zoom_level] - DISPLAY_HEIGHT - SHIFT)
+			curr_image_pos.y = image_height[zoom_level] - DISPLAY_HEIGHT;
+		else curr_image_pos.y += SHIFT;
 		printf ("UP\n");
 	}
 	else if (direction == DOWN){
-		if (ystart < SHIFT)
-			ystart = 0;
-		else ystart -= SHIFT;
+		if (curr_image_pos.y < SHIFT)
+			curr_image_pos.y = 0;
+		else curr_image_pos.y -= SHIFT;
 		printf ("DOWN\n");
 
 	}
 	else if (direction == RIGHT){
-		if (start.x > image_width[zoom_level] - DISPLAY_WIDTH - SHIFT)
-			start.x = image_width[zoom_level] - DISPLAY_WIDTH;
-		else start.x += SHIFT;
+		if (curr_image_pos.x > image_width[zoom_level] - DISPLAY_WIDTH - SHIFT)
+			curr_image_pos.x = image_width[zoom_level] - DISPLAY_WIDTH;
+		else curr_image_pos.x += SHIFT;
 		printf ("RIGHT\n");
 	}
 	else if (direction == LEFT){
-		if (start.x < SHIFT)
-			start.x = 0;
-		else start.x -= SHIFT;
+		if (curr_image_pos.x < SHIFT)
+			curr_image_pos.x = 0;
+		else curr_image_pos.x -= SHIFT;
 		printf ("LEFT\n");
 	}
-	Point printStart = ret_start_points ();
-	printf ("%d, %d", printStart.x, printStart.y);
-	draw_image(printStart);
+
+	printf ("curr_image_pos: %d, %d\n", curr_image_pos.x, curr_image_pos.y);
+	draw_image(curr_image_pos);
 }

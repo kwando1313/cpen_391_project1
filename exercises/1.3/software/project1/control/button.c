@@ -198,7 +198,7 @@ Button* get_s_button(Point p){
 	for(int i = KB_KEYS; i < N_KEYS; i++){
 		if(falls_inside(p, keyboard[i])){
 			Point p_f = GetRelease();
-			printf("Released Coordinates: (%i, %i)\n", p_f.x, p_f.y);
+			//printf("Released Coordinates: (%i, %i)\n", p_f.x, p_f.y);
 
 			if(falls_inside(p_f, keyboard[i])){
 				return &keyboard[i];
