@@ -281,6 +281,9 @@ gps_data* init_gps_data (void){
 	return data;
 }
 
+// call this to convert from the lat/long from gps to the lat/long used by the graph
+// latitude of everything on ubc is 49.xxxxxx, longitude is -123.xxxxxx
+// therefore, we only care about the 6 digits after the decimal for both
 void degrees_to_graph(double lati, double longi, int *latitude, int * longitude){
 	double tempLong;
 	double tempLat;

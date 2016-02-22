@@ -9,8 +9,6 @@
 adjacencyList* init_adjList(void);
 void add_directed_edge(adjacencyList* adjList, int vertex_id, cost cost);
 bool remove_directed_edge(adjacencyList* adjList, int vertex_id);
-int make_latitude_usable(float latitude);
-int make_longitude_usable(float latitude);
 void add_name(graph* graph, char* name);
 
 graph* init_graph(int inital_max_vertices){
@@ -228,22 +226,6 @@ vertex* find_vertex_by_coords(graph* graph, int latitude, int longitude){
 	}
 
 	return min_v;
-}
-
-// call these to convert from the lat/long from gps to the lat/long used by the graph
-// latitude of everything on ubc is 49.xxxxxx
-// therefore, we only care about the 6 digits after the decimal
-int make_latitude_usable(float latitude){
-	int lat_i = latitude * GPS_MULTIPLIER;
-	lat_i = lat_i % (int)GPS_MULTIPLIER;
-	return lat_i;
-}
-
-//longitude of everything on ubc is 123.xxxxxx
-int make_longitude_usable(float longitude){
-	int long_i = longitude * GPS_MULTIPLIER;
-	long_i = long_i % (int)GPS_MULTIPLIER;
-	return long_i;
 }
 
 name_list* get_names(graph* graph){
