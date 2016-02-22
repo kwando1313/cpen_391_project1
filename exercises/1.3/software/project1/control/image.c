@@ -9,22 +9,11 @@
 
 extern const unsigned int ColourPalletteData[256];
 
-/*
- * 	DISPLAY_HEIGHT 	: Height of the box we print our image.
- * 	DISPLAY_WIDTH 	: Width of the box we print our image.
- * 	COLOURTABLESIZE : size of colour table containing 256 colours (with BGRA fields)
- * 	SHIFT			: how much picture shifts on each
- */
-#define DISPLAY_HEIGHT	480
-#define DISPLAY_WIDTH 	500
-#define COLOURTABLESIZE 1024
-#define SHIFT 30
-
-int xstart = 0, ystart = 0;
 Point start = {0,0};
+int startx = 0, ystart = 0;
 
 Point ret_start_points(void){
-	Point ret = {xstart, ystart};
+	Point ret = {start.x, ystart};
 	return ret;
 }
 
@@ -112,21 +101,21 @@ void get_pixels(short file, int zoom){
  * We're picking the top left point to start from
  * but actually draw from the bottom left first.
  */
-void draw_image(Point topLeft, int xstart, int ystart){
+void draw_image(Point start){
 	int height = (image_height[zoom_level] < DISPLAY_HEIGHT) ? image_height[zoom_level] : DISPLAY_HEIGHT;
 	int width = (image_width[zoom_level] < DISPLAY_WIDTH) ? image_width[zoom_level]: DISPLAY_WIDTH;
 
 	for (int y = 0; y < height; y++){
 		for (int x = 0; x < width; x++){
 			int initialX = x;
-			char colour = image_pixels[zoom_level][xstart + x][ystart + y];
-			char colour2 = image_pixels[zoom_level][xstart + x][ystart + y];
+			char colour = image_pixels[zoom_level][start.x + x][start.y + y];
+			char colour2 = image_pixels[zoom_level][start.x + x][start.y + y];
 
 			while (colour == colour2 && x < width){
 				x++;
-				colour2 = image_pixels[zoom_level][xstart+x][ystart+y];
+				colour2 = image_pixels[zoom_level][start.x+x][start.y+y];
 			}
-			HLine(topLeft.x + initialX, topLeft.y + height - y, x - initialX, (int)colour);
+			HLine(initialX, height - y, x - initialX, (int)colour);
 			x--;
 		}
 	}
@@ -151,18 +140,18 @@ void move_img (Direction direction){
 
 	}
 	else if (direction == RIGHT){
-		if (xstart > image_width[zoom_level] - DISPLAY_WIDTH - SHIFT)
-			xstart = image_width[zoom_level] - DISPLAY_WIDTH;
-		else xstart += SHIFT;
+		if (start.x > image_width[zoom_level] - DISPLAY_WIDTH - SHIFT)
+			start.x = image_width[zoom_level] - DISPLAY_WIDTH;
+		else start.x += SHIFT;
 		printf ("RIGHT\n");
 	}
 	else if (direction == LEFT){
-		if (xstart < SHIFT)
-			xstart = 0;
-		else xstart -= SHIFT;
+		if (start.x < SHIFT)
+			start.x = 0;
+		else start.x -= SHIFT;
 		printf ("LEFT\n");
 	}
 	Point printStart = ret_start_points ();
 	printf ("%d, %d", printStart.x, printStart.y);
-	draw_image(start, printStart.x, printStart.y);
+	draw_image(printStart);
 }

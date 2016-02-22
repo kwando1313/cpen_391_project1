@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <math.h>
 #include "misc_helpers.h"
 #include "button.h"
@@ -98,11 +99,11 @@ void init_s_button(char key, int id){
 	break;
 
 	case 32:
-		PHOTO_BUTT.top = PT;
-		PHOTO_BUTT.bottom = PB;
-		PHOTO_BUTT.left = PL;
-		PHOTO_BUTT.right = PR;
-		PHOTO_BUTT.p = do_photo;
+		ZOOM_BUTT.top = PT;
+		ZOOM_BUTT.bottom = PB;
+		ZOOM_BUTT.left = PL;
+		ZOOM_BUTT.right = PR;
+		ZOOM_BUTT.p = do_zoom;
 	break;
 
 	case 33:
@@ -271,11 +272,25 @@ void do_dir(){
 
 }
 
-// Display photo of the next node touched
-void do_photo(void* nothing){
-	// TODO: Need to load up a photo for each node
-	photo_screen();
-	//int node = get_node();
+//Toggle between zoom in and zoom out
+void do_zoom(){
+	Point sel = {0,0};
+	if (zoom_level == ZOOM_IN){
+		zoom_level = ZOOM_OUT;
+	}
+	else {
+		zoom_level = ZOOM_IN;
+		sel = GetPress();
+		if(sel.x < DISPLAY_WIDTH/2)
+			sel.x = DISPLAY_WIDTH/2;
+		else if(sel.x > image_width[ZOOM_IN] - (DISPLAY_WIDTH/2))
+			sel.x = image_width[ZOOM_IN]  - (DISPLAY_WIDTH/2);
+		else if(sel.y < DISPLAY_HEIGHT/2)
+			sel.y = DISPLAY_HEIGHT/2;
+		else if(sel.y > image_height[ZOOM_IN] - (DISPLAY_HEIGHT/2))
+			sel.y = image_height[ZOOM_IN] - (DISPLAY_HEIGHT/2);
+	}
+	draw_image(sel);
 }
 
 // Display app about
@@ -285,22 +300,30 @@ void do_about(void* nothing){
 
 // Translate the map left
 void do_west(){
-	move_img (LEFT);
+	if (zoom_level == ZOOM_IN){
+		move_img (LEFT);
+	}
 }
 
 // Translate the map east
 void do_east(){
-	move_img (RIGHT);
+	if (zoom_level == ZOOM_IN){
+		move_img (RIGHT);
+	}
 }
 
 // Translate the map north
 void do_north(){
-	move_img (UP);
+	if (zoom_level == ZOOM_IN){
+		move_img (UP);
+	}
 }
 
 // Translate the map south
 void do_south(){
-	move_img (DOWN);
+	if (zoom_level == ZOOM_IN){
+		move_img (DOWN);
+	}
 }
 
 // Select the search match entry above the current selected
