@@ -37,15 +37,15 @@ int graph_test(void){
 			return -1;
 		}
 		if (vertex_has_edge(v1, v2->id)){
-			printf("\nTest failed: Vertex has edge.");
+			printf("\nTest failed: Vertex does not have edge.");
 			return -1;
 		}
 		if (vertex_has_edge(v2, v1->id)){
-			printf("\nTest failed: Vertex has edge.");
+			printf("\nTest failed: Vertex does not have edge.");
 			return -1;
 		}
 		if (graph_has_edge(g, v1->id, v2->id)){
-			printf("\nTest failed: Vertex has edge.");
+			printf("\nTest failed: Vertex does not have edge.");
 			return -1;
 		}
 
@@ -86,15 +86,15 @@ int graph_test(void){
 			return -1;
 		}
 		if (vertex_has_edge(v1, v2->id)){
-			printf("\nTest failed: Vertex has edge.");
+			printf("\nTest failed: Vertex does not have edge.");
 			return -1;
 		}
 		if (vertex_has_edge(v2, v1->id)){
-			printf("\nTest failed: Vertex has edge.");
+			printf("\nTest failed: Vertex does not have edge.");
 			return -1;
 		}
-		if (graph_has_edge(g2, v1->id, v2->id)){
-			printf("\nTest failed: Vertex has edge.");
+		if (graph_has_edge(g, v1->id, v2->id)){
+			printf("\nTest failed: Vertex does not have edge.");
 			return -1;
 		}
 	}
