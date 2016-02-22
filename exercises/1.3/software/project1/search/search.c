@@ -96,8 +96,7 @@ bool is_matched(char* name){
 
 // Get all the names that match with the query string
 void add_matches(){
-	mn_count = 0;
-
+	sel = 1;
 	graph* graph = get_graph();
 	name_list* nl = get_names(graph);
 
@@ -106,23 +105,24 @@ void add_matches(){
 	name_list* curr;
 
 	while(nl != NULL){
-			if(is_matched(nl->name)){
-				m_nl = malloc(sizeof(name_list));
-				m_nl->name = nl->name;
-				m_nl->next = NULL;
+		if(is_matched(nl->name)){
+			m_nl = malloc(sizeof(name_list));
+			m_nl->name = nl->name;
+			m_nl->next = NULL;
 
-				if(matched_names.head == NULL){
-					matched_names.head = m_nl;
-				}
-				else{
-					curr->next = m_nl;
-				}
-				curr = m_nl;
-				mn_count++;
+			if(matched_names.head == NULL){
+				matched_names.head = m_nl;
 			}
-			nl = nl->next;
+			else{
+				curr->next = m_nl;
+			}
+			curr = m_nl;
 		}
-	match_screen(sel, mn_count);
+		nl = nl->next;
+	}
+	print_nl(matched_names.head);
+	printf("%i\n", MN_COUNT);
+	match_screen(sel, MN_COUNT);
 }
 
 /* Delete names that no longer match
@@ -136,7 +136,6 @@ void del_matches_helper(name_list* nl){
 	name_list* temp = nl->next;
 	while(!(is_matched(temp)) && temp != NULL){
 		temp = temp->next;
-		mn_count--;
 	}
 	nl->next = temp;
 
@@ -145,26 +144,29 @@ void del_matches_helper(name_list* nl){
 }
 
 void del_matches(){
+	sel = 1;
 	name_list* m_nl = matched_names.head;
+	name_list* temp;
 
 	// Updates the head to be the first match in matched list
 	while(!(is_matched(m_nl->name)) && m_nl != NULL ){
-		m_nl = m_nl->next;
-		mn_count--;
+		temp = m_nl->next;
+		free(m_nl);
+		m_nl = temp;
 	}
 
-	matched_names.head = m_nl;
-
 	if(m_nl != NULL)
-		del_matches_helper(&m_nl);
-
-	match_screen(sel, mn_count);
+		del_matches_helper(m_nl);
+	print_nl(matched_names.head);
+	printf("%i\n", MN_COUNT);
+	match_screen(sel, MN_COUNT);
 }
 
 void destroy_matches(){
 	name_list* nl = matched_names.head;
+	name_list* temp;
 	while(nl != NULL){
-		name_list* temp = nl->next;
+		temp = nl->next;
 		free(nl);
 		nl = temp;
 	}
@@ -172,6 +174,16 @@ void destroy_matches(){
 
 // Search ready to be entered if we have at least one matching entry
 bool ready(){
-	return(mn_count > 0);
+	return(MN_COUNT > 0);
+}
+
+// Return the number of names in the name list
+int mn_count(name_list* nl){
+	int count = 0;
+	while(nl != NULL){
+		nl = nl->next;
+		count++;
+	}
+	return count;
 }
 

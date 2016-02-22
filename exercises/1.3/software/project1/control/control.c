@@ -65,8 +65,8 @@ int get_valid_vertex(graph* graph, Point p){
 // Returns whether a button is a keyboard button or not
 bool is_kb_butt(Button* butt){
 	if(butt->id < KB_KEYS)
-		return 1;
-	return 0;
+		return true;
+	return false;
 }
 
 // Listen for button inputs

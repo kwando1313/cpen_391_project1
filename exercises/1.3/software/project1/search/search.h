@@ -18,8 +18,8 @@ typedef struct matched_list{
 
 char query_string[MAX_CHAR];
 matched_list matched_names;
-int mn_count; // number of matched names
 int sel; // selected index of matched_names
+#define MN_COUNT mn_count(matched_names.head)
 
 // fcns for query string
 void reset_query();
@@ -38,5 +38,6 @@ void del_matches_helper(name_list* nl);
 void destroy_matches();
 bool is_matched(char name[]);
 bool ready();
+int mn_count();
 
 #endif /* SEARCH_H_ */

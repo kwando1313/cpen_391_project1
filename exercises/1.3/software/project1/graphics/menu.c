@@ -448,6 +448,11 @@ void pop_screen(){
 
 // draw the names matched with the query string and highlight the current chosen entry
 void match_screen(int sel, int mn_count){
+	if(mn_count == 0){
+		draw_information_box("NO SEARCH RESULTS FOUND");
+		return;
+	}
+
 	char* t[2];
 	Point p;
 
