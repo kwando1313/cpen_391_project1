@@ -10,20 +10,12 @@
 int keyify(char* name);
 
 void handle_nodes(short file, graph* graph){
-	char c = "";
-	int x = 0;
+	char c;
 	int y = 0;
 	short data = 0;
-	char* node_name = "A";
-	int x_zoomed_in_coord = 0;
-	int y_zoomed_in_coord = 0;
-	int	x_zoomed_out_coord = 0;
-	int y_zoomed_out_coord = 0;
-	int altitude = 0;
-	int longitude = 0;
-	int latitude = 0;
 
-	char* text = "";
+	char arr[8][30];
+	char* text;
 	while(data >= 0){
 		data = alt_up_sd_card_read(file);
 		c = (char)data;
@@ -32,39 +24,16 @@ void handle_nodes(short file, graph* graph){
 		}
 
 		else if (c == ','){
-			if (y == 0){
-				strcpy(node_name, text);
-			}
-			else if (y == 1){
-				x_zoomed_out_coord = atoi(text);
-			}
-			else if (y == 2){
-				y_zoomed_out_coord = atoi(text);
-			}
-			else if (y == 3){
-				x_zoomed_in_coord = atoi(text);
-			}
-			else if (y == 4){
-				y_zoomed_in_coord = atoi(text);
-			}
-			else if (y == 5){
-				altitude = atoi(text);
-			}
-			else if (y == 6){
-				longitude = atoi(text);
-			}
+			strcpy(arr[y], text);
 			memset(&text[0], 0, sizeof(text));
 			y++;
 		}
 		else if (c == ';'){
-			latitude = atoi(text);
-			vertex* v = init_vertex(latitude, longitude, altitude, node_name, x_zoomed_out_coord, y_zoomed_out_coord, x_zoomed_in_coord, y_zoomed_in_coord);
-
-			int v_id = add_vertex(graph, v);
-			int node_key = keyify(v->name);
+			strcpy(arr[y], text);
+			vertex* v = init_vertex(atoi(arr[7]), atoi(arr[6]), atof(arr[5]), arr[0], atoi(arr[3]), atoi(arr[4]), atoi(arr[1]), atoi(arr[2]));
+			add_vertex(graph, v);
 			memset(&text[0], 0, sizeof(text));
 			y=0;
-			x++;
 		}
 		else if (c != '\n' && c != '\r'){
 			text = strncat(text, &c, 1);
@@ -73,15 +42,11 @@ void handle_nodes(short file, graph* graph){
 }
 
 void handle_edges(short file, graph* graph){
-	int x = 0;
 	int y = 0;
-	int v1_id = 0;
-	int v2_id = 0;
-	int weight = 0;
 	short data = 0;
-	char c = "";
-	char* text = "A";
-	memset(&text[0], 0, sizeof(text));
+	char c;
+	char* text;
+	char arr[3][4];
 	while(data >= 0){
 		data = alt_up_sd_card_read(file);
 		c = (char)data;
@@ -89,24 +54,16 @@ void handle_edges(short file, graph* graph){
 			data = -1;
 		}
 		else if (c == ','){
-			if (y == 0){
-				v1_id = atoi(text);
-			}
-			else if (y == 1){
-				v2_id = atoi(text);
-			}
+			strcpy(arr[y], text);
 			memset(&text[0], 0, sizeof(text));
 			y++;
 		}
-		else if (c == ';' && y == 2){
-			weight = atoi(text);
-			cost cost1 = {weight};
-			if (v1_id != -1 && v2_id != -1){
-				add_edge(graph, v1_id, v2_id, cost1);
-			}
+		else if (c == ';'){
+			strcpy(arr[y], text);
+			cost cost1 = {atoi(arr[2])};
+			add_edge(graph, atoi(arr[0]), atoi(arr[1]), cost1);
 			memset(&text[0], 0, sizeof(text));
 			y=0;
-			x++;
 		}
 		else if (c != '\n' && c != '\r'){
 			text = strncat(text, &c, 1);
