@@ -11,26 +11,18 @@
 #include "search.h"
 
 //Text box is left aligned and has text wrapping
-void draw_text_box(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, int textColour, char* text, int fontSize){
-	int textLength = (int) strlen(text);
+void draw_text_box(Point topLeft, int width, int height, int borderWidth,
+		int borderColour, int fillColour, int textColour, char* text, int fontSize){
 	Point topRight = {topLeft.x + width, topLeft.y};
 	Point bottomLeft = {topLeft.x, topLeft.y + height};
 	Point bottomRight = {topLeft.x + width, topLeft.y + height};
 
 	draw_filled_rectangle_border(topLeft, topRight, bottomLeft, bottomRight, fillColour, borderColour, borderWidth);
-	int initialX = 0;
-	int initialY = 0;
+	int initialX = topLeft.x + 10; //give 10 pixels margin
+	int initialY = topLeft.y + 10; //May make this an adjustable variable
 
-	int fontSizePixelsWidth = 5;
-	int fontSizePixelsHeight = 7;
-
-	if (fontSize == MEDIUM){
-		fontSizePixelsWidth = 10;
-		fontSizePixelsHeight = 14;
-	}
-
-	initialX = topLeft.x + 10; //give 10 pixels margin
-	initialY = topLeft.y + 10; //May make this an adjustable variable
+	int fontSizePixelsWidth = (fontSize == MEDIUM ? 10 : 5);
+	int fontSizePixelsHeight = (fontSize == MEDIUM ? 14 : 7);
 
 	char* temp_text;
 	strcpy(temp_text, text);
@@ -74,7 +66,7 @@ void draw_information_box(char* text){
 
 	point8.x = 500;
 	point8.y = 0;
-	draw_text_box(point8, 300, 200, 2, BLACK, WHITE, BLACK, text, SMALL);
+	draw_text_box(point8, 300, 200, 1, BLACK, WHITE, BLACK, text, SMALL);
 
 }
 
@@ -190,13 +182,13 @@ void init_screen(){
 
 		about_screen();
 
-		draw_menu(point6, 150, 50, 2, BLACK, WHITE, BLACK, SMALL, firstTextArray);
+		draw_menu(point6, 150, 50, 1, BLACK, WHITE, BLACK, SMALL, firstTextArray);
 
-		draw_menu(point7, 150, 50, 2, BLACK, WHITE, BLACK, SMALL, secondTextArray);
+		draw_menu(point7, 150, 50, 1, BLACK, WHITE, BLACK, SMALL, secondTextArray);
 
-		draw_menu(point8, 300, 50, 2 , BLACK, WHITE, BLACK, SMALL, thirdTextArray);
+		draw_menu(point8, 300, 50, 1 , BLACK, WHITE, BLACK, SMALL, thirdTextArray);
 
-		draw_menu(point9, 300, 130, 2 , BLACK, WHITE, BLACK, SMALL, fourthTextArray);
+		draw_menu(point9, 300, 130, 1 , BLACK, WHITE, BLACK, SMALL, fourthTextArray);
 
 		draw_arrows();
 

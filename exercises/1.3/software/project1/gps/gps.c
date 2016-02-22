@@ -22,6 +22,7 @@
 
 void wait_for_header(void);
 gps_data* get_new_gps_data(void);
+void degrees_to_graph (double lati, double longi, int* latitude, int* longitude);
 
 void Init_GPS(void){
 	// set up 6850 Control Register to utilise a divide by 16 clock,
