@@ -137,16 +137,6 @@ int keyify(char* name){
 	return value;
 }
 
-alt_up_sd_card_dev* get_device_reference(){
-	alt_up_sd_card_dev* device_reference = NULL;
-	if ((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL){
-		return NULL;
-	}
-
-	return device_reference;
-}
-
-
 void load_graph(char* filename){
 	void (*func)(short) = &handle_data;
 	load_file(filename, func);

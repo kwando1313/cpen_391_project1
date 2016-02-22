@@ -22,6 +22,8 @@ void load_file(char* filename, void (*func)(short));
 
 void read_bytes_from_file(unsigned char* str, int len, short file);
 
+alt_up_sd_card_dev* get_device_reference();
+
 double convert_to_radians(double angle);
 
 float sub_and_sqre(int x, int y);

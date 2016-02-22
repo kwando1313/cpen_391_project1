@@ -11,6 +11,15 @@ void read_bytes_from_file(unsigned char* str, int len, short file){
 	}
 }
 
+alt_up_sd_card_dev* get_device_reference(){
+	alt_up_sd_card_dev* device_reference = NULL;
+	if ((device_reference = alt_up_sd_card_open_dev("/dev/Altera_UP_SD_Card_Avalon_Interface_0")) == NULL){
+		return NULL;
+	}
+
+	return device_reference;
+}
+
 double convert_to_radians(double angle){
 	return (angle*M_PI/180);
 }
