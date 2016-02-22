@@ -38,49 +38,16 @@ void test(){
 	//	pop_screen();
 	//	reset_query();
 	//
-	//	add_letter('B');
-	//	add_letter('U');
-	//	add_letter('C');
-	//	add_letter('H');
-	//	mn_count = 0;
-	//
 	//	graph* graph = get_graph();
 	//	name_list* nl = get_names(graph);
-	//	print_nl(nl);
 	//
-	//	name_list* m_nl;
-	//	matched_names.head = NULL;
-	//	name_list* curr;
-	//
-	//	while(nl != NULL){
-	//		if(is_matched(nl->name)){
-	//			m_nl = malloc(sizeof(name_list));
-	//			m_nl->name = nl->name;
-	//			m_nl->next = NULL;
-	//
-	//			if(matched_names.head == NULL){
-	//				matched_names.head = m_nl;
-	//			}
-	//			else{
-	//				curr->next = m_nl;
-	//			}
-	//			curr = m_nl;
-	//			mn_count++;
-	//		}
-	//		nl = nl->next;
-	//	}
-	//	print_nl(matched_names.head);
-	//	do_del();
-	//	print_nl(matched_names.head);
-	//	match_screen(1, mn_count);
-
 	//	keyboard[25].kb_p(keyboard[25].key); //B
 	//	keyboard[6].kb_p(keyboard[6].key); //U
 	//	keyboard[23].kb_p(keyboard[23].key); //C
 	//	keyboard[16].kb_p(keyboard[16].key); //H
-	//	del_letter();
-	//	//DEL_BUTT.p();
+	//	do_del();
 	//	keyboard[18].kb_p(keyboard[18].key); //K
+	//	keyboard[11].kb_p(keyboard[11].key); //A
 
 	// 	ANGELA'S TESTING
 	//	clear_screen(255);

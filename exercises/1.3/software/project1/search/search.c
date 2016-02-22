@@ -90,38 +90,56 @@ void add_matches(){
 	match_screen(sel, MN_COUNT);
 }
 
-/* Delete names that no longer match
- * Pre: nl is matched and not NULL
- */
-void del_matches_helper(name_list* nl){
-	if(nl->next == NULL)
-		return;
-
-	// Set the next matched name in the matched list
-	name_list* temp = nl->next;
-	while(!(is_matched(temp)) && temp != NULL){
-		temp = temp->next;
-	}
-	nl->next = temp;
-
-	if(temp != NULL)
-		del_matches_helper(temp);
-}
+///* Delete names that no longer match
+// * Pre: nl is matched and not NULL
+// */
+//void del_matches_helper(name_list* nl){
+//	if(nl->next == NULL)
+//		return;
+//
+//	// Set the next matched name in the matched list
+//	name_list* curr = nl->next;
+//	printf("%s\n", curr->name);
+//	name_list* temp;
+//	while(curr != NULL && !(is_matched(curr))){
+//		temp = curr->next;
+//		//print_nl(curr);
+//		free(curr);
+//		curr = temp;
+//	}
+//	nl->next = curr;
+//
+//	if(curr != NULL)
+//		del_matches_helper(curr);
+//}
 
 void del_matches(){
 	sel = 1;
-	name_list* m_nl = matched_names.head;
+	name_list* curr = matched_names.head;
+	name_list* prev;
 	name_list* temp;
 
 	// Updates the head to be the first match in matched list
-	while(m_nl != NULL && !(is_matched(m_nl->name)) ){
-		temp = m_nl->next;
-		free(m_nl);
-		m_nl = temp;
+	while(curr != NULL && !(is_matched(curr->name)) ){
+		temp = curr->next;
+		free(curr);
+		curr = temp;
+	}
+	matched_names.head = curr;
+	prev = curr;
+	curr = curr->next;
+
+	while(curr != NULL){
+		if(!is_matched(curr->name)){
+			prev->next = curr->next;
+			free(curr);
+		}
+		else{
+			prev = prev->next;
+		}
+		curr = prev->next;
 	}
 
-	if(m_nl != NULL)
-		del_matches_helper(m_nl);
 	print_nl(matched_names.head);
 	printf("%i\n", MN_COUNT);
 	match_screen(sel, MN_COUNT);
