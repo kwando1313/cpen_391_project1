@@ -63,7 +63,6 @@ void draw_arrows();
 void about_screen();
 void info_screen();
 void directions_screen();
-void photo_screen();
 void init_screen();
 void pop_screen();
 void match_screen(int sel, int mn_count);

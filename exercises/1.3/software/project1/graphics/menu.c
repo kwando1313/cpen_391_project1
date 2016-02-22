@@ -175,7 +175,7 @@ void init_screen(){
 		Point point8 = {500, 330};
 		Point point9 = {500, 200};
 
-		char* firstTextArray[] = {"Info", "Photo", ""};
+		char* firstTextArray[] = {"Info", "Zoom", ""};
 		char* secondTextArray[] = {"Directions", "About", ""};
 		char* thirdTextArray[] = {"Search", ""};
 		char* fourthTextArray[] = {" ", ""};
@@ -204,13 +204,6 @@ void info_screen(){
 
 void directions_screen(){
 	draw_information_box("DIRECTIONS");
-}
-
-void photo_screen(){
-//	char* name = "PIC.BMP";
-//	Point point = {500, 0};
-//	load_image(point, name, 330, 300);
-	draw_information_box("BUILDING PHOTO");
 }
 
 // draw the pop up keyboard on the LHS of the screen
