@@ -59,41 +59,6 @@ bool is_matched(char* name){
 	return matches;
 }
 
-//// Initialise the head of the matched names if there is one and return the head
-//name_list* init_matches(name_list* nl){
-//	name_list* mn_h = matched_names.head = malloc(sizeof(name_list));
-//	mn_h = NULL;
-//
-//	while(nl != NULL){
-//		if(is_matched(nl->name)){
-//			mn_h->name = nl->name;
-//			mn_h->next = NULL;
-//			mn_count++;
-//			nl = nl->next;
-//			return mn_h;
-//		}
-//		nl = nl->next;
-//	}
-//
-//	return mn_h;
-//}
-
-///* Adds names that match; nl is the graph name list
-// * Pre: m_nl is matched and not NULL
-// */
-//void add_matches_helper(name_list* nl, name_list* m_nl){
-//	while(nl != NULL){
-//		if(is_matched(nl->name)){
-//			m_nl->next = nl;
-//			m_nl = m_nl->next;
-//			mn_count++;
-//		}
-//		nl = nl->next;
-//		//print_nl(nl);
-//	}
-//	m_nl->next = NULL;
-//}
-
 // Get all the names that match with the query string
 void add_matches(){
 	sel = 1;
@@ -149,7 +114,7 @@ void del_matches(){
 	name_list* temp;
 
 	// Updates the head to be the first match in matched list
-	while(!(is_matched(m_nl->name)) && m_nl != NULL ){
+	while(m_nl != NULL && !(is_matched(m_nl->name)) ){
 		temp = m_nl->next;
 		free(m_nl);
 		m_nl = temp;

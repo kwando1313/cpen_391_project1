@@ -30,9 +30,7 @@ void del_letter();
 void draw_word();
 
 // fcns for search matcher
-//name_list* init_matches(name_list* head); // SCRAP
 void add_matches();
-//void add_matches_helper(name_list* nl, name_list* m_nl); // SCRAP
 void del_matches();
 void del_matches_helper(name_list* nl);
 void destroy_matches();
