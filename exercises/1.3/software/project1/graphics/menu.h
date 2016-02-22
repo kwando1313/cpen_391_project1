@@ -14,7 +14,7 @@
 #define DR 800
 #define DT 380
 #define DB 430
-//photo
+//zoom
 #define PL 500
 #define PR 650
 #define PT 430
@@ -68,7 +68,7 @@ void draw_arrows();
 void about_screen();
 void info_screen();
 void directions_screen();
-void photo_screen();
+void zoom_screen();
 void init_screen();
 void pop_screen();
 void match_screen(int sel, int mn_count);

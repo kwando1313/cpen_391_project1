@@ -98,11 +98,11 @@ void init_s_button(char key, int id){
 	break;
 
 	case 32:
-		PHOTO_BUTT.top = PT;
-		PHOTO_BUTT.bottom = PB;
-		PHOTO_BUTT.left = PL;
-		PHOTO_BUTT.right = PR;
-		PHOTO_BUTT.p = do_photo;
+		ZOOM_BUTT.top = PT;
+		ZOOM_BUTT.bottom = PB;
+		ZOOM_BUTT.left = PL;
+		ZOOM_BUTT.right = PR;
+		ZOOM_BUTT.p = do_zoom;
 	break;
 
 	case 33:
@@ -285,10 +285,10 @@ void do_dir(){
 
 }
 
-// Display photo of the next node touched
-void do_photo(void* nothing){
-	// TODO: Need to load up a photo for each node
-	photo_screen();
+// Zoom
+void do_zoom(void* nothing){
+	// TODO: Zoom
+
 	//int node = get_node();
 }
 
