@@ -53,6 +53,7 @@ int get_node(graph* graph){
 
 /* Returns the node if we pressed a point sufficiently close to the node. Assumption: Each node has
    a finite metric in relation to every other node, i.e there is a maximum of one node sufficiently close.*/
+//TODO optimize this shit yo
 int get_valid_vertex(graph* graph, Point p){
 	printf("started valid vertex\n");
 	for(int i = 0; i<graph->num_vertices; i++) {

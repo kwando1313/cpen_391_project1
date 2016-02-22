@@ -15,6 +15,7 @@ void load_zoom_in_pixels(short file);
 void load_zoom_out_pixels(short file);
 void get_header(short file, int zoom);
 void get_pixels(short file, int zoom);
+void clear_extra_map_space(int height, int width);
 
 /*	Load image from SD Card.
  * 	SD Card must be formatted in FAT16 to work with DE2.
@@ -91,15 +92,23 @@ void get_pixels(short file, int zoom){
 	}
 }
 
+void clear_extra_map_space(int height, int width){
+	printf("clear extra: %d, %d\n", height, width);
+	for (int y = height; y<DISPLAY_HEIGHT; y++){
+		HLine(0, y, DISPLAY_WIDTH, WHITE);
+	}
+}
+
 /* Draw the pictures in the range we want.
  * We're picking the top left point to start from
- * but actually draw from the bottom left first.
+ * but actually draw from the bottom left first, since the data is stored this way
  */
 void draw_image(Point start){
 	int height = (image_height[zoom_level] < DISPLAY_HEIGHT) ? image_height[zoom_level] : DISPLAY_HEIGHT;
 	int width = (image_width[zoom_level] < DISPLAY_WIDTH) ? image_width[zoom_level]: DISPLAY_WIDTH;
 
 	printf("startx: %d, starty: %d\n", start.x, start.y);
+	clear_extra_map_space(height, width);
 
 	for (int y = 0; y < height; y++){
 		for (int x = 0; x < width; x++){
