@@ -18,6 +18,9 @@ void append_to_path_points_array(path_points* path, int i, Point to_add);
 //debugging only
 void print_astar_node(astar_node* node);
 
+//graph draw
+void draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour);
+
 /*
  * Notes on datastructures chosen
  *
@@ -229,4 +232,10 @@ void append_to_path_points_array(path_points* path, int i, Point to_add){
 
 void print_astar_node(astar_node* node){
 	printf("v_id: %d, f_val %d, g_val %d, h_val %d\n", node->v_id, node->f_val, node->g_val, node->h_val);
+}
+
+
+void draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour){
+	path_points* points = get_path_points(graph, start, goal, roads_only);
+	draw_path(points->ordered_point_arr, points->actual_size, colour);
 }
