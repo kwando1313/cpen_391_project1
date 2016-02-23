@@ -42,7 +42,7 @@ Button* keyboard;
 #define NORTH_BUTT keyboard[37]
 #define SOUTH_BUTT keyboard[38]
 #define ROAD_BUTT keyboard[39]
-#define ROAD_TOG = ROAD_BUTT.pressed
+#define ROAD_TOG ROAD_BUTT.pressed
 
 // keyboard variables
 #define N_KEYS 40

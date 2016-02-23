@@ -37,6 +37,7 @@ void gps_data_3(alt_up_character_lcd_dev * char_lcd_dev, char *numSat, char *pos
 void test_command_gps (void);
 void test_read_gps (void);
 void read_gps(void);
+void get_current_coordinates(int* longitude, int* latitude);
 gps_data* init_gps_data(void);
 void minutes_to_degrees (char* latitude, char* longitude, double* lati, double* longi);
 
