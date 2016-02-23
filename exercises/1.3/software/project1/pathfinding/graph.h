@@ -19,6 +19,8 @@ typedef struct __name_list{
 
 typedef struct __path_points{
 	Point* ordered_point_arr;
+	Point min_corner;
+	Point max_corner;
 	int size; //Better way to do this?
 	int actual_size; //Better way to do this?
 } path_points;

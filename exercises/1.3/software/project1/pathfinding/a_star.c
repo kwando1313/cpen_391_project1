@@ -14,6 +14,7 @@ astar_node* pop_smallest(bnode** root);
 int* reconstruct_path(hashmap* path_map, int start, int current_id);
 int append_to_array(int** arr, int i, int arr_size, int to_add);
 void append_to_path_points_array(path_points* path, int i, Point to_add);
+void update_path_range(path_points* path, Point curr);
 
 //debugging only
 void print_astar_node(astar_node* node);
@@ -102,7 +103,6 @@ int* a_star(graph* graph, int start, int goal, bool roads_only){
 					next_node = init_astar_node(neighbour_id, tentative_g, get_distance_heuristic(graph, neighbour_id, goal));
 
 					open_set = insert_bnode(open_set, next_node->f_val, next_node);
-
 					hashmapInsert(vid_to_astar_node, next_node, neighbour_id);
 				}
 			}
@@ -133,6 +133,7 @@ int* reconstruct_path(hashmap* path_map, int start, int current_id){
 	} else {
 		path_size = append_to_array(&total_path, array_index, path_size, current_id);
 	}
+
 	hashmapDelete(path_map);
 	return total_path;
 }
@@ -190,8 +191,31 @@ void print_path_console(graph* graph, int start, int goal, bool roads_only){
 		printf("step: %d, vid: %d\n", curr, path[curr]);
 		curr++;
 	}
+
 	printf("step: %d, vid: %d\n\n", curr, path[curr]);
 	free(path);
+}
+
+void update_path_range(path_points* path, Point curr){
+	if (path->min_corner == NULL){
+		path->min_corner = curr;
+	}
+
+	if (path->max_corner == NULL){
+		path->max_corner = curr;
+	}
+
+	if (path->min_corner.x > curr.x) {
+		path->min_corner.x = curr.x;
+	} else if (path->max_corner.x < curr.x) {
+		path->max_corner.x = curr.x;
+	}
+
+	if (path->min_corner.y > curr.y) {
+		path->min_corner.y = curr.y;
+	} else if (path->max_corner.y < curr.y) {
+		path->max_corner.y = curr.y;
+	}
 }
 
 path_points* get_path_points(graph* graph, int start, int goal, bool roads_only){
@@ -203,12 +227,15 @@ path_points* get_path_points(graph* graph, int start, int goal, bool roads_only)
 	path->ordered_point_arr = malloc(DEFAULT_PATH_SIZE*sizeof(Point));
 	path->size = DEFAULT_PATH_SIZE;
 	path->actual_size = 0;
-
+	path->min_corner = NULL;
+	path->max_corner = NULL;
 
 	while(1) {
 		vertex* v = get_vertex(graph, path_ids[curr]);
 		Point to_add = get_vertex_xy(v);
+		update_path_range(path, to_add);
 		append_to_path_points_array(path, curr, to_add);
+
 		if (path_ids[curr] == start) {
 			break;
 		}
@@ -233,10 +260,8 @@ void print_astar_node(astar_node* node){
 	printf("v_id: %d, f_val %d, g_val %d, h_val %d\n", node->v_id, node->f_val, node->g_val, node->h_val);
 }
 
-
 void draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour){
 	path_points* points = get_path_points(graph, start, goal, roads_only);
 	draw_path(points->ordered_point_arr, points->actual_size, colour);
-	free(points->ordered_point_arr);
-	free(points);
+	destroy_path_points(points);
 }
