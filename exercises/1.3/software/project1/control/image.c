@@ -104,7 +104,6 @@ void draw_image(Point start){
 	int height = (image_height[zoom_level] < DISPLAY_HEIGHT) ? image_height[zoom_level] : DISPLAY_HEIGHT;
 	int width = (image_width[zoom_level] < DISPLAY_WIDTH) ? image_width[zoom_level]: DISPLAY_WIDTH;
 
-	printf("startx: %d, starty: %d\n", start.x, start.y);
 	clear_extra_map_space(height, width);
 
 	for (int y = 0; y < height; y++){
@@ -154,6 +153,13 @@ void move_img (Direction direction){
 		printf ("LEFT\n");
 	}
 
-	printf ("curr_image_pos: %d, %d\n", curr_image_pos.x, curr_image_pos.y);
 	draw_image(curr_image_pos);
+}
+
+Point convert_pnt_to_zoom_in(Point pnt){
+	Point new_pnt;
+	//new_pnt.x = pnt.x*image_width[ZOOM_IN]/image_width[ZOOM_OUT];
+	new_pnt.x = pnt.x*image_width[ZOOM_IN]/500;
+	new_pnt.y = pnt.y*image_height[ZOOM_IN]/image_height[ZOOM_OUT];
+	return new_pnt;
 }

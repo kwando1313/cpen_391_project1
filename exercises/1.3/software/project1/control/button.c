@@ -314,16 +314,34 @@ void do_zoom(){
 	}
 	else {
 		zoom_level = ZOOM_IN;
-		sel = GetPress();
+
+		do{
+			sel = GetPress();
+		//} while(sel.y > image_height[ZOOM_OUT] || sel.x > image_width[ZOOM_OUT]);
+		} while(sel.y > image_height[ZOOM_OUT] || sel.x > 500); //temporary, until we shift boundary to 600
+
+		//printf("sel pre convert %d, %d\n", sel.x, sel.y);
+		sel = convert_pnt_to_zoom_in(sel);
+		//printf("sel post convert %d, %d\n", sel.x, sel.y);
+
+		//we pass draw_image in the top left corner, sel should be the centre of the image
+		sel.x -= DISPLAY_WIDTH/2;
+		sel.y -= DISPLAY_HEIGHT/2;
+
 		if(sel.x < DISPLAY_WIDTH/2)
 			sel.x = DISPLAY_WIDTH/2;
-		else if(sel.x > image_width[ZOOM_IN] - (DISPLAY_WIDTH/2))
-			sel.x = image_width[ZOOM_IN]  - (DISPLAY_WIDTH/2);
-		else if(sel.y < DISPLAY_HEIGHT/2)
+		// else if(sel.x > image_width[ZOOM_OUT] - (DISPLAY_WIDTH/2))
+		else if(sel.x > (500 - DISPLAY_WIDTH/2)) //temporary, until we shift boundary to 600
+			sel.x = image_width[ZOOM_OUT]  - (DISPLAY_WIDTH/2);
+
+		if(sel.y < DISPLAY_HEIGHT/2)
 			sel.y = DISPLAY_HEIGHT/2;
-		else if(sel.y > image_height[ZOOM_IN] - (DISPLAY_HEIGHT/2))
-			sel.y = image_height[ZOOM_IN] - (DISPLAY_HEIGHT/2);
+		else if(sel.y > (image_height[ZOOM_OUT] - DISPLAY_HEIGHT/2))
+			sel.y = image_height[ZOOM_OUT] - (DISPLAY_HEIGHT/2);
+
+		//printf("sel final %d, %d\n", sel.x, sel.y);
 	}
+
 	draw_image(sel);
 }
 
