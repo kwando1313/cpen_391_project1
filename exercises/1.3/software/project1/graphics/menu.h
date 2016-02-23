@@ -59,12 +59,15 @@
 
 #define BUTT_SIZE 40
 #define ARROW_SIZE 50
-#define ARRBUTT_HEIGHT 130
+#define ARR_BUTT_HEIGHT 130
 #define SBUTT_WIDTH 150
 #define SBUTT_HEIGHT 50
+#define BOX_WIDTH 300
+#define BOX HEIGHT 200
 #define MAP_WIDTH 500
 #define KB_HEIGHT 180
 #define SEARCH_HEIGHT 70
+#define ORIGIN 0
 
 void draw_keyboard(Point leftCorner, int size);
 

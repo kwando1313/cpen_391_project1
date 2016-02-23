@@ -9,6 +9,7 @@
 #include <altera_up_sd_card_avalon_interface.h>
 #include "Directions.h"
 #include "search.h"
+#include "button.c"
 
 //Text box is left aligned and has text wrapping
 void draw_text_box(Point topLeft, int width, int height, int borderWidth,
@@ -54,9 +55,9 @@ void draw_text_box(Point topLeft, int width, int height, int borderWidth,
 void draw_information_box(char* text){
 	Point point8;
 
-	point8.x = 500;
-	point8.y = 0;
-	draw_text_box(point8, 300, 200, 1, BLACK, WHITE, BLACK, text, SMALL);
+	point8.x = MAP_WIDTH;
+	point8.y = ORIGIN;
+	draw_text_box(point8, BOX_WIDTH, BOX_HEIGHT, 1, BLACK, WHITE, BLACK, text, SMALL);
 
 }
 
@@ -235,7 +236,7 @@ void init_screen(){
 		draw_menu(infoZoomP, SBUTT_WIDTH, SBUTT_HEIGHT, 1, BLACK, WHITE, BLACK, SMALL, infoZoomText);
 		draw_menu(dirAboutP, SBUTT_WIDTH, SBUTT_HEIGHT, 1, BLACK, WHITE, BLACK, SMALL, dirAboutText);
 		draw_menu(searchP, SBUTT_WIDTH, SBUTT_HEIGHT, 1 , BLACK, WHITE, BLACK, SMALL, searchText);
-		draw_menu(arrowsP, SBUTT_WIDTH*2, ARRBUTT_HEIGHT, 1 , BLACK, WHITE, BLACK, SMALL, arrowsText);
+		draw_menu(arrowsP, BOX_WIDTH, ARR_BUTT_HEIGHT, 1 , BLACK, WHITE, BLACK, SMALL, arrowsText);
 		draw_menu(roadP, SBUTT_WIDTH, SBUTT_HEIGHT, 1, BLACK, WHITE, BLACK, SMALL, roadText);
 
 		draw_arrows();
@@ -314,14 +315,14 @@ void map_screen(){
 void highlight(Button b){
 	Point p = {b.left, b.top};
 	if(is_kb_butt(b)){
-		draw_button(p, BUTT_SIZE, BUTT_SIZE, 1, WHITE, BLACK, WHITE, b.key, MEDIUM);
+		draw_button(p, BUTT_SIZE, BUTT_SIZE, 1, WHITE, BLACK, WHITE, (char*)KEYS[b.id], MEDIUM);
 	}
 	else if(is_arrow_butt(b)){
 		int dir = get_arrow_dir(b);
 		draw_arrow(p, ARROW_SIZE, ARROW_SIZE, 1, WHITE, BLACK, dir);
 	}
 	else if(is_screen_butt(b)){
-		char* text = get_butt_text;
+		char* text = get_butt_text(b);
 		char* textArray[] = {text, ""};
 		draw_menu(p, SBUTT_WIDTH, SBUTT_HEIGHT, 1, WHITE, BLACK, WHITE, SMALL, textArray);
 	}
@@ -330,14 +331,14 @@ void highlight(Button b){
 void unhighlight(Button b){
 	Point p = {b.left, b.top};
 	if(is_kb_butt(b)){
-		draw_button(p, BUTT_SIZE, BUTT_SIZE, 1, BLACK, WHITE, BLACK, b.key, MEDIUM);
+		draw_button(p, BUTT_SIZE, BUTT_SIZE, 1, BLACK, WHITE, BLACK, (char*)KEYS[b.id], MEDIUM);
 	}
 	else if(is_arrow_butt(b)){
 		int dir = get_arrow_dir(b);
 		draw_arrow(p, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, dir);
 	}
 	else if(is_screen_butt(b)){
-		char* text = get_butt_text;
+		char* text = get_butt_text(b);
 		char* textArray[] = {text, ""};
 		draw_menu(p, SBUTT_WIDTH, SBUTT_HEIGHT, 1, BLACK, WHITE, BLACK, SMALL, textArray);
 	}
