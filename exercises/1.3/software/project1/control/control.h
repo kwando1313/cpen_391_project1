@@ -4,8 +4,6 @@
 #include "graph.h"
 #include "button.h"
 
-bool ROAD;
-
 void init_control();
 void s_listen();
 void kb_listen();
