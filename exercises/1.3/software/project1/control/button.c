@@ -328,9 +328,7 @@ void do_info(){
 
 //// Ask for a start and end node and find the best directions
 void do_dir(){
-//	printf("do dir\n");
 //	directions_screen();
-//	draw_information_box("PLEASE SELECT STARTING POINT");
 //	int start_node = get_node(graph);
 	int curr_lat, curr_long;
 	switch (button_iteration){
@@ -358,11 +356,6 @@ void do_dir(){
 	draw_path(path->ordered_point_arr, path->actual_size, BLUE);
 	destroy_path_points(path);
 	draw_information_box("HAVE A FUN TRIP!");
-	printf("start do dir\n");
-	directions_screen();
-	//read_gps();
-	printf("done do dir\n");
-
 }
 
 //Toggle between zoom in and zoom out
