@@ -6,6 +6,7 @@
 #include "graph.h"
 
 #define FLICKER_DELAY 100000
+#define TOGGLE_DELAY 10000
 
 typedef struct Button{
 	bool* pressed;
@@ -59,6 +60,7 @@ Button* get_s_button(Point p);
 Button* get_kb_button(Point p);
 
 bool is_kb_butt(Button b);
+bool is_big_kb(Button b);
 bool is_arrow_butt(Button b);
 bool is_screen_butt(Button b);
 int get_arrow_dir(Button b);

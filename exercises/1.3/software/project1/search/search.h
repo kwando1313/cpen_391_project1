@@ -7,8 +7,8 @@
 
 //TODO change constants
 #define MAX_CHAR 26 - 1 // n - 1 because of index; Change n to be the longest node name
-#define X 50
-#define Y 260
+#define X 40
+#define Y 235
 #define INCR 20 // Change this so that MAX_CHAR letters fits
 
 #define MAX_MATCHES 10

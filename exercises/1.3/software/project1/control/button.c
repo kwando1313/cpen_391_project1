@@ -13,9 +13,9 @@
 #include "gps.h"
 #include "graph.h"
 
-const char KEYS[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '-',
+const char KEYS[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '<',
 			  	  	'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '+',
-			  	  	'Z', 'X', 'C', 'V', 'B', 'N', 'M', ' ', '<',
+			  	  	'Z', 'X', 'C', 'V', 'B', 'N', 'M', ' ', '>',
 			  	  	'!', '@', '#', '$', '%',
 			  	  	'a', 'd', 'w', 's', '^'};
 
@@ -35,11 +35,14 @@ void init_kb_button(char key, int id){
 		j = 0;
 	}
 	else if(id == DEL_BUTT.id){
-		DEL_BUTT.left = 430;
-		DEL_BUTT.right = 470;
-		DEL_BUTT.top = 330;
-		DEL_BUTT.bottom = 370;
+		i = id;
+		j = 0;
+		keyboard[id].left = KB_LEFT + KEY_SIZE*i;
+		keyboard[id].right = (KB_LEFT+KEY_SIZE) + KEY_SIZE*i;
+		keyboard[id].top = KB_TOP + KEY_SIZE*j;
+		keyboard[id].bottom = (KB_TOP + KEY_SIZE) + KEY_SIZE*j;
 		DEL_BUTT.p = do_del;
+		DEL_BUTT.text = "<-";
 		return;
 	}
 	else if(id < ENTER_BUTT.id){
@@ -47,10 +50,12 @@ void init_kb_button(char key, int id){
 		j = 1;
 	}
 	else if(id == ENTER_BUTT.id){
-		ENTER_BUTT.left = 390;
-		ENTER_BUTT.right = 470;
-		ENTER_BUTT.top = 370;
-		ENTER_BUTT.bottom = 410;
+		i = id - 11;
+		j = 1;
+		keyboard[id].left = KB_LEFT + KEY_SIZE*i;
+		keyboard[id].right = (KB_LEFT+KEY_SIZE*2) + KEY_SIZE*i;
+		keyboard[id].top = KB_TOP + KEY_SIZE*j;
+		keyboard[id].bottom = (KB_TOP + KEY_SIZE) + KEY_SIZE*j;
 		ENTER_BUTT.ent_p = do_enter;
 		ENTER_BUTT.text = "ENTER";
 		return;
@@ -60,27 +65,31 @@ void init_kb_button(char key, int id){
 		j = 2;
 	}
 	else if(id == SPACE_BUTT.id){
-		SPACE_BUTT.left = 310;
-		SPACE_BUTT.right = 390;
-		SPACE_BUTT.top = 410;
-		SPACE_BUTT.bottom = 450;
+		i = id - 21;
+		j = 2;
+		keyboard[id].left = KB_LEFT + KEY_SIZE*i;
+		keyboard[id].right = (KB_LEFT+KEY_SIZE*2) + KEY_SIZE*i;
+		keyboard[id].top = KB_TOP + KEY_SIZE*j;
+		keyboard[id].bottom = (KB_TOP + KEY_SIZE) + KEY_SIZE*j;
 		SPACE_BUTT.kb_p = do_key;
 		SPACE_BUTT.text = "SPACE";
 		return;
 	}
 	else if(id == BACK_BUTT.id){
-		BACK_BUTT.left = 390;
-		BACK_BUTT.right = 470;
-		BACK_BUTT.top = 410;
-		BACK_BUTT.bottom = 450;
+		i = id - 21;
+		j = 2;
+		keyboard[id].left = (KB_LEFT+KEY_SIZE) + KEY_SIZE*i;
+		keyboard[id].right = (KB_LEFT+KEY_SIZE*2) + KEY_SIZE*i;
+		keyboard[id].top = KB_TOP + KEY_SIZE*j;
+		keyboard[id].bottom = (KB_TOP + KEY_SIZE) + KEY_SIZE*j;
 		BACK_BUTT.p = do_back;
 		BACK_BUTT.text = "BACK";
 		return;
 	}
-	keyboard[id].left = 30 + 40*i;
-	keyboard[id].right = 70 + 40*i;
-	keyboard[id].top = 330 + 40*j;
-	keyboard[id].bottom = 370 + 40*j;
+	keyboard[id].left = KB_LEFT + KEY_SIZE*i;
+	keyboard[id].right = (KB_LEFT+KEY_SIZE) + KEY_SIZE*i;
+	keyboard[id].top = KB_TOP + KEY_SIZE*j;
+	keyboard[id].bottom = (KB_TOP + KEY_SIZE) + KEY_SIZE*j;
 	keyboard[id].kb_p = do_key;
 }
 
@@ -473,28 +482,27 @@ bool do_enter(){
 
 // Leave search mode and redraw the map
 void do_back(){
-	printf("In do_back\n");
 	reset_query();
 	destroy_matches();
 
-	init_screen();
+	init_screen(); //TODO replace this
 	//map_screen();
 }
 
 void toggle(Button b){
-	printf("toggle\n");
 	if(*b.pressed == false){
 		*b.pressed = true;
 		highlight(b);
+		usleep(TOGGLE_DELAY);
 	}
 	else{
 		*b.pressed = false;
 		unhighlight(b);
+		usleep(TOGGLE_DELAY);
 	}
 }
 
 void flicker(Button b){
-	printf("flick\n");
 	highlight(b);
 	usleep(FLICKER_DELAY);
 	unhighlight(b);

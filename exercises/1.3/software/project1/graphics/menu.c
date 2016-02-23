@@ -115,7 +115,7 @@ void draw_keyboard(Point leftCorner, int size){
 		x++;
 	}
 	// Draw <-
-	draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, "<-", MEDIUM);
+	draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, "<", MEDIUM);
 
 	// Draw home row
 	x = 0;
@@ -204,10 +204,10 @@ void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borde
 
 void draw_arrows(){
 	// bounded in (500-800, 200-330); midway pts: (650, 275)
-	Point LPOINT = {550, 240};
-	Point RPOINT = {700, 240};
-	Point UPOINT = {625, 210};
-	Point DPOINT = {625, 270};
+	Point LPOINT = {WL, WT};
+	Point RPOINT = {EL, ET};
+	Point UPOINT = {NL, NT};
+	Point DPOINT = {SL, ST};
 
 	draw_arrow(LPOINT, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, LEFT, 0);
 
@@ -223,24 +223,18 @@ void init_screen(){
 		clear_screen(WHITE);
 
 		// These points define these button locations
-		Point infoZoomP = {500, 380};
-		Point dirAboutP = {650, 380};
-		Point searchP = {500, 330};
-		Point arrowsP = {500, 200};
-		Point roadP = {650, 330};
+		Point searchP = {MAP_WIDTH, BOX_HEIGHT + ARR_BUTT_HEIGHT};
+		Point roadP = {MAP_WIDTH+SBUTT_WIDTH, BOX_HEIGHT + ARR_BUTT_HEIGHT};
+		Point arrowsP = {MAP_WIDTH, 200};
 
-		char* infoZoomText[] = {"INFO", "ZOOM", ""};
-		char* dirAboutText[] = {"DIRECTIONS", "ABOUT", ""};
-		char* searchText[] = {"SEARCH", ""};
 		char* arrowsText[] = {" ", ""};
-		char* roadText[] = {"ROADS", ""};
+		char* searchText[] = {"SEARCH", "INFO", "ZOOM", ""};
+		char* roadText[] = {"ROADS", "DIRECTIONS", "ABOUT", ""};
 
 		about_screen();
 
-		draw_menu(infoZoomP, SBUTT_WIDTH, SBUTT_HEIGHT, 1, BLACK, WHITE, BLACK, SMALL, infoZoomText);
-		draw_menu(dirAboutP, SBUTT_WIDTH, SBUTT_HEIGHT, 1, BLACK, WHITE, BLACK, SMALL, dirAboutText);
-		draw_menu(searchP, SBUTT_WIDTH, SBUTT_HEIGHT, 1 , BLACK, WHITE, BLACK, SMALL, searchText);
 		draw_menu(arrowsP, BOX_WIDTH, ARR_BUTT_HEIGHT, 1 , BLACK, WHITE, BLACK, SMALL, arrowsText);
+		draw_menu(searchP, SBUTT_WIDTH, SBUTT_HEIGHT, 1 , BLACK, WHITE, BLACK, SMALL, searchText);
 		draw_menu(roadP, SBUTT_WIDTH, SBUTT_HEIGHT, 1, BLACK, WHITE, BLACK, SMALL, roadText);
 
 		draw_arrows();
@@ -269,17 +263,14 @@ void zoom_screen(){
 void pop_screen(){
 	draw_information_box("ENTER YOUR SEARCH!");
 
-	Point p = {30, 330};
-	Point kb_p = {0, 300};
-	Point s_p = {0, 230};
+	Point kb_p = {KB_LEFT, KB_TOP};
+	Point border_p = {ORIGIN, BORD_TOP};
+	Point search_p = {ORIGIN, SEARCH_TOP};
 	char* t[] = {" ", ""};
 
-	//bounded in (0-500, 300-480)
-	draw_menu(kb_p, MAP_WIDTH, KB_HEIGHT, 2, BLACK, WHITE, BLACK, SMALL, t);
-	//bounded in (0-500, 230-300)
-	draw_menu(s_p, MAP_WIDTH, SEARCH_HEIGHT, 2, BLACK, WHITE, BLACK, SMALL, t);
-	//bounded in (30-470, 330-450)
-	draw_keyboard(p, BUTT_SIZE);
+	draw_menu(border_p, MAP_WIDTH, BORD_HEIGHT, 2, BLACK, WHITE, BLACK, SMALL, t);
+	draw_menu(search_p, MAP_WIDTH, SEARCH_HEIGHT, 2, BLACK, WHITE, BLACK, SMALL, t);
+	draw_keyboard(kb_p, KEY_SIZE);
 }
 
 // draw the names matched with the query string and highlight the current chosen entry
@@ -292,10 +283,10 @@ void match_screen(int sel, int mn_count){
 	char* t[2];
 	Point p;
 
-	int incr = 200 / mn_count;
+	int incr = BOX_HEIGHT / mn_count;
 	name_list* nl = matched_names.head;
 	for(int i = 0; i < mn_count; i++){
-		p.x = 500;
+		p.x = MAP_WIDTH;
 		p.y = i*incr;
 
 		t[0] = nl->name;
@@ -304,9 +295,9 @@ void match_screen(int sel, int mn_count){
 		nl = nl->next;
 
 		if(i != (sel-1))
-			draw_menu(p, 300, incr, 2 , BLACK, WHITE, BLACK, SMALL, t);
+			draw_menu(p, BOX_WIDTH, incr, 2 , BLACK, WHITE, BLACK, SMALL, t);
 		else if(i == (sel-1))
-			draw_menu(p, 300, incr, 2 , WHITE, BLACK, WHITE, SMALL, t); // highlighted entry (i.e invert colors)
+			draw_menu(p, BOX_WIDTH, incr, 2 , WHITE, BLACK, WHITE, SMALL, t);
 	}
 }
 
@@ -320,12 +311,12 @@ void highlight(Button b){
 	Point p = {b.left, b.top};
 	if(is_kb_butt(b)){
 		if(is_big_kb(b)){
-			draw_button(p, BUTT_SIZE*2, BUTT_SIZE, 1, WHITE, BLACK, WHITE, b.text, MEDIUM);
+			draw_button(p, KEY_SIZE*2, KEY_SIZE, 1, WHITE, BLACK, WHITE, b.text, MEDIUM);
 		}
 		else{
 			char* c = "A";
 			strncpy(c, &b.key, 1);
-			draw_button(p, BUTT_SIZE, BUTT_SIZE, 1, WHITE, BLACK, WHITE, c, MEDIUM);
+			draw_button(p, KEY_SIZE, KEY_SIZE, 1, WHITE, BLACK, WHITE, c, MEDIUM);
 		}
 	}
 	else if(is_arrow_butt(b)){
@@ -343,12 +334,12 @@ void unhighlight(Button b){
 	Point p = {b.left, b.top};
 	if(is_kb_butt(b)){
 		if(is_big_kb(b)){
-			draw_button(p, BUTT_SIZE*2, BUTT_SIZE, 1, BLACK, WHITE, BLACK, b.text, MEDIUM);
+			draw_button(p, KEY_SIZE*2, KEY_SIZE, 1, BLACK, WHITE, BLACK, b.text, MEDIUM);
 		}
 		else{
 			char* c = "A";
 			strncpy(c, &b.key, 1);
-			draw_button(p, BUTT_SIZE, BUTT_SIZE, 1, BLACK, WHITE, BLACK, c, MEDIUM);
+			draw_button(p, KEY_SIZE, KEY_SIZE, 1, BLACK, WHITE, BLACK, c, MEDIUM);
 		}
 	}
 	else if(is_arrow_butt(b)){
