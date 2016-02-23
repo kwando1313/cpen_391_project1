@@ -7,7 +7,7 @@
 #include "graph.h"
 
 adjacencyList* init_adjList(void);
-void add_directed_edge(adjacencyList* adjList, int vertex_id, cost cost);
+void add_directed_edge(adjacencyList* adjList, int vertex_id, bool road);
 bool remove_directed_edge(adjacencyList* adjList, int vertex_id);
 void add_name(graph* graph, char* name);
 
@@ -45,7 +45,7 @@ adjacencyList* init_adjList(void){
 	adjacencyList* adjList = malloc(sizeof(adjacencyList));
 	adjList->max_neighbours = DEFAULT_NUM_NEIGHBOURS;
 	adjList->num_neighbours = 0;
-	adjList->costs = malloc(DEFAULT_NUM_NEIGHBOURS*sizeof(cost));
+	adjList->roads = malloc(DEFAULT_NUM_NEIGHBOURS*sizeof(bool));
 	adjList->neighbours = malloc(DEFAULT_NUM_NEIGHBOURS*sizeof(int));
 	return adjList;
 }
@@ -65,7 +65,7 @@ int add_vertex(graph* graph, vertex* v){
 	return num_vertices;
 }
 
-void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes){
+void add_edge(graph* graph, int v0_id, int v1_id, bool road){
 	// v0, v1 should exist in the graph
 	assert(v0_id < graph->num_vertices && v1_id < graph->num_vertices);
 
@@ -80,20 +80,19 @@ void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes){
 		printf("ERROR: trying to re-add edge %d, %d\n", v0_id, v1_id);
 		return;
 	}
-	add_directed_edge(v0->adjList, v1_id, cost_between_nodes);
-	add_directed_edge(v1->adjList, v0_id, cost_between_nodes);
+	add_directed_edge(v0->adjList, v1_id, road);
+	add_directed_edge(v1->adjList, v0_id, road);
 }
 
-void add_directed_edge(adjacencyList* adjList, int vertex_id, cost cost){
+void add_directed_edge(adjacencyList* adjList, int vertex_id, bool road){
 	if (adjList->num_neighbours == adjList->max_neighbours){
 		adjList->max_neighbours *= 2;
-		//wtf? why does eclipse not recognize my typedef...
-		struct __cost* new_costs = realloc(adjList->costs, sizeof(cost)*adjList->max_neighbours);
-		adjList->costs = new_costs;
+		bool* new_roads = realloc(adjList->roads, sizeof(bool)*adjList->max_neighbours);
+		adjList->roads = new_roads;
 		int* new_neighbours = realloc(adjList->neighbours, sizeof(int)*adjList->max_neighbours);
 		adjList->neighbours = new_neighbours;
 	}
-	adjList->costs[adjList->num_neighbours] = cost;
+	adjList->roads[adjList->num_neighbours] = road;
 	adjList->neighbours[adjList->num_neighbours] = vertex_id;
 	adjList->num_neighbours++;
 }
@@ -102,13 +101,13 @@ bool remove_directed_edge(adjacencyList* adjList, int vertex_id){
 	bool success = false;
 	for(int i = 0; i < adjList->num_neighbours; i++) {
 		int* neighbour = &adjList->neighbours[i];
-		cost* curr_cost = &adjList->costs[i];
+		bool* curr_is_road = &adjList->roads[i];
 		if (*neighbour == vertex_id) {
 			// since all we do is shift data from right to left to replace what we want to "delete",
 			// there's no point in moving at the last spot
 			if (i != adjList->num_neighbours-1){
 				memmove(neighbour, neighbour+1, (adjList->num_neighbours-i-1)*sizeof(int));
-				memmove(curr_cost, curr_cost+1, (adjList->num_neighbours-i-1)*sizeof(cost));
+				memmove(curr_is_road, curr_is_road+1, (adjList->num_neighbours-i-1)*sizeof(bool));
 			}
 			success = true;
 			adjList->num_neighbours--;
@@ -155,10 +154,22 @@ vertex* get_vertex(graph* graph, int id){
 	return v;
 }
 
+bool edge_is_road(graph* graph, int v0_id, int v1_id){
+	assert(graph_has_edge(graph, v0_id, v1_id));
+
+	adjacencyList* list = get_vertex(graph, v0_id)->adjList;
+	for(int i = 0; i < list->num_neighbours; i++) {
+		if (list->neighbours[i] == v1_id){
+			return list->roads[i];
+		}
+	}
+	return false;
+}
+
 void destroy_graph(graph* graph){
 	for (int i = 0; i < graph->num_vertices; i++) {
 		vertex* curr = graph->vertices[i];
-		free(curr->adjList->costs);
+		free(curr->adjList->roads);
 		free(curr->adjList->neighbours);
 		free(curr->adjList);
 		free(curr->name);

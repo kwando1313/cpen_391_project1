@@ -9,6 +9,9 @@
 #define DEFAULT_NUM_NEIGHBOURS 4
 #define DEFAULT_GRAPH_SIZE 64
 
+#define ROAD_COST 0
+#define PATH_COST 1
+
 typedef struct __name_list{
 	char* name;
 	struct __name_list* next;
@@ -27,17 +30,10 @@ typedef struct __astar_node{
 	int h_val; //heuristic val based on distance to goal
 } astar_node;
 
-typedef struct __cost{
-	//TODO: replace this with some other bs. We already cover distance with get_distance_heuristic
-	int distance_cost;
-} cost;
-
 typedef struct __adjacencyList{
 	int max_neighbours;
 	int num_neighbours;
-	// TODO find better solution to this if memory is an issue
-	// costs are symmetric
-	cost* costs;
+	bool* roads;
 	//too much work to sort, not worth it, max neighbours will probably be ~10
 	int* neighbours;
 } adjacencyList;
@@ -76,16 +72,17 @@ vertex* init_vertex(int latitude, int longitude, float altitude, char* name,
 		int zoomed_in_x, int zoomed_in_y, int zoomed_out_x, int zoomed_out_y);
 int add_vertex(graph* graph, vertex* v);
 vertex* get_vertex(graph* graph, int id);
-void add_edge(graph* graph, int v0_id, int v1_id, cost cost_between_nodes);
+void add_edge(graph* graph, int v0_id, int v1_id, bool road);
 bool remove_edge(graph* graph, int v0_id, int v1_id);
 bool vertex_has_edge(vertex* v, int v1_id);
 bool graph_has_edge(graph* graph, int v0_id, int v1_id);
 Point get_vertex_xy(vertex* v);
+bool edge_is_road(graph* graph, int v0_id, int v1_id);
 
 /* pathfinding */
-int* a_star(graph* graph, int start, int goal);
-void print_path_console(graph* graph, int start, int goal);
-path_points* get_path_points(graph* graph, int start, int goal);
+int* a_star(graph* graph, int start, int goal, bool roads_only);
+void print_path_console(graph* graph, int start, int goal, bool roads_only);
+path_points* get_path_points(graph* graph, int start, int goal, bool roads_only);
 void destroy_path_points(path_points* path);
 
 /* other */

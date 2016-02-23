@@ -60,8 +60,8 @@ void handle_edges(short file, graph* graph){
 		}
 		else if (c == ';'){
 			strcpy(arr[y], text);
-			cost cost1 = {atoi(arr[2])};
-			add_edge(graph, atoi(arr[0]), atoi(arr[1]), cost1);
+			bool road = (atoi(arr[2]) == ROAD_COST);
+			add_edge(graph, atoi(arr[0]), atoi(arr[1]), road);
 			memset(&text[0], 0, sizeof(text));
 			y=0;
 		}

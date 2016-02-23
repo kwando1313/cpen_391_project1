@@ -36,7 +36,7 @@ void print_astar_node(astar_node* node);
  * - searchable
  * - chosen btree(O(logn) for all). Heap would be O(n) to search, O(logn) for find/remove, O(logn) to add.
  */
-int* a_star(graph* graph, int start, int goal){
+int* a_star(graph* graph, int start, int goal, bool roads_only){
 	hashmap* closed_set = hashmapCreate(DEFAULT_PATH_SIZE);
 	hashmap* path = hashmapCreate(DEFAULT_PATH_SIZE);
 
@@ -69,6 +69,10 @@ int* a_star(graph* graph, int start, int goal){
 
 		for (int i = 0; i < num_neighbours; i++){
 			int neighbour_id = curr_vertex->adjList->neighbours[i];
+
+			if(roads_only && !edge_is_road(graph, curr_node->v_id, neighbour_id)){
+				continue;
+			}
 
 			if (hashmapGet(closed_set, neighbour_id) != HASHMAP_ERROR) {
 				//already explored node
@@ -173,8 +177,8 @@ int get_cost(graph* graph, int curr, int neighbour){
 	return get_distance_heuristic(graph, curr, neighbour);
 }
 
-void print_path_console(graph* graph, int start, int goal){
-	int* path = a_star(graph, start, goal);
+void print_path_console(graph* graph, int start, int goal, bool roads_only){
+	int* path = a_star(graph, start, goal, roads_only);
 	if (path == NULL) {
 		return;
 	}
@@ -189,8 +193,8 @@ void print_path_console(graph* graph, int start, int goal){
 	free(path);
 }
 
-path_points* get_path_points(graph* graph, int start, int goal){
-	int* path_ids = a_star(graph, start, goal);
+path_points* get_path_points(graph* graph, int start, int goal, bool roads_only){
+	int* path_ids = a_star(graph, start, goal, roads_only);
 	assert(path_ids != NULL);
 	int curr = 0;
 
