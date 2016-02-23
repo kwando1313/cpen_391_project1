@@ -203,7 +203,10 @@ path_points* get_path_points(graph* graph, int start, int goal, bool roads_only)
 	path->size = DEFAULT_PATH_SIZE;
 	path->actual_size = 0;
 
+	printf("Number of vertices in graph: %d\n", graph->num_vertices);
+
 	while(1) {
+		printf("Current vertex ID: %d\n", path_ids[curr]);
 		vertex* v = get_vertex(graph, path_ids[curr]);
 		Point to_add = get_vertex_xy(v);
 		append_to_path_points_array(path, curr, to_add);

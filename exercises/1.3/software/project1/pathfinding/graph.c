@@ -298,3 +298,30 @@ void print_name_list(name_list* nl){
 	}
 	printf("\n");
 }
+
+void find_range_of_graph(graph* graph, int start, int goal, bool roads_only){
+	path_points* points = get_path_points(graph, start, goal, roads_only);
+	Point min_corner = points->ordered_point_arr[0];
+	Point max_corner = points->ordered_point_arr[0];
+
+	for (int x = 0; x < points->actual_size; x++){
+		if (points->ordered_point_arr[x].x < min_corner.x){
+			min_corner.x = points->ordered_point_arr[x].x;
+		}
+		if (points->ordered_point_arr[x].y < min_corner.y){
+			min_corner.y = points->ordered_point_arr[x].y;
+		}
+		if (points->ordered_point_arr[x].x > max_corner.x){
+			max_corner.x = points->ordered_point_arr[x].x;
+		}
+		if (points->ordered_point_arr[x].y > max_corner.y){
+			max_corner.y = points->ordered_point_arr[x].y;
+		}
+	}
+	printf("One corner is: %d, %d the other corner is: %d, %d", min_corner.x, min_corner.y, max_corner.x, max_corner.y);
+	HLine(min_corner.x, min_corner.y, max_corner.x - min_corner.x, 0);
+	HLine(min_corner.x, max_corner.y, max_corner.x - min_corner.x, 0);
+	VLine(min_corner.x, min_corner.y, max_corner.y - min_corner.y, 0);
+	VLine(max_corner.x, min_corner.y, max_corner.y - min_corner.y, 0);
+
+}
