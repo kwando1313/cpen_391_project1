@@ -18,9 +18,6 @@ void append_to_path_points_array(path_points* path, int i, Point to_add);
 //debugging only
 void print_astar_node(astar_node* node);
 
-//graph draw
-void draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour);
-
 /*
  * Notes on datastructures chosen
  *
