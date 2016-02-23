@@ -100,26 +100,31 @@ void clear_extra_map_space(int height, int width){
  * We're picking the top left point to start from
  * but actually draw from the bottom left first, since the data is stored this way
  */
-void draw_image(Point start){
-	int height = (image_height[zoom_level] < DISPLAY_HEIGHT) ? image_height[zoom_level] : DISPLAY_HEIGHT;
-	int width = (image_width[zoom_level] < DISPLAY_WIDTH) ? image_width[zoom_level]: DISPLAY_WIDTH;
-
-	clear_extra_map_space(height, width);
-
-	for (int y = 0; y < height; y++){
-		for (int x = 0; x < width; x++){
+void draw_image_segment(Point topLeft, int width, int height){
+	for (int y = topLeft.y; y < height; y++){
+		for (int x = topLeft.x; x < width; x++){
 			int initialX = x;
-			char colour = image_pixels[zoom_level][start.x + x][start.y + y];
-			char colour2 = image_pixels[zoom_level][start.x + x][start.y + y];
+			char colour = image_pixels[zoom_level][curr_image_pos.x + x][curr_image_pos.y + y];
+			char colour2 = image_pixels[zoom_level][curr_image_pos.x + x][curr_image_pos.y + y];
 
 			while (colour == colour2 && x < width){
 				x++;
-				colour2 = image_pixels[zoom_level][start.x+x][start.y+y];
+				colour2 = image_pixels[zoom_level][curr_image_pos.x+x][curr_image_pos.y+y];
 			}
 			HLine(initialX, height - y - 1, x - initialX, (int)colour);
 			x--;
 		}
 	}
+}
+
+void draw_full_image(void){
+	int height = (image_height[zoom_level] < DISPLAY_HEIGHT) ? image_height[zoom_level] : DISPLAY_HEIGHT;
+	int width = (image_width[zoom_level] < DISPLAY_WIDTH) ? image_width[zoom_level]: DISPLAY_WIDTH;
+
+	clear_extra_map_space(height, width);
+
+	Point topLeft = {0,0};
+	draw_image_segment(topLeft, width, height);
 }
 
 /*	Move the x and y start points according to button
@@ -153,7 +158,7 @@ void move_img (Direction direction){
 		printf ("LEFT\n");
 	}
 
-	draw_image(curr_image_pos);
+	draw_full_image();
 }
 
 Point convert_pnt_to_zoom_in(Point pnt){

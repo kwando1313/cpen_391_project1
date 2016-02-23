@@ -7,6 +7,9 @@
 
 #define DEFAULT_PATH_SIZE 8
 
+Point prev_min_corner = NULL;
+Point prev_max_corner = NULL;
+
 astar_node* init_astar_node(int v_id, int g_val, int h_val);
 int get_distance_heuristic(graph* graph, int start, int goal);
 int get_cost(graph* graph, int curr, int neighbour);
@@ -202,19 +205,20 @@ void update_path_range(path_points* path, Point curr){
 	}
 
 	if (path->max_corner == NULL){
-		path->max_corner = curr;
+		path->max_corner.x = curr.x + 1;
+		path->max_corner.y = curr.y + 1;
 	}
 
 	if (path->min_corner.x > curr.x) {
 		path->min_corner.x = curr.x;
-	} else if (path->max_corner.x < curr.x) {
-		path->max_corner.x = curr.x;
+	} else if (path->max_corner.x <= curr.x) {
+		path->max_corner.x = curr.x + 1; // max corner is up to but not including
 	}
 
 	if (path->min_corner.y > curr.y) {
 		path->min_corner.y = curr.y;
-	} else if (path->max_corner.y < curr.y) {
-		path->max_corner.y = curr.y;
+	} else if (path->max_corner.y <= curr.y) {
+		path->max_corner.y = curr.y + 1;
 	}
 }
 
@@ -261,7 +265,13 @@ void print_astar_node(astar_node* node){
 }
 
 void draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour){
+	//redraw over min/max
+	if (prev_min_corner && prev_max_corner) {
+		draw_image_segment(prev_min_corner, prev_max_corner.x, prev_max_corner.y);
+	}
 	path_points* points = get_path_points(graph, start, goal, roads_only);
+	prev_min_corner = points->min_corner;
+	prev_max_corner = points->max_corner;
 	draw_path(points->ordered_point_arr, points->actual_size, colour);
 	destroy_path_points(points);
 }

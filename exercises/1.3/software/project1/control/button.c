@@ -321,8 +321,8 @@ void do_zoom(){
 
 		//printf("sel final %d, %d\n", sel.x, sel.y);
 	}
-
-	draw_image(sel);
+	curr_image_pos = sel;
+	draw_full_image();
 }
 
 // Display app about

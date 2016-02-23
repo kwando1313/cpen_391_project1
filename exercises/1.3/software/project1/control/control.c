@@ -136,6 +136,7 @@ void load_from_sd(){
 	load_zoom_out_image("zoomout.bmp");
 	zoom_level = ZOOM_OUT;
 	Point p = {0,0};
-	draw_image(p);
+	curr_image_pos = p;
+	draw_full_image();
 	load_graph("nodes.txt");
 }

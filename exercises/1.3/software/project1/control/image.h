@@ -26,7 +26,8 @@ int image_height[2];
 
 void load_image(char* filename);
 void move_img (Direction direction);
-void draw_image(Point start);
+void draw_full_image(void);
+void draw_image_segment(Point topLeft, int width, int height);
 Point convert_pnt_to_zoom_in(Point pnt);
 
 #endif /* IMAGE_H_ */
