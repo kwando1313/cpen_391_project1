@@ -65,6 +65,8 @@ typedef struct __graph {
 } graph;
 
 graph* full_map_graph;
+//const static Point NULL_CORNER = {-1,-1};
+Point prev_min_corner, prev_max_corner;
 
 /* basics */
 graph* init_graph(int inital_num_vertices);

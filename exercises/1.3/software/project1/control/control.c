@@ -10,12 +10,28 @@
 #include "misc_helpers.h"
 #include "button.h"
 
+const static Point NULL_CORNER = {-1,-1};
+extern Point curr_image_pos, prev_min_corner, prev_max_corner;
+//extern const Point NULL_CORNER;
+extern int zoom_level;
+
+void init_globals();
+
 // initialize and load up graphics on touchscreen
 void init_control(){
 	Init_GPS();
 	init_touch();
 	init_screen();
 	init_keyboard();
+	init_globals();
+}
+
+void init_globals(){
+	prev_min_corner = NULL_CORNER;
+	prev_max_corner = NULL_CORNER;
+	zoom_level = ZOOM_OUT;
+	Point p = {0,0};
+	curr_image_pos = p;
 }
 
 // Get the node from where we pressed
@@ -134,9 +150,6 @@ void kb_listen(){
 void load_from_sd(){
 	load_zoom_in_image("zoomin.bmp");
 	load_zoom_out_image("zoomout.bmp");
-	zoom_level = ZOOM_OUT;
-	Point p = {0,0};
-	curr_image_pos = p;
 	draw_full_image();
 	load_graph("nodes.txt");
 }

@@ -18,6 +18,7 @@
 #define ZOOM_OUT 1
 
 int zoom_level;
+Point curr_image_pos;
 
 // Store the 8bit values of the colours for each pixel.
 char** image_pixels[2]; //[zoom_level][bmpWidth][bmpHeight]

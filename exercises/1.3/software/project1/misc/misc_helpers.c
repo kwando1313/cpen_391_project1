@@ -154,3 +154,7 @@ int alphaBetize (char *a, char *b) {
 		return strlen(a) - strlen(b);
 	}
 }
+
+bool points_equal(Point a, Point b){
+	return (a.x == b.x && a.y == b.y);
+}

@@ -8,8 +8,7 @@
 #include "ColourPallette.h"
 
 extern const unsigned int ColourPalletteData[256];
-
-Point curr_image_pos = {0,0};
+extern int zoom_level;
 
 void load_zoom_in_pixels(short file);
 void load_zoom_out_pixels(short file);

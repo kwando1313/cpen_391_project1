@@ -16,6 +16,8 @@
 
 typedef struct{int x, y; } Point;
 
+bool points_equal(Point a, Point b);
+
 int alphaBetize (char *a, char *b);
 
 void load_file(char* filename, void (*func)(short));

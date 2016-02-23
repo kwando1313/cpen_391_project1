@@ -6,6 +6,8 @@
 #include "misc_helpers.h"
 #include "graph.h"
 
+extern int zoom_level;
+
 adjacencyList* init_adjList(void);
 void add_directed_edge(adjacencyList* adjList, int vertex_id, bool road);
 bool remove_directed_edge(adjacencyList* adjList, int vertex_id);
