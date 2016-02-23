@@ -10,17 +10,34 @@
 #include "misc_helpers.h"
 #include "button.h"
 
+<<<<<<< HEAD
 
 #define push_buttons123 (volatile int *) 0x80001060
 
 int button_value;
 int old_button;
 // initialize and load up graphics on touchscreen
+=======
+const static Point NULL_CORNER = {-1,-1};
+extern Point curr_image_pos, prev_min_corner, prev_max_corner;
+extern int zoom_level;
+
+// Initialise and load up graphics on touchscreen
+>>>>>>> d759b6775b8963cf209ad7730d50ef76762c35ff
 void init_control(){
 	Init_GPS();
 	init_touch();
 	init_screen();
 	init_keyboard();
+	init_globals();
+}
+
+void init_globals(){
+	prev_min_corner = NULL_CORNER;
+	prev_max_corner = NULL_CORNER;
+	zoom_level = ZOOM_OUT;
+	Point p = {0,0};
+	curr_image_pos = p;
 }
 
 // Get the node from where we pressed
@@ -40,12 +57,8 @@ int get_node(graph* graph){
 			c = p_f.x;
 			d = p_f.y;
 
-		} while(sqrt(pow((c-a),2) + pow((d-b),2)) > RADIUS); //check for valid press&release
+		} while(sqrt(pow((c-a),2) + pow((d-b),2)) > RADIUS); //check for valid press & release
 
-		// vertex p = init_vertex(c, d, 0, "press", c, d);
-		// assuming we read have access to the graph data
-		// IF WE CAN (especially for sprint2): create node in graph with coords a,b; find nearest node and check if distance < RADIUS
-		// ELSE: iterate through the nodes in the graph like a dumbass and check if shortest distance < RADIUS
 		node_id = get_valid_vertex(graph, p_f);
 		if (node_id == -1) {
 			printf("x: %d, y: %d", p_f.x, p_f.y);
@@ -70,39 +83,25 @@ int get_valid_vertex(graph* graph, Point p){
 	return -1;
 }
 
-// Returns whether a button is a keyboard button or not
-bool is_kb_butt(Button* butt){
-	if(butt->id < KB_KEYS)
-		return true;
-	return false;
-}
-
-// Listen for button inputs
-
+// Listen for screen button presses
 void s_listen(){
-//		graph* graph = create_test_graph();
-//		draw_graph(graph, YELLOW, RED);
 
-		while(1){
-			// Wait for button input
-			Button* butt;
-			do{
-				Point p_i = GetPress();
-				//printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
-				butt = get_s_button(p_i);
-			}
-			while(butt == NULL);
-//			printf("%c: ", butt->key);
-//			printf("%i\n", butt->id);
-			butt->p();
+	while(1){
+		Button* butt;
+		do{
+			Point p_i = GetPress();
+			printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
+			butt = get_s_button(p_i);
 		}
+		while(butt == NULL);
+		butt->prs_p(*butt);
+		butt->p();
+	}
 }
 
-// Listen for only keyboard button inputs
+// Listen for keyboard + NORTH/SOUTH + ROAD button presses
 void kb_listen(){
 	while(1){
-
-		// Wait for keyboard button input
 		Button* butt;
 		do{
 			Point p_i = GetPress();
@@ -110,11 +109,11 @@ void kb_listen(){
 			butt = get_kb_button(p_i);
 		}
 		while(butt == NULL );
-		printf("%c: ", butt->key);
-		printf("%i\n", butt->id);
 
-		if(butt->id != BACK_BUTT.id && butt->id != ENTER_BUTT.id && butt->id != DEL_BUTT.id)
+		butt->prs_p(*butt);
+		if(butt->id != BACK_BUTT.id && butt->id != ENTER_BUTT.id && butt->id != DEL_BUTT.id && butt->id != ROAD_BUTT.id){
 			butt->kb_p(butt->key);
+		}
 
 		// We are done with the keyboard upon BACK
 		else if(butt->id == BACK_BUTT.id){
@@ -124,22 +123,20 @@ void kb_listen(){
 
 		// We are done with the keyboard upon valid search input
 		else if(butt->id == ENTER_BUTT.id){
-			if(butt->ent_p()){
+			if(butt->ent_p(*butt)){
 				break;
 			}
 		}
 
-		// Butt is the delete button
-		else if(butt->id == DEL_BUTT.id)
+		else if(butt->id == DEL_BUTT.id || butt->id == ROAD_BUTT.id){
 			butt->p();
+		}
 	}
 }
 
 void load_from_sd(){
 	load_zoom_in_image("zoomin.bmp");
 	load_zoom_out_image("zoomout.bmp");
-	zoom_level = ZOOM_OUT;
-	Point p = {0,0};
-	draw_image(p);
+	draw_full_image();
 	load_graph("nodes.txt");
 }

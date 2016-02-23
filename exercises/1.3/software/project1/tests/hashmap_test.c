@@ -1,4 +1,5 @@
 #include "hashmap.h"
+#include <stdio.h>
 
 int hashmap_test(void) {
 	printf("Starting hashmap tests...\n\n");

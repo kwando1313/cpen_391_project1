@@ -18,6 +18,7 @@
 #define ZOOM_OUT 1
 
 int zoom_level;
+Point curr_image_pos;
 
 // Store the 8bit values of the colours for each pixel.
 char** image_pixels[2]; //[zoom_level][bmpWidth][bmpHeight]
@@ -26,7 +27,8 @@ int image_height[2];
 
 void load_image(char* filename);
 void move_img (Direction direction);
-void draw_image(Point start);
+void draw_full_image(void);
+void draw_image_segment(Point topLeft, Point botRight);
 Point convert_pnt_to_zoom_in(Point pnt);
 
 #endif /* IMAGE_H_ */

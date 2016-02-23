@@ -8,14 +8,14 @@
 #include "ColourPallette.h"
 
 extern const unsigned int ColourPalletteData[256];
-
-Point curr_image_pos = {0,0};
+extern int zoom_level;
 
 void load_zoom_in_pixels(short file);
 void load_zoom_out_pixels(short file);
 void get_header(short file, int zoom);
 void get_pixels(short file, int zoom);
 void clear_extra_map_space(int height, int width);
+char get_colour(int x, int y);
 
 /*	Load image from SD Card.
  * 	SD Card must be formatted in FAT16 to work with DE2.
@@ -96,30 +96,42 @@ void clear_extra_map_space(int height, int width){
 	}
 }
 
+char get_colour(int x, int y){
+	int height = image_height[zoom_level];
+	//in graphics, (0,0) is topLeft. for some unknown reason, bmp (0,0) is bottom left
+	return image_pixels[zoom_level][curr_image_pos.x + x][height - (curr_image_pos.y + y) - 1];
+}
+
 /* Draw the pictures in the range we want.
  * We're picking the top left point to start from
  * but actually draw from the bottom left first, since the data is stored this way
  */
-void draw_image(Point start){
+void draw_image_segment(Point topLeft, Point botRight){
+	for (int y = topLeft.y; y < botRight.y; y++){
+		for (int x = topLeft.x; x < botRight.x; x++){
+			int initialX = x;
+			char colour = get_colour(x, y);
+			char colour2 = get_colour(x, y);
+
+			while (colour == colour2 && x < botRight.x){
+				x++;
+				colour2 = get_colour(x, y);
+			}
+			HLine(initialX, y, x - initialX, (int)colour);
+			x--;
+		}
+	}
+}
+
+void draw_full_image(void){
 	int height = (image_height[zoom_level] < DISPLAY_HEIGHT) ? image_height[zoom_level] : DISPLAY_HEIGHT;
 	int width = (image_width[zoom_level] < DISPLAY_WIDTH) ? image_width[zoom_level]: DISPLAY_WIDTH;
 
 	clear_extra_map_space(height, width);
 
-	for (int y = 0; y < height; y++){
-		for (int x = 0; x < width; x++){
-			int initialX = x;
-			char colour = image_pixels[zoom_level][start.x + x][start.y + y];
-			char colour2 = image_pixels[zoom_level][start.x + x][start.y + y];
-
-			while (colour == colour2 && x < width){
-				x++;
-				colour2 = image_pixels[zoom_level][start.x+x][start.y+y];
-			}
-			HLine(initialX, height - y - 1, x - initialX, (int)colour);
-			x--;
-		}
-	}
+	Point topLeft = {0,0};
+	Point botRight = {width, height};
+	draw_image_segment(topLeft, botRight);
 }
 
 /*	Move the x and y start points according to button
@@ -153,7 +165,7 @@ void move_img (Direction direction){
 		printf ("LEFT\n");
 	}
 
-	draw_image(curr_image_pos);
+	draw_full_image();
 }
 
 Point convert_pnt_to_zoom_in(Point pnt){

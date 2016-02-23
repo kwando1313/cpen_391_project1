@@ -2,10 +2,12 @@
 #include "b_tree.h"
 #include "hashmap.h"
 #include "misc_helpers.h"
+#include "graphics.h"
 #include <math.h>
 #include <assert.h>
 
-#define DEFAULT_PATH_SIZE 8
+#define DEFAULT_PATH_SIZE 16
+const static Point NULL_CORNER = {-1,-1};
 
 astar_node* init_astar_node(int v_id, int g_val, int h_val);
 int get_distance_heuristic(graph* graph, int start, int goal);
@@ -197,24 +199,25 @@ void print_path_console(graph* graph, int start, int goal, bool roads_only){
 }
 
 void update_path_range(path_points* path, Point curr){
-	if (path->min_corner == NULL){
+	if (points_equal(path->min_corner,NULL_CORNER)){
 		path->min_corner = curr;
 	}
 
-	if (path->max_corner == NULL){
-		path->max_corner = curr;
+	if (points_equal(path->max_corner,NULL_CORNER)){
+		path->max_corner.x = curr.x + 1;
+		path->max_corner.y = curr.y + 1;
 	}
 
 	if (path->min_corner.x > curr.x) {
 		path->min_corner.x = curr.x;
-	} else if (path->max_corner.x < curr.x) {
-		path->max_corner.x = curr.x;
+	} else if (path->max_corner.x <= curr.x) {
+		path->max_corner.x = curr.x + 1; // max corner is up to but not including
 	}
 
 	if (path->min_corner.y > curr.y) {
 		path->min_corner.y = curr.y;
-	} else if (path->max_corner.y < curr.y) {
-		path->max_corner.y = curr.y;
+	} else if (path->max_corner.y <= curr.y) {
+		path->max_corner.y = curr.y + 1;
 	}
 }
 
@@ -227,8 +230,8 @@ path_points* get_path_points(graph* graph, int start, int goal, bool roads_only)
 	path->ordered_point_arr = malloc(DEFAULT_PATH_SIZE*sizeof(Point));
 	path->size = DEFAULT_PATH_SIZE;
 	path->actual_size = 0;
-	path->min_corner = NULL;
-	path->max_corner = NULL;
+	path->min_corner = NULL_CORNER;
+	path->max_corner = NULL_CORNER;
 
 	while(1) {
 		vertex* v = get_vertex(graph, path_ids[curr]);
@@ -261,7 +264,13 @@ void print_astar_node(astar_node* node){
 }
 
 void draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour){
+	//redraw over min/max
+	if (!points_equal(prev_min_corner, NULL_CORNER) && !points_equal(prev_max_corner, NULL_CORNER)){
+		draw_image_segment(prev_min_corner,  prev_max_corner);
+	}
 	path_points* points = get_path_points(graph, start, goal, roads_only);
+	prev_min_corner = points->min_corner;
+	prev_max_corner = points->max_corner;
 	draw_path(points->ordered_point_arr, points->actual_size, colour);
 	destroy_path_points(points);
 }

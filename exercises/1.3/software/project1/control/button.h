@@ -5,17 +5,25 @@
 #include <string.h>
 #include "graph.h"
 
-typedef struct Button {
+#define FLICKER_DELAY 100000
+#define TOGGLE_DELAY 10000
+
+typedef struct Button{
+	bool* pressed;
     int left;
     int right;
     int top;
     int bottom;
     char key;
     int id;
+    int dir;
+    char* text;
+    // Button fcns
     void (*p)();
+    void (*prs_p)(struct Button b);
     bool (*ent_p)();
-    void (*kb_p)(char key); // what each button does
-} Button ;
+    void (*kb_p)(char key);
+} Button;
 
 Button* keyboard;
 
@@ -33,22 +41,30 @@ Button* keyboard;
 #define EAST_BUTT keyboard[36]
 #define NORTH_BUTT keyboard[37]
 #define SOUTH_BUTT keyboard[38]
+#define ROAD_BUTT keyboard[39]
+#define ROAD_TOG = ROAD_BUTT.pressed
 
 // keyboard variables
-#define N_KEYS 39
+#define N_KEYS 40
 #define KB_KEYS 30
 
 // initialise keyboard
 void init_kb_button(char key, int id);
 void init_s_button(char key, int id);
 void init_keyboard();
-//void destroy_keyboard();
-
+void destroy_keyboard();
 
 // Gets the button upon input for control
 int falls_inside(Point p, Button b);
 Button* get_s_button(Point p);
 Button* get_kb_button(Point p);
+
+bool is_kb_butt(Button b);
+bool is_big_kb(Button b);
+bool is_arrow_butt(Button b);
+bool is_screen_butt(Button b);
+int get_arrow_dir(Button b);
+char* get_butt_text(Button b);
 
 // ptr fcns
 void do_key(char key);
@@ -60,12 +76,15 @@ void do_dir();
 void do_zoom();
 void do_about();
 void do_pop();
+void do_sel(char key);
 void do_west();
 void do_east();
 void do_north();
-void do_up(char key);
+void do_up();
 void do_south();
-void do_down(char key);
-
+void do_down();
+void flicker(Button b);
+void toggle(Button b);
+void do_nothing();
 
 #endif /* BUTTON_H_ */
