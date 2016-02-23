@@ -18,6 +18,7 @@ const char KEYS[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '-',
 			  	  	'!', '@', '#', '$', '%',
 			  	  	'a', 'd', 'w', 's'};
 
+// Initialise buttons on the keyboard
 void init_kb_button(char key, int id){
 	keyboard[id].key = key;
 	keyboard[id].id = id;
@@ -77,6 +78,7 @@ void init_kb_button(char key, int id){
 	keyboard[id].kb_p = do_key;
 }
 
+// Initialise buttons on the screen not on the keyboard
 void init_s_button(char key, int id){
 	keyboard[id].key = key;
 	keyboard[id].id = id;
@@ -167,38 +169,32 @@ void init_keyboard(){
 
 	// KB buttons
 	for(int i = 0; i < KB_KEYS; i++){
-		//keyboard[i] = malloc(sizeof(Button));
 		init_kb_button(KEYS[i], i);
 	}
 
 	// Screen buttons
 	for(int i = KB_KEYS; i < N_KEYS; i++){
-		//keyboard[i] = malloc(sizeof(Button));
 		init_s_button(KEYS[i], i);
 	}
 }
 
  void destroy_keyboard(Button* keyboard){
-//	for(int i = 0; i < N_KEYS; i++){
-//		free(keyboard[i]);
-//	}
 	free(keyboard);
 }
 
-/* Assumption: all of our buttons are rectangles. Aside: nodes aren't buttons but they are circles right now.
- * Returns true if the point is inside the button
- */
+
+ // Returns true if the point is inside the button
 int falls_inside(Point p, Button b){
 	return(falls_between(p.x, b.left, b.right) &&
 		   falls_between(p.y, b.top, b.bottom));
 }
 
-// Returns the button that was pressed.
+// Returns the screen button that was pressed and NULL if no valid button was pressed
 Button* get_s_button(Point p){
 	for(int i = KB_KEYS; i < N_KEYS; i++){
 		if(falls_inside(p, keyboard[i])){
 			Point p_f = GetRelease();
-			//printf("Released Coordinates: (%i, %i)\n", p_f.x, p_f.y);
+			printf("Released Coordinates: (%i, %i)\n", p_f.x, p_f.y);
 
 			if(falls_inside(p_f, keyboard[i])){
 				return &keyboard[i];
@@ -214,6 +210,9 @@ Button* get_s_button(Point p){
 	return NULL;
 }
 
+/* Returns the keyboard button that was pressed and NULL if no valid button was pressed
+ * North and south buttons used during search mode to select search matching
+ */
 Button* get_kb_button(Point p){
 	for(int i = 0; i < KB_KEYS; i++){
 		if(falls_inside(p, keyboard[i])){
@@ -229,7 +228,7 @@ Button* get_kb_button(Point p){
 			}
 		}
 	}
-	// North and South buttons used in search mode to select matching search entry
+
 	if(falls_inside(p, NORTH_BUTT)){
 		Point p_f = GetRelease();
 		printf("Released Coordinates: (%i, %i)\n", p_f.x, p_f.y);
@@ -342,27 +341,23 @@ void do_south(){
 
 // Select the search match entry above the current selected
 void do_up(char key){
-	printf("%c is up\n", key);
 	if(MN_COUNT < SEARCH_THRESHHOLD)
 		return;
 	if(sel > 1)
 		sel--;
 	else
 		sel = MN_COUNT;
-	printf("sel moved up to %i\n", sel);
 	match_screen(sel, MN_COUNT);
 }
 
 // Select the search match entry below the current selected
 void do_down(char key){
-	printf("%c is down\n", key);
 	if(MN_COUNT < SEARCH_THRESHHOLD)
 		return;
 	if(sel < MN_COUNT)
 		sel++;
 	else
 		sel = 1;
-	printf("sel moved down to %i\n", sel);
 	match_screen(sel, MN_COUNT);
 }
 
@@ -404,22 +399,23 @@ void do_del(){
 	}
 }
 
-/* On valid search, go to and highlight the searched node? Re-draw the map.
-	On invalid search, display invalid search and keep listening for keyboard inputs */
+/* On valid search, find the path to the selected entry from current location. Re-draw the map.
+	On invalid search, returns and keep listening for keyboard inputs */
 bool do_enter(){
-	printf("In do_enter\n");
+	bool retval = false;
 	if(ready()){
 		name_list* nl = matched_names.head;
 		for(int i = 0; i < sel; i++){
 			nl = nl->next;
 		}
+		char* name = nl->name;
 		//TODO  Now do something using the name of the selected search entry
 		do_back();
 	}
-	return false;
+	return retval;
 }
 
-// Redraw the map
+// Leave search mode and redraw the map
 void do_back(){
 	printf("In do_back\n");
 	reset_query();

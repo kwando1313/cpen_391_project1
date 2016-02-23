@@ -10,7 +10,7 @@
 #include "misc_helpers.h"
 #include "button.h"
 
-// initialize and load up graphics on touchscreen
+// Initialise and load up graphics on touchscreen
 void init_control(){
 	Init_GPS();
 	init_touch();
@@ -35,12 +35,8 @@ int get_node(graph* graph){
 			c = p_f.x;
 			d = p_f.y;
 
-		} while(sqrt(pow((c-a),2) + pow((d-b),2)) > RADIUS); //check for valid press&release
+		} while(sqrt(pow((c-a),2) + pow((d-b),2)) > RADIUS); //check for valid press & release
 
-		// vertex p = init_vertex(c, d, 0, "press", c, d);
-		// assuming we read have access to the graph data
-		// IF WE CAN (especially for sprint2): create node in graph with coords a,b; find nearest node and check if distance < RADIUS
-		// ELSE: iterate through the nodes in the graph like a dumbass and check if shortest distance < RADIUS
 		node_id = get_valid_vertex(graph, p_f);
 		if (node_id == -1) {
 			printf("x: %d, y: %d", p_f.x, p_f.y);
@@ -72,33 +68,23 @@ bool is_kb_butt(Button* butt){
 	return false;
 }
 
-// Listen for button inputs
-
+// Listen for screen button presses
 void s_listen(){
-//		graph* graph = create_test_graph();
-//		draw_graph(graph, YELLOW, RED);
-
-		while(1){
-			// Wait for button input
-
-			Button* butt;
-			do{
-				Point p_i = GetPress();
-				//printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
-				butt = get_s_button(p_i);
-			}
-			while(butt == NULL);
-//			printf("%c: ", butt->key);
-//			printf("%i\n", butt->id);
-			butt->p();
+	while(1){
+		Button* butt;
+		do{
+			Point p_i = GetPress();
+			printf("Pressed Coordinates: (%i, %i)\n", p_i.x, p_i.y);
+			butt = get_s_button(p_i);
 		}
+		while(butt == NULL);
+		butt->p();
+	}
 }
 
-// Listen for only keyboard button inputs
+// Listen for keyboard + NORTH/SOUTH button presses
 void kb_listen(){
 	while(1){
-
-		// Wait for keyboard button input
 		Button* butt;
 		do{
 			Point p_i = GetPress();
@@ -125,7 +111,6 @@ void kb_listen(){
 			}
 		}
 
-		// Butt is the delete button
 		else if(butt->id == DEL_BUTT.id)
 			butt->p();
 	}

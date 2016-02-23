@@ -95,13 +95,16 @@ void draw_menu(Point leftCorner, int width, int height, int borderWidth,
 }
 
 void draw_keyboard(Point leftCorner, int size){
-	//qwertyuiop
-	//asdfghjkl
-	//zxcvbnm
+	//qwertyuiop <-
+	//asdfghjkl ENTER
+	//zxcvbnm SPACE BACK
+
+	// These are the letters
 	char topRow[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '\0'};
 	char homeRow[] = {'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '\0'};
 	char bottomRow[] = {'Z', 'X', 'C', 'V', 'B', 'N', 'M', '\0'};
 
+	// Draw top row
 	int x = 0;
 	Point initialLeftCorner = {leftCorner.x, leftCorner.y};
 	while(topRow[x] != '\0'){
@@ -111,7 +114,10 @@ void draw_keyboard(Point leftCorner, int size){
 		leftCorner.x += size;
 		x++;
 	}
+	// Draw <-
 	draw_button(leftCorner, size, size, 1, BLACK, WHITE, BLACK, "<-", MEDIUM);
+
+	// Draw home row
 	x = 0;
 	leftCorner.x = initialLeftCorner.x;
 	leftCorner.y = initialLeftCorner.y + size;
@@ -122,7 +128,11 @@ void draw_keyboard(Point leftCorner, int size){
 		leftCorner.x += size;
 		x++;
 	}
+
+	// Draw ENTER
 	draw_button(leftCorner, 2*size, size, 1, BLACK, WHITE, BLACK, "ENTER", MEDIUM);
+
+	// Draw bottom row
 	leftCorner.x = initialLeftCorner.x;
 	leftCorner.y = initialLeftCorner.y + 2*size;
 	x = 0;
@@ -133,109 +143,12 @@ void draw_keyboard(Point leftCorner, int size){
 		leftCorner.x += size;
 		x++;
 	}
+
+	// Draw SPACE and BACK
 	draw_button(leftCorner, 2*size, size, 1, BLACK, WHITE, BLACK, "SPACE", MEDIUM);
 	leftCorner.x += 2*size;
 	draw_button(leftCorner, 2*size, size, 1, BLACK, WHITE, BLACK, "BACK", MEDIUM);
 	return;
-}
-
-// Initialises the RHS of the screen (i.e everything but the map)
-void init_screen(){
-		clear_screen(WHITE);
-
-		Point point6 = {500, 380};
-		Point point7 = {650, 380}; //Adjust these to fit within the margins...
-		Point point8 = {500, 330};
-		Point point9 = {500, 200};
-
-		char* firstTextArray[] = {"Info", "Zoom", ""};
-		char* secondTextArray[] = {"Directions", "About", ""};
-		char* thirdTextArray[] = {"Search", ""};
-		char* fourthTextArray[] = {" ", ""};
-
-		about_screen();
-
-		draw_menu(point6, 150, 50, 1, BLACK, WHITE, BLACK, SMALL, firstTextArray);
-
-		draw_menu(point7, 150, 50, 1, BLACK, WHITE, BLACK, SMALL, secondTextArray);
-
-		draw_menu(point8, 300, 50, 1 , BLACK, WHITE, BLACK, SMALL, thirdTextArray);
-
-		draw_menu(point9, 300, 130, 1 , BLACK, WHITE, BLACK, SMALL, fourthTextArray);
-
-		draw_arrows();
-
-}
-
-void about_screen(){
-	draw_information_box("Pathfinding Map (CPEN 391 Team 22)\nAlex Charles\nAngela Cho\nCaleb Kwan\nWilliam Tang\n\nWelcome to [insert name here].\n Below this menu you may:\nSearch for directions\nGet directions between two points\nOther bs, let's write this shit at the end");
-}
-
-void info_screen(){
-	draw_information_box("BUILDING INFO");
-}
-
-void directions_screen(){
-	draw_information_box("DIRECTIONS");
-}
-
-void zoom_screen(){
-//	char* name = "PIC.BMP";
-//	Point point = {500, 0};
-//	load_image(point, name, 330, 300);
-	draw_information_box("ZOOMING");
-}
-
-// draw the pop up keyboard on the LHS of the screen
-void pop_screen(){
-	draw_information_box("ENTER YOUR SEARCH!");
-
-	Point p = {30, 330};
-	Point p1 = {0, 300};
-	Point p2 = {0, 230};
-	char* t[] = {" ", ""};
-
-	//bounded in (0-500, 300-480)
-	draw_menu(p1, 500, 180, 2 , BLACK, WHITE, BLACK, SMALL, t);
-	//bounded in (0-500, 230-300)
-	draw_menu(p2, 500, 70, 2 , BLACK, WHITE, BLACK, SMALL, t);
-	//bounded in (30-470, 330-450)
-	draw_keyboard(p, 40);
-}
-
-// draw the names matched with the query string and highlight the current chosen entry
-void match_screen(int sel, int mn_count){
-	if(mn_count == 0){
-		draw_information_box("NO SEARCH RESULTS FOUND");
-		return;
-	}
-
-	char* t[2];
-	Point p;
-
-	int incr = 200 / mn_count;
-	name_list* nl = matched_names.head;
-
-	for(int i = 0; i < mn_count; i++){
-		p.x = 500;
-		p.y = i*incr;
-
-		t[0] = nl->name;
-		t[1] = "";
-
-		nl = nl->next;
-
-		if(i != (sel-1))
-			draw_menu(p, 300, incr, 2 , BLACK, 255, BLACK, SMALL, t);
-		else if(i == (sel-1))
-			draw_menu(p, 300, incr, 2 , 255, BLACK, 255, SMALL, t); // highlighted entry (i.e invert colors)
-	}
-}
-
-// redraw the map when we leave pop_screen
-void map_screen(){
-	// TODO:
-
 }
 
 void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, Direction direction){
@@ -298,4 +211,102 @@ void draw_arrows(){
 	draw_arrow(UPOINT, 50, 50, 1, BLACK, WHITE, UP);
 
 	draw_arrow(DPOINT, 50, 50, 1, BLACK, WHITE, DOWN);
+}
+
+// TODO: Add loading up the map image in here
+void init_screen(){
+		clear_screen(WHITE);
+
+		// These points define these button locations
+		Point infoZoomP = {500, 380};
+		Point dirAboutP = {650, 380};
+		Point searchP = {500, 330};
+		Point arrowsP = {500, 200};
+
+		char* infoZoomText[] = {"Info", "Zoom", ""};
+		char* dirAboutText[] = {"Directions", "About", ""};
+		char* searchText[] = {"Search", ""};
+		char* arrowsText[] = {" ", ""};
+
+		about_screen();
+
+		draw_menu(infoZoomP, 150, 50, 1, BLACK, WHITE, BLACK, SMALL, infoZoomText);
+
+		draw_menu(dirAboutP, 150, 50, 1, BLACK, WHITE, BLACK, SMALL, dirAboutText);
+
+		draw_menu(searchP, 300, 50, 1 , BLACK, WHITE, BLACK, SMALL, searchText);
+
+		draw_menu(arrowsP, 300, 130, 1 , BLACK, WHITE, BLACK, SMALL, arrowsText);
+
+		draw_arrows();
+}
+
+void about_screen(){
+	draw_information_box("PATHFINDING MAP (CPEN 391 TEAM 22)\nALEX CHARLES\nANGELO CHO\nCALEB KWAN\nWILLIAM TANG\n\nWELCOME TO [INSER NAME HERE].\nBELOW THIS MENU YOU MAY FIND:\nSEARCH FOR DIRECTIONS\nGET DIRECTIONS BETWEEN TWO POINTS\nOTHER BS");
+}
+
+void info_screen(){
+	draw_information_box("BUILDING INFO");
+}
+
+void directions_screen(){
+	draw_information_box("TOUCH A MAP POINT TO BE THE STARTING LOCATION,\n THEN TOUCH A MAP POINT TO BE THE DESTINATION LOCATION.");
+}
+
+void zoom_screen(){
+//	char* name = "PIC.BMP";
+//	Point point = {500, 0};
+//	load_image(point, name, 330, 300);
+	draw_information_box("ZOOMING");
+}
+
+// draw the pop up keyboard on the LHS of the screen
+void pop_screen(){
+	draw_information_box("ENTER YOUR SEARCH!");
+
+	Point p = {30, 330};
+	Point p1 = {0, 300};
+	Point p2 = {0, 230};
+	char* t[] = {" ", ""};
+
+	//bounded in (0-500, 300-480)
+	draw_menu(p1, 500, 180, 2 , BLACK, WHITE, BLACK, SMALL, t);
+	//bounded in (0-500, 230-300)
+	draw_menu(p2, 500, 70, 2 , BLACK, WHITE, BLACK, SMALL, t);
+	//bounded in (30-470, 330-450)
+	draw_keyboard(p, 40);
+}
+
+// draw the names matched with the query string and highlight the current chosen entry
+void match_screen(int sel, int mn_count){
+	if(mn_count == 0){
+		draw_information_box("NO SEARCH RESULTS FOUND");
+		return;
+	}
+
+	char* t[2];
+	Point p;
+
+	int incr = 200 / mn_count;
+	name_list* nl = matched_names.head;
+	for(int i = 0; i < mn_count; i++){
+		p.x = 500;
+		p.y = i*incr;
+
+		t[0] = nl->name;
+		t[1] = "";
+
+		nl = nl->next;
+
+		if(i != (sel-1))
+			draw_menu(p, 300, incr, 2 , BLACK, 255, BLACK, SMALL, t);
+		else if(i == (sel-1))
+			draw_menu(p, 300, incr, 2 , 255, BLACK, 255, SMALL, t); // highlighted entry (i.e invert colors)
+	}
+}
+
+// redraw the map when we leave pop_screen
+void map_screen(){
+	// TODO:
+
 }
