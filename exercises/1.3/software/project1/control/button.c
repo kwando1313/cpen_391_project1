@@ -351,7 +351,7 @@ void do_dir(){
 
 	int start_node = find_vertex_by_coords(full_map_graph, curr_long, curr_lat)->id;
 	draw_information_box("PLEASE SELECT DESTINATION");
-	int end_node = get_node(graph);
+	int end_node = get_node(full_map_graph);
 	draw_graph_path(full_map_graph, start_node, end_node, ROAD_TOG, BLUE);
 	draw_information_box("HAVE A FUN TRIP!");
 }
@@ -509,7 +509,7 @@ bool do_enter(){
 		}
 		char* name = nl->name;
 		int curr_lat, curr_long;
-		switch (real_data){
+		switch (button_iteration){
 			case 0:
 				get_current_coordinates(&curr_lat, &curr_long);
 				break;
@@ -528,7 +528,7 @@ bool do_enter(){
 		}
 
 		int start_node = find_vertex_by_coords(full_map_graph, curr_long, curr_lat)->id;
-		int end_node = find_vertex_by_name(name)->id;
+		int end_node = find_vertex_by_name(full_map_graph, name)->id;
 		draw_graph_path(full_map_graph, start_node, end_node, ROAD_TOG, BLUE);
 		//TODO  Now do something using the name of the selected search entry
 		do_back();
