@@ -102,6 +102,7 @@ int* a_star(graph* graph, int start, int goal, bool roads_only){
 					next_node = init_astar_node(neighbour_id, tentative_g, get_distance_heuristic(graph, neighbour_id, goal));
 
 					open_set = insert_bnode(open_set, next_node->f_val, next_node);
+
 					hashmapInsert(vid_to_astar_node, next_node, neighbour_id);
 				}
 			}
@@ -123,7 +124,7 @@ int* reconstruct_path(hashmap* path_map, int start, int current_id){
 		astar_node* v = (astar_node*)hashmapGet(path_map, current_id);
 		current_id = v->v_id;
 		array_index++;
-		append_to_array(&total_path, array_index, path_size, current_id);
+		path_size = append_to_array(&total_path, array_index, path_size, current_id);
 	}
 
 	if (current_id != start) {
@@ -202,6 +203,7 @@ path_points* get_path_points(graph* graph, int start, int goal, bool roads_only)
 	path->ordered_point_arr = malloc(DEFAULT_PATH_SIZE*sizeof(Point));
 	path->size = DEFAULT_PATH_SIZE;
 	path->actual_size = 0;
+
 
 	while(1) {
 		vertex* v = get_vertex(graph, path_ids[curr]);
