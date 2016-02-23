@@ -516,6 +516,30 @@ bool do_enter(){
 			nl = nl->next;
 		}
 		char* name = nl->name;
+		int curr_lat, curr_long;
+		switch (real_data){
+			case 0:
+				get_current_coordinates(&curr_lat, &curr_long);
+				break;
+			case 1:
+				curr_lat = 2504654;
+				curr_long = 2656412;
+				break;
+			case 2:
+				curr_lat = 2565916;
+				curr_long = 2676995;
+				break;
+			case 3:
+				curr_lat = 2453370;
+				curr_long = 2645000;
+				break;
+		}
+
+		int start_node = find_vertex_by_coords(full_map_graph, curr_long, curr_lat)->id;
+		int end_node = find_vertex_by_name(name)->id;
+		path_points* path = get_path_points(full_map_graph, start_node, end_node, ROAD_TOG);
+		draw_path(path->ordered_point_arr, path->actual_size, BLUE);
+		destroy_path_points(path);
 		//TODO  Now do something using the name of the selected search entry
 		do_back();
 	}
