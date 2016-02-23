@@ -10,20 +10,17 @@
 #include "misc_helpers.h"
 #include "button.h"
 
-<<<<<<< HEAD
 
 #define push_buttons123 (volatile int *) 0x80001060
 
 int button_value;
 int old_button;
 // initialize and load up graphics on touchscreen
-=======
 const static Point NULL_CORNER = {-1,-1};
 extern Point curr_image_pos, prev_min_corner, prev_max_corner;
 extern int zoom_level;
 
 // Initialise and load up graphics on touchscreen
->>>>>>> d759b6775b8963cf209ad7730d50ef76762c35ff
 void init_control(){
 	Init_GPS();
 	init_touch();
