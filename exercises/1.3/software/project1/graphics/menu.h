@@ -33,7 +33,7 @@
 #define WB 290
 //pop
 #define POPL 500
-#define POPR 800
+#define POPR 650
 #define POPT 330
 #define POPB 380
 //east
@@ -63,7 +63,7 @@
 #define SBUTT_WIDTH 150
 #define SBUTT_HEIGHT 50
 #define BOX_WIDTH 300
-#define BOX HEIGHT 200
+#define BOX_HEIGHT 200
 #define MAP_WIDTH 500
 #define KB_HEIGHT 180
 #define SEARCH_HEIGHT 70
@@ -79,7 +79,7 @@ void draw_text_box(Point topLeft, int width, int height, int borderWidth,
 		int borderColour, int fillColour, int textColour, char* text, FontSize fontSize);
 void draw_information_box(char* text);
 void draw_arrow(Point topLeft, int width, int height, int borderWidth,
-		int borderColour, int fillColour, Direction direction);
+		int borderColour, int fillColour, Direction direction, int invert);
 void draw_arrows();
 
 void about_screen();

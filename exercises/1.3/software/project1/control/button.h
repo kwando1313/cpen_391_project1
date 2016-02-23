@@ -5,8 +5,10 @@
 #include <string.h>
 #include "graph.h"
 
+#define FLICKER_DELAY 100000
+
 typedef struct Button{
-	bool pressed;
+	bool* pressed;
     int left;
     int right;
     int top;
@@ -17,7 +19,8 @@ typedef struct Button{
     char* text;
     // Button fcns
     void (*p)();
-    bool (*prs_p)(struct Button b);
+    void (*prs_p)(struct Button b);
+    bool (*ent_p)();
     void (*kb_p)(char key);
 } Button;
 
@@ -80,5 +83,6 @@ void do_south();
 void do_down();
 void flicker(Button b);
 void toggle(Button b);
+void do_nothing();
 
 #endif /* BUTTON_H_ */

@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "button.h"
 #include <stdbool.h>
+#include <unistd.h>
 #include <math.h>
 #include "misc_helpers.h"
-#include "button.h"
 #include "menu.h"
 #include "touchscreen.h"
 #include "control.h"
@@ -50,7 +51,7 @@ void init_kb_button(char key, int id){
 		ENTER_BUTT.right = 470;
 		ENTER_BUTT.top = 370;
 		ENTER_BUTT.bottom = 410;
-		ENTER_BUTT.prs_p = do_enter;
+		ENTER_BUTT.ent_p = do_enter;
 		ENTER_BUTT.text = "ENTER";
 		return;
 	}
@@ -96,7 +97,7 @@ void init_s_button(char key, int id){
 		INFO_BUTT.left = IL;
 		INFO_BUTT.right = IR;
 		INFO_BUTT.p = do_info;
-		INFO_BUTT.prs_p = toggle;
+		INFO_BUTT.prs_p = flicker;
 		INFO_BUTT.text = "INFO";
 	break;
 
@@ -106,7 +107,7 @@ void init_s_button(char key, int id){
 		DIR_BUTT.left = DL;
 		DIR_BUTT.right = DR;
 		DIR_BUTT.p = do_dir;
-		DIR_BUTT.prs_p = toggle;
+		DIR_BUTT.prs_p = flicker;
 		DIR_BUTT.text = "DIRECTIONS";
 	break;
 
@@ -126,7 +127,7 @@ void init_s_button(char key, int id){
 		ABOUT_BUTT.left = AL;
 		ABOUT_BUTT.right = AR;
 		ABOUT_BUTT.p = do_about;
-		ABOUT_BUTT.prs_p = toggle;
+		ABOUT_BUTT.prs_p = flicker;
 		ABOUT_BUTT.text = "ABOUT";
 	break;
 
@@ -168,7 +169,7 @@ void init_s_button(char key, int id){
 		NORTH_BUTT.p = do_north;
 		NORTH_BUTT.kb_p = do_sel;
 		NORTH_BUTT.prs_p = flicker;
-		SOUTH_BUTT.dir = UP;
+		NORTH_BUTT.dir = UP;
 	break;
 
 	case 38:
@@ -187,8 +188,9 @@ void init_s_button(char key, int id){
 		ROAD_BUTT.bottom = RB;
 		ROAD_BUTT.left = RL;
 		ROAD_BUTT.right = RR;
+		ROAD_BUTT.p = do_nothing;
 		ROAD_BUTT.prs_p = toggle;
-		ROAD_BUTT.text = "ROAD";
+		ROAD_BUTT.text = "ROADS";
 	break;
 
 	default:
@@ -456,7 +458,6 @@ void do_del(){
 /* On valid search, find the path to the selected entry from current location. Re-draw the map.
 	On invalid search, returns and keep listening for keyboard inputs */
 bool do_enter(){
-	flicker(ENTER_BUTT);
 	bool retval = false;
 	if(ready()){
 		name_list* nl = matched_names.head;
@@ -481,24 +482,31 @@ void do_back(){
 }
 
 void toggle(Button b){
-	if(!b.pressed){
-		b.pressed = true;
+	printf("toggle\n");
+	if(*b.pressed == false){
+		*b.pressed = true;
 		highlight(b);
 	}
 	else{
-		b.pressed = false;
+		*b.pressed = false;
 		unhighlight(b);
 	}
 }
 
 void flicker(Button b){
+	printf("flick\n");
 	highlight(b);
-	usleep(1000);
+	usleep(FLICKER_DELAY);
 	unhighlight(b);
 }
 
 bool is_kb_butt(Button b){
 	return(b.id < KB_KEYS);
+}
+
+// Pre: b is a keyboard button
+bool is_big_kb(Button b){
+	return(b.id == ENTER_BUTT.id || b.id == SPACE_BUTT.id || b.id == BACK_BUTT.id);
 }
 
 bool is_arrow_butt(Button b){
@@ -517,4 +525,7 @@ int get_arrow_dir(Button b){
 // Pre: b has text
 char* get_butt_text(Button b){
 	return b.text;
+}
+
+void do_nothing(){
 }

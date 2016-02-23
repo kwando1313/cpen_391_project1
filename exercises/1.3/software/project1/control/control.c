@@ -87,27 +87,25 @@ void kb_listen(){
 		}
 		while(butt == NULL );
 
-		if(butt->id != BACK_BUTT.id && butt->id != ENTER_BUTT.id && butt->id != DEL_BUTT.id){
-			butt->prs_p(*butt);
+		butt->prs_p(*butt);
+		if(butt->id != BACK_BUTT.id && butt->id != ENTER_BUTT.id && butt->id != DEL_BUTT.id && butt->id != ROAD_BUTT.id){
 			butt->kb_p(butt->key);
 		}
 
 		// We are done with the keyboard upon BACK
 		else if(butt->id == BACK_BUTT.id){
-			butt->prs_p(*butt);
 			butt->p();
 			break;
 		}
 
 		// We are done with the keyboard upon valid search input
 		else if(butt->id == ENTER_BUTT.id){
-			if(butt->prs_p(*butt)){
+			if(butt->ent_p(*butt)){
 				break;
 			}
 		}
 
-		else if(butt->id == DEL_BUTT.id){
-			butt->prs_p(*butt);
+		else if(butt->id == DEL_BUTT.id || butt->id == ROAD_BUTT.id){
 			butt->p();
 		}
 	}

@@ -9,7 +9,6 @@
 #include <altera_up_sd_card_avalon_interface.h>
 #include "Directions.h"
 #include "search.h"
-#include "button.c"
 
 //Text box is left aligned and has text wrapping
 void draw_text_box(Point topLeft, int width, int height, int borderWidth,
@@ -152,7 +151,8 @@ void draw_keyboard(Point leftCorner, int size){
 	return;
 }
 
-void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, Direction direction){
+void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borderColour, int fillColour, Direction direction, int invert){
+
 	Point topRight = {topLeft.x + width, topLeft.y};
 	Point bottomLeft = {topLeft.x, topLeft.y + height};
 	Point bottomRight = {topLeft.x + width, topLeft.y + height};
@@ -194,8 +194,12 @@ void draw_arrow(Point topLeft, int width, int height, int borderWidth, int borde
 		cornerThree.x = topLeft.x + 2*width/3;
 		cornerThree.y = topLeft.y + 2*height/3;
 	}
-
-	draw_filled_triangle(cornerOne, cornerTwo, cornerThree, BLACK);
+	if(!invert){
+		draw_filled_triangle(cornerOne, cornerTwo, cornerThree, BLACK);
+	}
+	else{
+		draw_filled_triangle(cornerOne, cornerTwo, cornerThree, WHITE);
+	}
 }
 
 void draw_arrows(){
@@ -205,13 +209,13 @@ void draw_arrows(){
 	Point UPOINT = {625, 210};
 	Point DPOINT = {625, 270};
 
-	draw_arrow(LPOINT, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, LEFT);
+	draw_arrow(LPOINT, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, LEFT, 0);
 
-	draw_arrow(RPOINT, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, RIGHT);
+	draw_arrow(RPOINT, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, RIGHT, 0);
 
-	draw_arrow(UPOINT, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, UP);
+	draw_arrow(UPOINT, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, UP, 0);
 
-	draw_arrow(DPOINT, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, DOWN);
+	draw_arrow(DPOINT, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, DOWN, 0);
 }
 
 // TODO: Add loading up the map image in here
@@ -315,11 +319,18 @@ void map_screen(){
 void highlight(Button b){
 	Point p = {b.left, b.top};
 	if(is_kb_butt(b)){
-		draw_button(p, BUTT_SIZE, BUTT_SIZE, 1, WHITE, BLACK, WHITE, (char*)KEYS[b.id], MEDIUM);
+		if(is_big_kb(b)){
+			draw_button(p, BUTT_SIZE*2, BUTT_SIZE, 1, WHITE, BLACK, WHITE, b.text, MEDIUM);
+		}
+		else{
+			char* c = "A";
+			strncpy(c, &b.key, 1);
+			draw_button(p, BUTT_SIZE, BUTT_SIZE, 1, WHITE, BLACK, WHITE, c, MEDIUM);
+		}
 	}
 	else if(is_arrow_butt(b)){
 		int dir = get_arrow_dir(b);
-		draw_arrow(p, ARROW_SIZE, ARROW_SIZE, 1, WHITE, BLACK, dir);
+		draw_arrow(p, ARROW_SIZE, ARROW_SIZE, 1, WHITE, BLACK, dir, 1);
 	}
 	else if(is_screen_butt(b)){
 		char* text = get_butt_text(b);
@@ -331,11 +342,18 @@ void highlight(Button b){
 void unhighlight(Button b){
 	Point p = {b.left, b.top};
 	if(is_kb_butt(b)){
-		draw_button(p, BUTT_SIZE, BUTT_SIZE, 1, BLACK, WHITE, BLACK, (char*)KEYS[b.id], MEDIUM);
+		if(is_big_kb(b)){
+			draw_button(p, BUTT_SIZE*2, BUTT_SIZE, 1, BLACK, WHITE, BLACK, b.text, MEDIUM);
+		}
+		else{
+			char* c = "A";
+			strncpy(c, &b.key, 1);
+			draw_button(p, BUTT_SIZE, BUTT_SIZE, 1, BLACK, WHITE, BLACK, c, MEDIUM);
+		}
 	}
 	else if(is_arrow_butt(b)){
 		int dir = get_arrow_dir(b);
-		draw_arrow(p, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, dir);
+		draw_arrow(p, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, dir, 0);
 	}
 	else if(is_screen_butt(b)){
 		char* text = get_butt_text(b);
