@@ -2,10 +2,11 @@
 #include "b_tree.h"
 #include "hashmap.h"
 #include "misc_helpers.h"
+#include "graphics.h"
 #include <math.h>
 #include <assert.h>
 
-#define DEFAULT_PATH_SIZE 8
+#define DEFAULT_PATH_SIZE 16
 const static Point NULL_CORNER = {-1,-1};
 
 astar_node* init_astar_node(int v_id, int g_val, int h_val);
@@ -264,8 +265,8 @@ void print_astar_node(astar_node* node){
 
 void draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour){
 	//redraw over min/max
-	if (points_equal(prev_min_corner, NULL_CORNER) || points_equal(prev_max_corner, NULL_CORNER)){
-		draw_image_segment(prev_min_corner, prev_max_corner.x, prev_max_corner.y);
+	if (!points_equal(prev_min_corner, NULL_CORNER) && !points_equal(prev_max_corner, NULL_CORNER)){
+		draw_image_segment(prev_min_corner,  prev_max_corner);
 	}
 	path_points* points = get_path_points(graph, start, goal, roads_only);
 	prev_min_corner = points->min_corner;

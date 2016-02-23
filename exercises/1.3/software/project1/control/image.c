@@ -15,6 +15,7 @@ void load_zoom_out_pixels(short file);
 void get_header(short file, int zoom);
 void get_pixels(short file, int zoom);
 void clear_extra_map_space(int height, int width);
+char get_colour(int x, int y);
 
 /*	Load image from SD Card.
  * 	SD Card must be formatted in FAT16 to work with DE2.
@@ -95,22 +96,28 @@ void clear_extra_map_space(int height, int width){
 	}
 }
 
+char get_colour(int x, int y){
+	int height = image_height[zoom_level];
+	//in graphics, (0,0) is topLeft. for some unknown reason, bmp (0,0) is bottom left
+	return image_pixels[zoom_level][curr_image_pos.x + x][height - (curr_image_pos.y + y) - 1];
+}
+
 /* Draw the pictures in the range we want.
  * We're picking the top left point to start from
  * but actually draw from the bottom left first, since the data is stored this way
  */
-void draw_image_segment(Point topLeft, int width, int height){
-	for (int y = topLeft.y; y < height; y++){
-		for (int x = topLeft.x; x < width; x++){
+void draw_image_segment(Point topLeft, Point botRight){
+	for (int y = topLeft.y; y < botRight.y; y++){
+		for (int x = topLeft.x; x < botRight.x; x++){
 			int initialX = x;
-			char colour = image_pixels[zoom_level][curr_image_pos.x + x][curr_image_pos.y + y];
-			char colour2 = image_pixels[zoom_level][curr_image_pos.x + x][curr_image_pos.y + y];
+			char colour = get_colour(x, y);
+			char colour2 = get_colour(x, y);
 
-			while (colour == colour2 && x < width){
+			while (colour == colour2 && x < botRight.x){
 				x++;
-				colour2 = image_pixels[zoom_level][curr_image_pos.x+x][curr_image_pos.y+y];
+				colour2 = get_colour(x, y);
 			}
-			HLine(initialX, height - y - 1, x - initialX, (int)colour);
+			HLine(initialX, y, x - initialX, (int)colour);
 			x--;
 		}
 	}
@@ -123,7 +130,8 @@ void draw_full_image(void){
 	clear_extra_map_space(height, width);
 
 	Point topLeft = {0,0};
-	draw_image_segment(topLeft, width, height);
+	Point botRight = {width, height};
+	draw_image_segment(topLeft, botRight);
 }
 
 /*	Move the x and y start points according to button

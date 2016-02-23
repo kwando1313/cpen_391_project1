@@ -322,8 +322,9 @@ void do_zoom(){
 		else if(sel.y > (image_height[ZOOM_OUT] - DISPLAY_HEIGHT/2))
 			sel.y = image_height[ZOOM_OUT] - (DISPLAY_HEIGHT/2);
 
-		//printf("sel final %d, %d\n", sel.x, sel.y);
+
 	}
+	printf("sel final %d, %d\n", sel.x, sel.y);
 	curr_image_pos = sel;
 	draw_full_image();
 }
