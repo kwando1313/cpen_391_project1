@@ -15,6 +15,18 @@ int main(void) {
 	draw_graph_path(full_map_graph, 5, 113, true, RED);
 	draw_graph_path(full_map_graph, 0, 5, true, RED);
 	draw_graph_path(full_map_graph, 5, 113, true, RED);
+	draw_graph_path(full_map_graph, 5, 113, true, RED);
+	draw_graph_path(full_map_graph, 5, 113, true, RED);
+	draw_graph_path(full_map_graph, 5, 113, true, RED);
+	draw_graph_path(full_map_graph, 5, 113, true, RED);
+	draw_graph_path(full_map_graph, 5, 113, true, RED);
+	draw_graph_path(full_map_graph, 5, 113, true, RED);
+	draw_graph_path(full_map_graph, 5, 113, true, RED);
+	draw_graph_path(full_map_graph, 5, 113, true, RED);
+	draw_graph_path(full_map_graph, 5, 113, true, RED);
+	draw_graph_path(full_map_graph, 5, 113, true, RED);
+	draw_graph_path(full_map_graph, 5, 113, true, RED);
+	draw_graph_path(full_map_graph, 5, 113, true, RED);
 
 	//find_range_of_graph(full_map_graph, 5, 113, true);
 	//draw_graph_path(full_map_graph, 58, 113, false, BLUE);
