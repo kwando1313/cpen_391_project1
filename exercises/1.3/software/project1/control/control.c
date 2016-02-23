@@ -71,11 +71,12 @@ void s_listen(){
 			butt = get_s_button(p_i);
 		}
 		while(butt == NULL);
+		butt->prs_p(*butt);
 		butt->p();
 	}
 }
 
-// Listen for keyboard + NORTH/SOUTH button presses
+// Listen for keyboard + NORTH/SOUTH + ROAD button presses
 void kb_listen(){
 	while(1){
 		Button* butt;
@@ -85,27 +86,30 @@ void kb_listen(){
 			butt = get_kb_button(p_i);
 		}
 		while(butt == NULL );
-		printf("%c: ", butt->key);
-		printf("%i\n", butt->id);
 
-		if(butt->id != BACK_BUTT.id && butt->id != ENTER_BUTT.id && butt->id != DEL_BUTT.id)
+		if(butt->id != BACK_BUTT.id && butt->id != ENTER_BUTT.id && butt->id != DEL_BUTT.id){
+			butt->prs_p(*butt);
 			butt->kb_p(butt->key);
+		}
 
 		// We are done with the keyboard upon BACK
 		else if(butt->id == BACK_BUTT.id){
+			butt->prs_p(*butt);
 			butt->p();
 			break;
 		}
 
 		// We are done with the keyboard upon valid search input
 		else if(butt->id == ENTER_BUTT.id){
-			if(butt->ent_p()){
+			if(butt->prs_p(*butt)){
 				break;
 			}
 		}
 
-		else if(butt->id == DEL_BUTT.id)
+		else if(butt->id == DEL_BUTT.id){
+			butt->prs_p(*butt);
 			butt->p();
+		}
 	}
 }
 

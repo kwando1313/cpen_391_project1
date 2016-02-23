@@ -37,7 +37,7 @@ void add_letter(char letter){
 // delete the end of the query string
 void del_letter(){
     int back_index = qs_length()-1;
-    OutGraphicsCharFont2a((X + back_index*INCR), Y, 255, 255, query_string[back_index], 0); // 255 is WHITE
+    OutGraphicsCharFont2a((X + back_index*INCR), Y, WHITE, WHITE, query_string[back_index], 0);
     query_string[back_index] = '\0';
 }
 
@@ -45,7 +45,7 @@ void del_letter(){
 void draw_word(){
 	int x = X;
 	for (int i = 0; i < qs_length(); i++){
-		OutGraphicsCharFont2a(x, Y, BLACK, 255, query_string[i], 0);
+		OutGraphicsCharFont2a(x, Y, BLACK, WHITE, query_string[i], 0);
 		x += INCR;
 	}
 }

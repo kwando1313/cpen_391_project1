@@ -204,13 +204,13 @@ void draw_arrows(){
 	Point UPOINT = {625, 210};
 	Point DPOINT = {625, 270};
 
-	draw_arrow(LPOINT, 50, 50, 1, BLACK, WHITE, LEFT);
+	draw_arrow(LPOINT, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, LEFT);
 
-	draw_arrow(RPOINT, 50, 50, 1, BLACK, WHITE, RIGHT);
+	draw_arrow(RPOINT, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, RIGHT);
 
-	draw_arrow(UPOINT, 50, 50, 1, BLACK, WHITE, UP);
+	draw_arrow(UPOINT, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, UP);
 
-	draw_arrow(DPOINT, 50, 50, 1, BLACK, WHITE, DOWN);
+	draw_arrow(DPOINT, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, DOWN);
 }
 
 // TODO: Add loading up the map image in here
@@ -222,21 +222,21 @@ void init_screen(){
 		Point dirAboutP = {650, 380};
 		Point searchP = {500, 330};
 		Point arrowsP = {500, 200};
+		Point roadP = {650, 330};
 
-		char* infoZoomText[] = {"Info", "Zoom", ""};
-		char* dirAboutText[] = {"Directions", "About", ""};
-		char* searchText[] = {"Search", ""};
+		char* infoZoomText[] = {"INFO", "ZOOM", ""};
+		char* dirAboutText[] = {"DIRECTIONS", "ABOUT", ""};
+		char* searchText[] = {"SEARCH", ""};
 		char* arrowsText[] = {" ", ""};
+		char* roadText[] = {"ROADS", ""};
 
 		about_screen();
 
-		draw_menu(infoZoomP, 150, 50, 1, BLACK, WHITE, BLACK, SMALL, infoZoomText);
-
-		draw_menu(dirAboutP, 150, 50, 1, BLACK, WHITE, BLACK, SMALL, dirAboutText);
-
-		draw_menu(searchP, 300, 50, 1 , BLACK, WHITE, BLACK, SMALL, searchText);
-
-		draw_menu(arrowsP, 300, 130, 1 , BLACK, WHITE, BLACK, SMALL, arrowsText);
+		draw_menu(infoZoomP, SBUTT_WIDTH, SBUTT_HEIGHT, 1, BLACK, WHITE, BLACK, SMALL, infoZoomText);
+		draw_menu(dirAboutP, SBUTT_WIDTH, SBUTT_HEIGHT, 1, BLACK, WHITE, BLACK, SMALL, dirAboutText);
+		draw_menu(searchP, SBUTT_WIDTH, SBUTT_HEIGHT, 1 , BLACK, WHITE, BLACK, SMALL, searchText);
+		draw_menu(arrowsP, SBUTT_WIDTH*2, ARRBUTT_HEIGHT, 1 , BLACK, WHITE, BLACK, SMALL, arrowsText);
+		draw_menu(roadP, SBUTT_WIDTH, SBUTT_HEIGHT, 1, BLACK, WHITE, BLACK, SMALL, roadText);
 
 		draw_arrows();
 }
@@ -265,16 +265,16 @@ void pop_screen(){
 	draw_information_box("ENTER YOUR SEARCH!");
 
 	Point p = {30, 330};
-	Point p1 = {0, 300};
-	Point p2 = {0, 230};
+	Point kb_p = {0, 300};
+	Point s_p = {0, 230};
 	char* t[] = {" ", ""};
 
 	//bounded in (0-500, 300-480)
-	draw_menu(p1, 500, 180, 2 , BLACK, WHITE, BLACK, SMALL, t);
+	draw_menu(kb_p, MAP_WIDTH, KB_HEIGHT, 2, BLACK, WHITE, BLACK, SMALL, t);
 	//bounded in (0-500, 230-300)
-	draw_menu(p2, 500, 70, 2 , BLACK, WHITE, BLACK, SMALL, t);
+	draw_menu(s_p, MAP_WIDTH, SEARCH_HEIGHT, 2, BLACK, WHITE, BLACK, SMALL, t);
 	//bounded in (30-470, 330-450)
-	draw_keyboard(p, 40);
+	draw_keyboard(p, BUTT_SIZE);
 }
 
 // draw the names matched with the query string and highlight the current chosen entry
@@ -299,9 +299,9 @@ void match_screen(int sel, int mn_count){
 		nl = nl->next;
 
 		if(i != (sel-1))
-			draw_menu(p, 300, incr, 2 , BLACK, 255, BLACK, SMALL, t);
+			draw_menu(p, 300, incr, 2 , BLACK, WHITE, BLACK, SMALL, t);
 		else if(i == (sel-1))
-			draw_menu(p, 300, incr, 2 , 255, BLACK, 255, SMALL, t); // highlighted entry (i.e invert colors)
+			draw_menu(p, 300, incr, 2 , WHITE, BLACK, WHITE, SMALL, t); // highlighted entry (i.e invert colors)
 	}
 }
 
@@ -309,4 +309,36 @@ void match_screen(int sel, int mn_count){
 void map_screen(){
 	// TODO:
 
+}
+
+void highlight(Button b){
+	Point p = {b.left, b.top};
+	if(is_kb_butt(b)){
+		draw_button(p, BUTT_SIZE, BUTT_SIZE, 1, WHITE, BLACK, WHITE, b.key, MEDIUM);
+	}
+	else if(is_arrow_butt(b)){
+		int dir = get_arrow_dir(b);
+		draw_arrow(p, ARROW_SIZE, ARROW_SIZE, 1, WHITE, BLACK, dir);
+	}
+	else if(is_screen_butt(b)){
+		char* text = get_butt_text;
+		char* textArray[] = {text, ""};
+		draw_menu(p, SBUTT_WIDTH, SBUTT_HEIGHT, 1, WHITE, BLACK, WHITE, SMALL, textArray);
+	}
+}
+
+void unhighlight(Button b){
+	Point p = {b.left, b.top};
+	if(is_kb_butt(b)){
+		draw_button(p, BUTT_SIZE, BUTT_SIZE, 1, BLACK, WHITE, BLACK, b.key, MEDIUM);
+	}
+	else if(is_arrow_butt(b)){
+		int dir = get_arrow_dir(b);
+		draw_arrow(p, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, dir);
+	}
+	else if(is_screen_butt(b)){
+		char* text = get_butt_text;
+		char* textArray[] = {text, ""};
+		draw_menu(p, SBUTT_WIDTH, SBUTT_HEIGHT, 1, BLACK, WHITE, BLACK, SMALL, textArray);
+	}
 }

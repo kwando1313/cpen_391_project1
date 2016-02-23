@@ -3,6 +3,7 @@
 
 #include "graphics.h"
 #include "Directions.h"
+#include "button.h"
 
 //button coords
 //info
@@ -50,6 +51,20 @@
 #define SR 675
 #define ST 270
 #define SB 320
+//road
+#define RL 650
+#define RR 800
+#define RT 330
+#define RB 380
+
+#define BUTT_SIZE 40
+#define ARROW_SIZE 50
+#define ARRBUTT_HEIGHT 130
+#define SBUTT_WIDTH 150
+#define SBUTT_HEIGHT 50
+#define MAP_WIDTH 500
+#define KB_HEIGHT 180
+#define SEARCH_HEIGHT 70
 
 void draw_keyboard(Point leftCorner, int size);
 
@@ -73,5 +88,7 @@ void pop_screen();
 void match_screen(int sel, int mn_count);
 //TODO: need fcn to redraw the map after finished with keyboard
 void map_screen();
+void highlight(Button b);
+void unhighlight(Button b);
 
 #endif /* MENU_H_ */
