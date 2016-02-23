@@ -220,7 +220,8 @@ path_points* get_path_points(graph* graph, int start, int goal, bool roads_only)
 void append_to_path_points_array(path_points* path, int i, Point to_add){
 	if (i == path->size) {
 		path->size *= 2;
-		path->ordered_point_arr = realloc(path->ordered_point_arr, path->size);
+		Point* new_ordered_point_arr = realloc(path->ordered_point_arr, path->size*sizeof(Point));
+		path->ordered_point_arr = new_ordered_point_arr;
 	}
 	path->actual_size++;
 	path->ordered_point_arr[i] = to_add;
