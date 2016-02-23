@@ -57,4 +57,6 @@ Point GetRelease(void);
 
 void test_touch(void);
 
+int button_iteration;
+
 #endif /* TOUCHSCREEN_H_ */

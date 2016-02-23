@@ -7,7 +7,10 @@
 #define Touchscreen_RxData 		(*(volatile unsigned char *)(0x84000232))
 #define Touchscreen_Baud    	(*(volatile unsigned char *)(0x84000234))
 
+#define push_buttons123 (volatile int *) 0x80001060
 
+int button_value;
+int old_button;
 /**************************************************************************
 ***
 **  Initialise touch screen controller
@@ -58,7 +61,17 @@ int ScreenIdle(void){
 **   wait for screen to be touched
 *****************************************************************************/
 void WaitForTouch(){
-	while(!ScreenTouched());
+	while(!ScreenTouched()){
+
+		button_value = (*push_buttons123);
+		if (button_value != old_button){
+			if (button_value == 5){
+				button_iteration = (button_iteration+1)% 4;
+			}
+			old_button = button_value;
+		}
+
+	}
 }
 
 /*****************************************************************************
