@@ -10,6 +10,11 @@
 #include "misc_helpers.h"
 #include "button.h"
 
+
+#define push_buttons123 (volatile int *) 0x80001060
+
+int button_value;
+int old_button;
 // initialize and load up graphics on touchscreen
 void init_control(){
 	Init_GPS();
@@ -80,7 +85,6 @@ void s_listen(){
 
 		while(1){
 			// Wait for button input
-
 			Button* butt;
 			do{
 				Point p_i = GetPress();

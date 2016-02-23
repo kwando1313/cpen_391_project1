@@ -18,7 +18,7 @@
 #define GPS_RxData 		(*(volatile unsigned char *)(0x84000212))
 #define GPS_Baud    	(*(volatile unsigned char *)(0x84000214))
 
-#define GPS_TO_GRAPH_MULTIPLIER 1e6
+#define GPS_TO_GRAPH_MULTIPLIER 1e7
 
 void wait_for_header(void);
 gps_data* get_new_gps_data(void);
@@ -148,7 +148,9 @@ void test_read_gps(void){
 	}
 }
 void read_gps(void) {
+
 	gps_data* data = get_gps_data();
+
 
 	double lati;
 	double longi;
@@ -160,7 +162,26 @@ void read_gps(void) {
 
 	degrees_to_graph (lati, longi, &latitude, &longitude);
 	printf ("Lati: %lf, Longi: %lf\n", lati, longi);
-	return;
+}
+
+void get_current_coordinates(int* longitude, int* latitude){
+	gps_data* data = get_gps_data();
+	while (atoi(data->numSat) <= 3){
+		data = get_gps_data();
+	}
+	double lati;
+	double longi;
+	//convert the latitude and longitude data to completely be in degrees
+	//minutes_to_degrees("4915.1256", "12316.4438", &lati, &longi);
+	minutes_to_degrees (data->lati, data->longi, &lati, &longi);
+
+	int lo;
+	int la;
+
+	degrees_to_graph (lati, longi, &la, &lo);
+	*longitude = lo;
+	*latitude = la;
+
 }
 void wait_for_header(void) {
 	char str[] = "$GPGGA";
@@ -289,7 +310,7 @@ void degrees_to_graph(double lati, double longi, int *latitude, int * longitude)
 	double tempLong;
 	double tempLat;
 
-	tempLong = longi + 123;
+	tempLong = longi - 123;
 	tempLat = lati - 49;
 
 	*longitude = (int) (tempLong * GPS_TO_GRAPH_MULTIPLIER);

@@ -273,12 +273,32 @@ void do_dir(){
 //	directions_screen();
 //	draw_information_box("PLEASE SELECT STARTING POINT");
 //	int start_node = get_node(graph);
-//	draw_information_box("PLEASE SELECT DESTINATION");
-//	int end_node = get_node(graph);
-//	path_points* path = get_path_points(graph, start_node, end_node);
-//	draw_path(path->ordered_point_arr, path->actual_size, CYAN);
-//	destroy_path_points(path);
-//	draw_information_box("HAVE A FUN TRIP!");
+	int curr_lat, curr_long;
+	switch (real_data){
+		case 0:
+			get_current_coordinates(&curr_lat, &curr_long);
+			break;
+		case 1:
+			curr_lat = 2504654;
+			curr_long = 2656412;
+			break;
+		case 2:
+			curr_lat = 2565916;
+			curr_long = 2676995;
+			break;
+		case 3:
+			curr_lat = 2453370;
+			curr_long = 2645000;
+			break;
+	}
+
+	int start_node = find_vertex_by_coords(full_map_graph, curr_long, curr_lat)->id;
+	draw_information_box("PLEASE SELECT DESTINATION");
+	int end_node = find_vertex_by_coords(full_map_graph, 2616925, 2533514)->id;//get_node(graph); //Actually use get_node when we are implementing this on touchscreen
+	path_points* path = get_path_points(full_map_graph, start_node, end_node, false); //ROAD_TOG); //replace with ROAD_TOG once it gets merged in
+	draw_path(path->ordered_point_arr, path->actual_size, BLUE);
+	destroy_path_points(path);
+	draw_information_box("HAVE A FUN TRIP!");
 	printf("start do dir\n");
 	directions_screen();
 	//read_gps();

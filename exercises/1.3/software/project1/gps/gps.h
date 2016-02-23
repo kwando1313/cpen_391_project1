@@ -40,4 +40,5 @@ void read_gps(void);
 gps_data* init_gps_data(void);
 void minutes_to_degrees (char* latitude, char* longitude, double* lati, double* longi);
 
+
 #endif /* GPS_H_ */
