@@ -238,4 +238,6 @@ void print_astar_node(astar_node* node){
 void draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour){
 	path_points* points = get_path_points(graph, start, goal, roads_only);
 	draw_path(points->ordered_point_arr, points->actual_size, colour);
+	free(points->ordered_point_arr);
+	free(points);
 }
