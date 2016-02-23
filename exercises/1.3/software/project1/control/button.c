@@ -353,9 +353,7 @@ void do_dir(){
 	int start_node = find_vertex_by_coords(full_map_graph, curr_long, curr_lat)->id;
 	draw_information_box("PLEASE SELECT DESTINATION");
 	int end_node = get_node(graph);
-	path_points* path = get_path_points(full_map_graph, start_node, end_node, ROAD_TOG);
-	draw_path(path->ordered_point_arr, path->actual_size, BLUE);
-	destroy_path_points(path);
+	draw_graph_path(full_map_graph, start_node, end_node, ROAD_TOG, BLUE);	destroy_path_points(path);
 	draw_information_box("HAVE A FUN TRIP!");
 	printf("start do dir\n");
 	directions_screen();
@@ -537,8 +535,7 @@ bool do_enter(){
 
 		int start_node = find_vertex_by_coords(full_map_graph, curr_long, curr_lat)->id;
 		int end_node = find_vertex_by_name(name)->id;
-		path_points* path = get_path_points(full_map_graph, start_node, end_node, ROAD_TOG);
-		draw_path(path->ordered_point_arr, path->actual_size, BLUE);
+		draw_graph_path(full_map_graph, start_node, end_node, ROAD_TOG, BLUE);
 		destroy_path_points(path);
 		//TODO  Now do something using the name of the selected search entry
 		do_back();
