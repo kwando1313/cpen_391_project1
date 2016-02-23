@@ -509,7 +509,7 @@ bool do_enter(){
 		}
 		char* name = nl->name;
 		int curr_lat, curr_long;
-		switch (real_data){
+		switch (button_iteration){
 			case 0:
 				get_current_coordinates(&curr_lat, &curr_long);
 				break;
