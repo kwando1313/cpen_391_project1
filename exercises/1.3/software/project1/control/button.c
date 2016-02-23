@@ -352,8 +352,8 @@ void do_dir(){
 
 	int start_node = find_vertex_by_coords(full_map_graph, curr_long, curr_lat)->id;
 	draw_information_box("PLEASE SELECT DESTINATION");
-	int end_node = find_vertex_by_coords(full_map_graph, 2616925, 2533514)->id;//get_node(graph); //Actually use get_node when we are implementing this on touchscreen
-	path_points* path = get_path_points(full_map_graph, start_node, end_node, false); //ROAD_TOG); //replace with ROAD_TOG once it gets merged in
+	int end_node = get_node(graph);
+	path_points* path = get_path_points(full_map_graph, start_node, end_node, ROAD_TOG);
 	draw_path(path->ordered_point_arr, path->actual_size, BLUE);
 	destroy_path_points(path);
 	draw_information_box("HAVE A FUN TRIP!");
