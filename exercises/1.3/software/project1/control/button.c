@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "button.h"
 #include <stdbool.h>
+#include <unistd.h>
 #include <math.h>
 #include "misc_helpers.h"
-#include "button.h"
 #include "menu.h"
 #include "touchscreen.h"
 #include "control.h"
@@ -15,15 +16,18 @@
 extern Point curr_image_pos;
 extern int zoom_level;
 
-const char KEYS[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '-',
+const char KEYS[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '<',
 			  	  	'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '+',
-			  	  	'Z', 'X', 'C', 'V', 'B', 'N', 'M', ' ', '<',
+			  	  	'Z', 'X', 'C', 'V', 'B', 'N', 'M', ' ', '>',
 			  	  	'!', '@', '#', '$', '%',
-			  	  	'a', 'd', 'w', 's'};
+			  	  	'a', 'd', 'w', 's', '^'};
 
+// Initialise buttons on the keyboard
 void init_kb_button(char key, int id){
 	keyboard[id].key = key;
 	keyboard[id].id = id;
+	keyboard[id].pressed = false;
+	keyboard[id].prs_p = flicker;
 
 	// We can use the id to know where to draw
 	int i = 0;
@@ -34,11 +38,14 @@ void init_kb_button(char key, int id){
 		j = 0;
 	}
 	else if(id == DEL_BUTT.id){
-		DEL_BUTT.left = 430;
-		DEL_BUTT.right = 470;
-		DEL_BUTT.top = 330;
-		DEL_BUTT.bottom = 370;
+		i = id;
+		j = 0;
+		keyboard[id].left = KB_LEFT + KEY_SIZE*i;
+		keyboard[id].right = (KB_LEFT+KEY_SIZE) + KEY_SIZE*i;
+		keyboard[id].top = KB_TOP + KEY_SIZE*j;
+		keyboard[id].bottom = (KB_TOP + KEY_SIZE) + KEY_SIZE*j;
 		DEL_BUTT.p = do_del;
+		DEL_BUTT.text = "<-";
 		return;
 	}
 	else if(id < ENTER_BUTT.id){
@@ -46,11 +53,14 @@ void init_kb_button(char key, int id){
 		j = 1;
 	}
 	else if(id == ENTER_BUTT.id){
-		ENTER_BUTT.left = 390;
-		ENTER_BUTT.right = 470;
-		ENTER_BUTT.top = 370;
-		ENTER_BUTT.bottom = 410;
+		i = id - 11;
+		j = 1;
+		keyboard[id].left = KB_LEFT + KEY_SIZE*i;
+		keyboard[id].right = (KB_LEFT+KEY_SIZE*2) + KEY_SIZE*i;
+		keyboard[id].top = KB_TOP + KEY_SIZE*j;
+		keyboard[id].bottom = (KB_TOP + KEY_SIZE) + KEY_SIZE*j;
 		ENTER_BUTT.ent_p = do_enter;
+		ENTER_BUTT.text = "ENTER";
 		return;
 	}
 	else if(id >= 21 && id < SPACE_BUTT.id){
@@ -58,31 +68,39 @@ void init_kb_button(char key, int id){
 		j = 2;
 	}
 	else if(id == SPACE_BUTT.id){
-		SPACE_BUTT.left = 310;
-		SPACE_BUTT.right = 390;
-		SPACE_BUTT.top = 410;
-		SPACE_BUTT.bottom = 450;
+		i = id - 21;
+		j = 2;
+		keyboard[id].left = KB_LEFT + KEY_SIZE*i;
+		keyboard[id].right = (KB_LEFT+KEY_SIZE*2) + KEY_SIZE*i;
+		keyboard[id].top = KB_TOP + KEY_SIZE*j;
+		keyboard[id].bottom = (KB_TOP + KEY_SIZE) + KEY_SIZE*j;
 		SPACE_BUTT.kb_p = do_key;
+		SPACE_BUTT.text = "SPACE";
 		return;
 	}
 	else if(id == BACK_BUTT.id){
-		BACK_BUTT.left = 390;
-		BACK_BUTT.right = 470;
-		BACK_BUTT.top = 410;
-		BACK_BUTT.bottom = 450;
+		i = id - 21;
+		j = 2;
+		keyboard[id].left = (KB_LEFT+KEY_SIZE) + KEY_SIZE*i;
+		keyboard[id].right = (KB_LEFT+KEY_SIZE*2) + KEY_SIZE*i;
+		keyboard[id].top = KB_TOP + KEY_SIZE*j;
+		keyboard[id].bottom = (KB_TOP + KEY_SIZE) + KEY_SIZE*j;
 		BACK_BUTT.p = do_back;
+		BACK_BUTT.text = "BACK";
 		return;
 	}
-	keyboard[id].left = 30 + 40*i;
-	keyboard[id].right = 70 + 40*i;
-	keyboard[id].top = 330 + 40*j;
-	keyboard[id].bottom = 370 + 40*j;
+	keyboard[id].left = KB_LEFT + KEY_SIZE*i;
+	keyboard[id].right = (KB_LEFT+KEY_SIZE) + KEY_SIZE*i;
+	keyboard[id].top = KB_TOP + KEY_SIZE*j;
+	keyboard[id].bottom = (KB_TOP + KEY_SIZE) + KEY_SIZE*j;
 	keyboard[id].kb_p = do_key;
 }
 
+// Initialise buttons on the screen not on the keyboard
 void init_s_button(char key, int id){
 	keyboard[id].key = key;
 	keyboard[id].id = id;
+	keyboard[id].pressed = false;
 
 	switch (id){
 	case 30:
@@ -91,6 +109,8 @@ void init_s_button(char key, int id){
 		INFO_BUTT.left = IL;
 		INFO_BUTT.right = IR;
 		INFO_BUTT.p = do_info;
+		INFO_BUTT.prs_p = flicker;
+		INFO_BUTT.text = "INFO";
 	break;
 
 	case 31:
@@ -99,6 +119,8 @@ void init_s_button(char key, int id){
 		DIR_BUTT.left = DL;
 		DIR_BUTT.right = DR;
 		DIR_BUTT.p = do_dir;
+		DIR_BUTT.prs_p = flicker;
+		DIR_BUTT.text = "DIRECTIONS";
 	break;
 
 	case 32:
@@ -107,6 +129,8 @@ void init_s_button(char key, int id){
 		ZOOM_BUTT.left = PL;
 		ZOOM_BUTT.right = PR;
 		ZOOM_BUTT.p = do_zoom;
+		ZOOM_BUTT.prs_p = toggle;
+		ZOOM_BUTT.text = "ZOOM";
 	break;
 
 	case 33:
@@ -115,6 +139,8 @@ void init_s_button(char key, int id){
 		ABOUT_BUTT.left = AL;
 		ABOUT_BUTT.right = AR;
 		ABOUT_BUTT.p = do_about;
+		ABOUT_BUTT.prs_p = flicker;
+		ABOUT_BUTT.text = "ABOUT";
 	break;
 
 	case 34:
@@ -123,6 +149,8 @@ void init_s_button(char key, int id){
 		POP_BUTT.left = POPL;
 		POP_BUTT.right = POPR;
 		POP_BUTT.p = do_pop;
+		POP_BUTT.prs_p = toggle;
+		POP_BUTT.text = "SEARCH";
 	break;
 
 	case 35:
@@ -131,6 +159,8 @@ void init_s_button(char key, int id){
 		WEST_BUTT.left = WL;
 		WEST_BUTT.right = WR;
 		WEST_BUTT.p = do_west;
+		WEST_BUTT.prs_p = flicker;
+		WEST_BUTT.dir = LEFT;
 	break;
 
 	case 36:
@@ -139,6 +169,8 @@ void init_s_button(char key, int id){
 		EAST_BUTT.left = EL;
 		EAST_BUTT.right = ER;
 		EAST_BUTT.p = do_east;
+		EAST_BUTT.prs_p = flicker;
+		EAST_BUTT.dir = RIGHT;
 	break;
 
 	case 37:
@@ -147,7 +179,9 @@ void init_s_button(char key, int id){
 		NORTH_BUTT.left = NL;
 		NORTH_BUTT.right = NR;
 		NORTH_BUTT.p = do_north;
-		NORTH_BUTT.kb_p = do_up;
+		NORTH_BUTT.kb_p = do_sel;
+		NORTH_BUTT.prs_p = flicker;
+		NORTH_BUTT.dir = UP;
 	break;
 
 	case 38:
@@ -156,7 +190,19 @@ void init_s_button(char key, int id){
 		SOUTH_BUTT.left = SL;
 		SOUTH_BUTT.right = SR;
 		SOUTH_BUTT.p = do_south;
-		SOUTH_BUTT.kb_p = do_down;
+		SOUTH_BUTT.kb_p = do_sel;
+		SOUTH_BUTT.prs_p = flicker;
+		SOUTH_BUTT.dir = DOWN;
+	break;
+
+	case 39:
+		ROAD_BUTT.top = RT;
+		ROAD_BUTT.bottom = RB;
+		ROAD_BUTT.left = RL;
+		ROAD_BUTT.right = RR;
+		ROAD_BUTT.p = do_nothing;
+		ROAD_BUTT.prs_p = toggle;
+		ROAD_BUTT.text = "ROADS";
 	break;
 
 	default:
@@ -170,38 +216,31 @@ void init_keyboard(){
 
 	// KB buttons
 	for(int i = 0; i < KB_KEYS; i++){
-		//keyboard[i] = malloc(sizeof(Button));
 		init_kb_button(KEYS[i], i);
 	}
 
 	// Screen buttons
 	for(int i = KB_KEYS; i < N_KEYS; i++){
-		//keyboard[i] = malloc(sizeof(Button));
 		init_s_button(KEYS[i], i);
 	}
 }
 
  void destroy_keyboard(Button* keyboard){
-//	for(int i = 0; i < N_KEYS; i++){
-//		free(keyboard[i]);
-//	}
 	free(keyboard);
 }
 
-/* Assumption: all of our buttons are rectangles. Aside: nodes aren't buttons but they are circles right now.
- * Returns true if the point is inside the button
- */
+ // Returns true if the point is inside the button
 int falls_inside(Point p, Button b){
 	return(falls_between(p.x, b.left, b.right) &&
 		   falls_between(p.y, b.top, b.bottom));
 }
 
-// Returns the button that was pressed.
+// Returns the screen button that was pressed and NULL if no valid button was pressed
 Button* get_s_button(Point p){
 	for(int i = KB_KEYS; i < N_KEYS; i++){
 		if(falls_inside(p, keyboard[i])){
 			Point p_f = GetRelease();
-			//printf("Released Coordinates: (%i, %i)\n", p_f.x, p_f.y);
+			printf("Released Coordinates: (%i, %i)\n", p_f.x, p_f.y);
 
 			if(falls_inside(p_f, keyboard[i])){
 				return &keyboard[i];
@@ -217,6 +256,10 @@ Button* get_s_button(Point p){
 	return NULL;
 }
 
+/* Returns the keyboard button that was pressed and NULL if no valid button was pressed
+ * North/south buttons used during search mode to select search matching
+ * Road button always active
+ */
 Button* get_kb_button(Point p){
 	for(int i = 0; i < KB_KEYS; i++){
 		if(falls_inside(p, keyboard[i])){
@@ -232,7 +275,7 @@ Button* get_kb_button(Point p){
 			}
 		}
 	}
-	// North and South buttons used in search mode to select matching search entry
+
 	if(falls_inside(p, NORTH_BUTT)){
 		Point p_f = GetRelease();
 		printf("Released Coordinates: (%i, %i)\n", p_f.x, p_f.y);
@@ -251,6 +294,18 @@ Button* get_kb_button(Point p){
 
 		if(falls_inside(p_f, SOUTH_BUTT)){
 			return &SOUTH_BUTT;
+		}
+		else{
+			printf("Invalid button\n");
+			return NULL;
+		}
+	}
+	else if(falls_inside(p, ROAD_BUTT)){
+		Point p_f = GetRelease();
+		printf("Released Coordinates: (%i, %i)\n", p_f.x, p_f.y);
+
+		if(falls_inside(p_f, ROAD_BUTT)){
+			return &ROAD_BUTT;
 		}
 		else{
 			printf("Invalid button\n");
@@ -362,29 +417,34 @@ void do_south(){
 	}
 }
 
+void do_sel(char key){
+	if (key == NORTH_BUTT.key){
+		do_up();
+	}
+	else if(key == SOUTH_BUTT.key){
+		do_down();
+	}
+}
+
 // Select the search match entry above the current selected
-void do_up(char key){
-	printf("%c is up\n", key);
+void do_up(){
 	if(MN_COUNT < SEARCH_THRESHHOLD)
 		return;
 	if(sel > 1)
 		sel--;
 	else
 		sel = MN_COUNT;
-	printf("sel moved up to %i\n", sel);
 	match_screen(sel, MN_COUNT);
 }
 
 // Select the search match entry below the current selected
-void do_down(char key){
-	printf("%c is down\n", key);
+void do_down(){
 	if(MN_COUNT < SEARCH_THRESHHOLD)
 		return;
 	if(sel < MN_COUNT)
 		sel++;
 	else
 		sel = 1;
-	printf("sel moved down to %i\n", sel);
 	match_screen(sel, MN_COUNT);
 }
 
@@ -426,27 +486,76 @@ void do_del(){
 	}
 }
 
-/* On valid search, go to and highlight the searched node? Re-draw the map.
-	On invalid search, display invalid search and keep listening for keyboard inputs */
+/* On valid search, find the path to the selected entry from current location. Re-draw the map.
+	On invalid search, returns and keep listening for keyboard inputs */
 bool do_enter(){
-	printf("In do_enter\n");
+	bool retval = false;
 	if(ready()){
 		name_list* nl = matched_names.head;
 		for(int i = 0; i < sel; i++){
 			nl = nl->next;
 		}
+		char* name = nl->name;
 		//TODO  Now do something using the name of the selected search entry
 		do_back();
 	}
-	return false;
+	return retval;
 }
 
-// Redraw the map
+// Leave search mode and redraw the map
 void do_back(){
-	printf("In do_back\n");
 	reset_query();
 	destroy_matches();
 
-	init_screen();
+	init_screen(); //TODO replace this
 	//map_screen();
+}
+
+void toggle(Button b){
+	if(*b.pressed == false){
+		*b.pressed = true;
+		highlight(b);
+		usleep(TOGGLE_DELAY);
+	}
+	else{
+		*b.pressed = false;
+		unhighlight(b);
+		usleep(TOGGLE_DELAY);
+	}
+}
+
+void flicker(Button b){
+	highlight(b);
+	usleep(FLICKER_DELAY);
+	unhighlight(b);
+}
+
+bool is_kb_butt(Button b){
+	return(b.id < KB_KEYS);
+}
+
+// Pre: b is a keyboard button
+bool is_big_kb(Button b){
+	return(b.id == ENTER_BUTT.id || b.id == SPACE_BUTT.id || b.id == BACK_BUTT.id);
+}
+
+bool is_arrow_butt(Button b){
+	return(b.id >= WEST_BUTT.id && b.id <= SOUTH_BUTT.id);
+}
+
+bool is_screen_butt(Button b){
+	return(!is_kb_butt(b) && !is_arrow_butt(b));
+}
+
+// Pre: b has a direction
+int get_arrow_dir(Button b){
+	return b.dir;
+}
+
+// Pre: b has text
+char* get_butt_text(Button b){
+	return b.text;
+}
+
+void do_nothing(){
 }
