@@ -15,6 +15,7 @@
 
 extern Point curr_image_pos;
 extern int zoom_level;
+extern int button_iteration;
 
 const char KEYS[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '<',
 			  	  	'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '+',
@@ -327,12 +328,10 @@ void do_info(){
 
 //// Ask for a start and end node and find the best directions
 void do_dir(){
-//	printf("do dir\n");
 //	directions_screen();
-//	draw_information_box("PLEASE SELECT STARTING POINT");
 //	int start_node = get_node(graph);
 	int curr_lat, curr_long;
-	switch (real_data){
+	switch (button_iteration){
 		case 0:
 			get_current_coordinates(&curr_lat, &curr_long);
 			break;
@@ -355,11 +354,6 @@ void do_dir(){
 	int end_node = get_node(graph);
 	draw_graph_path(full_map_graph, start_node, end_node, ROAD_TOG, BLUE);
 	draw_information_box("HAVE A FUN TRIP!");
-	printf("start do dir\n");
-	directions_screen();
-	//read_gps();
-	printf("done do dir\n");
-
 }
 
 //Toggle between zoom in and zoom out

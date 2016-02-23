@@ -66,7 +66,7 @@ void WaitForTouch(){
 		button_value = (*push_buttons123);
 		if (button_value != old_button){
 			if (button_value == 5){
-				real_data = (real_data+1)% 4;
+				button_iteration = (button_iteration+1)% 4;
 			}
 			old_button = button_value;
 		}
