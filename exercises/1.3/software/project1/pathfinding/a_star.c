@@ -223,9 +223,6 @@ void update_path_range(path_points* path, Point curr){
 
 path_points* get_path_points(graph* graph, int start, int goal, bool roads_only){
 	int* path_ids = a_star(graph, start, goal, roads_only);
-	if (path_ids == NULL){
-		return NULL;
-	}
 	assert(path_ids != NULL);
 	int curr = 0;
 

@@ -59,6 +59,10 @@ int get_node(graph* graph){
 			printf("Not a valid node\n");
 			draw_information_box("NOT A VALID NODE.");
 		}
+		if (road_only && !vertex_had_road_edge(node_id)){
+			draw_information_box("NOT A VALID NODE");
+			node_id = -1;
+		}
 	}
 	printf("returning node: %d\n", node_id);
 	return node_id;

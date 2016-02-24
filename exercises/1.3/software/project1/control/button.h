@@ -82,6 +82,7 @@ void do_north();
 void do_up();
 void do_south();
 void do_down();
+void do_road();
 void flicker(Button b);
 void toggle(Button b);
 void do_nothing();

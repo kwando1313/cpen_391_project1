@@ -331,15 +331,15 @@ void do_dir(){
 //	directions_screen();
 //	int start_node = get_node(graph);
 	int start_node = get_start_node();
+	if (road_only && !vertex_had_road_edge(full_map_graph)){
+		draw_information_box("YOUR CURRENT LOCATION HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS ONLY BUTTON.");
+		do_back();
+	}
 	draw_information_box("PLEASE SELECT DESTINATION");
 	int end_node = get_node(full_map_graph);
-	bool valid_path = draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
-	if (!valid_path){
-		draw_information_box("THERE IS NO ROAD BETWEEN THESE TWO LOCATIONS.");
-	}
-	else{
-		draw_information_box("HAVE A FUN TRIP!");
-	}
+	draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
+	draw_information_box("HAVE A FUN TRIP!");
+
 }
 
 //Toggle between zoom in and zoom out
@@ -501,16 +501,20 @@ bool do_enter(){
 		do_back();
 
 		int start_node = get_start_node();
+		if (road_only && !vertex_had_road_edge(full_map_graph, start_node)){
+			draw_information_box("YOUR CURRENT LOCATION HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS ONLY BUTTON.");
+			do_back();
+		}
 		int end_node = find_vertex_by_name(full_map_graph, nl->name)->id;
+		if (road_only && !vertex_had_road_edge(full_map_graph, end_node)){
+			draw_information_box("YOUR SELECTED LOCATION HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS ONLY BUTTON.");
+			do_back();
+		}
 
 
-		bool valid_path = draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
-		if (!valid_path){
-			draw_information_box("THERE IS NO ROAD BETWEEN THESE TWO LOCATIONS.");
-		}
-		else{
-			draw_information_box("HAVE A FUN TRIP!");
-		}
+		draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
+		draw_information_box("HAVE A FUN TRIP!");
+
 		//TODO  Now do something using the name of the selected search entry
 	}
 	return retval;
