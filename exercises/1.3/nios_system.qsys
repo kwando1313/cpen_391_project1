@@ -244,45 +244,6 @@
          type = "int";
       }
    }
-   element timer_0.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "4320";
-         type = "String";
-      }
-   }
-   element pio_5.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "4352";
-         type = "String";
-      }
-   }
-   element pio_1.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "4160";
-         type = "String";
-      }
-   }
    element pio_7.s1
    {
       datum _lockedAddress
@@ -293,58 +254,6 @@
       datum baseAddress
       {
          value = "4256";
-         type = "String";
-      }
-   }
-   element pio_3.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "4192";
-         type = "String";
-      }
-   }
-   element pio_2.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "4144";
-         type = "String";
-      }
-   }
-   element pio_4.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "4368";
-         type = "String";
-      }
-   }
-   element new_sdram_controller_0.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "16777216";
          type = "String";
       }
    }
@@ -361,6 +270,19 @@
          type = "String";
       }
    }
+   element pio_2.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "4144";
+         type = "String";
+      }
+   }
    element pio_0.s1
    {
       datum _lockedAddress
@@ -371,6 +293,45 @@
       datum baseAddress
       {
          value = "4176";
+         type = "String";
+      }
+   }
+   element pio_5.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "4352";
+         type = "String";
+      }
+   }
+   element timer_1.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "4288";
+         type = "String";
+      }
+   }
+   element pio_3.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "4192";
          type = "String";
       }
    }
@@ -387,7 +348,7 @@
          type = "String";
       }
    }
-   element timer_1.s1
+   element pio_1.s1
    {
       datum _lockedAddress
       {
@@ -396,7 +357,46 @@
       }
       datum baseAddress
       {
-         value = "4288";
+         value = "4160";
+         type = "String";
+      }
+   }
+   element new_sdram_controller_0.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "16777216";
+         type = "String";
+      }
+   }
+   element pio_4.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "4368";
+         type = "String";
+      }
+   }
+   element timer_0.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "4320";
          type = "String";
       }
    }
@@ -447,7 +447,7 @@
  <parameter name="projectName" value="NIOS_II_System.qpf" />
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="1" />
- <parameter name="timeStamp" value="1456304397284" />
+ <parameter name="timeStamp" value="1456308986572" />
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
@@ -948,7 +948,9 @@
   <parameter name="AUTO_CLOCK_SINK_CLOCK_RATE" value="50000000" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone II" />
  </module>
- <module kind="amd" version="1.0" enabled="1" name="amd_0" />
+ <module kind="amd" version="1.0" enabled="1" name="amd_0">
+  <parameter name="AUTO_CLOCK_CLOCK_RATE" value="50000000" />
+ </module>
  <connection
    kind="avalon"
    version="13.0"
@@ -1509,12 +1511,12 @@
    version="13.0"
    start="up_clocks_0.sys_clk"
    end="Altera_UP_SD_Card_Avalon_Interface_0.clock_sink" />
- <connection kind="reset" version="13.0" start="clk_0.clk_reset" end="amd_0.reset" />
  <connection
    kind="clock"
    version="13.0"
    start="up_clocks_0.sys_clk"
    end="amd_0.clock" />
+ <connection kind="reset" version="13.0" start="clk_0.clk_reset" end="amd_0.reset" />
  <connection
    kind="avalon"
    version="13.0"
