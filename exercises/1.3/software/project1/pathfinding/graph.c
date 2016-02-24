@@ -211,10 +211,12 @@ void draw_node(int colour, vertex* v){
 vertex* find_vertex_by_name(graph* graph, char* name){
 	for (int i = 0; i<graph->num_vertices; i++) {
 		vertex* v = get_vertex(graph, i);
+		printf("%s - %s\n", name, v->name);
 		if (strcmp(name, v->name) == 0) {
 			return v;
 		}
 	}
+	printf("Null is returned\n");
 	return NULL;
 }
 
@@ -286,8 +288,8 @@ Point get_vertex_xy(vertex* v){
 		p.x = v->zo_x;
 		p.y = v->zo_y;
 	} else {
-		p.x = v->zi_x;
-		p.y = v->zi_y;
+		p.x = v->zi_x - curr_image_pos.x;
+		p.y = v->zi_y - curr_image_pos.y;
 	}
 	return p;
 }

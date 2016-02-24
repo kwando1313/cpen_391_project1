@@ -333,8 +333,13 @@ void do_dir(){
 	int start_node = get_start_node();
 	draw_information_box("PLEASE SELECT DESTINATION");
 	int end_node = get_node(full_map_graph);
-	draw_graph_path(full_map_graph, start_node, end_node, road_mode(), BLUE);
-	draw_information_box("HAVE A FUN TRIP!");
+	bool valid_path = draw_graph_path(full_map_graph, start_node, end_node, road_mode(), RED);
+	if (!valid_path){
+		draw_information_box("THERE IS NO ROAD BETWEEN THESE TWO LOCATIONS.");
+	}
+	else{
+		draw_information_box("HAVE A FUN TRIP!");
+	}
 }
 
 //Toggle between zoom in and zoom out
@@ -482,16 +487,26 @@ void do_del(){
 bool do_enter(){
 	bool retval = false;
 	if(ready()){
+		retval = true;
 		name_list* nl = matched_names.head;
-		for(int i = 0; i < sel; i++){
+		for(int i = 1; i < sel; i++){
 			nl = nl->next;
 		}
-		char* name = nl->name;
-
+		//char* name;
+		//strcpy(name, nl->name);
+		do_back();
 
 		int start_node = get_start_node();
-		int end_node = find_vertex_by_name(full_map_graph, name)->id;
-		draw_graph_path(full_map_graph, start_node, end_node, road_mode(), BLUE);
+		int end_node = find_vertex_by_name(full_map_graph, nl->name)->id;
+
+
+		bool valid_path = draw_graph_path(full_map_graph, start_node, end_node, road_mode(), RED);
+		if (!valid_path){
+			draw_information_box("THERE IS NO ROAD BETWEEN THESE TWO LOCATIONS.");
+		}
+		else{
+			draw_information_box("HAVE A FUN TRIP!");
+		}
 		//TODO  Now do something using the name of the selected search entry
 	}
 	return retval;

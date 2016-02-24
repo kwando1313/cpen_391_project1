@@ -55,6 +55,7 @@ int get_node(graph* graph){
 		if (node_id == -1) {
 			printf("x: %d, y: %d", p_f.x, p_f.y);
 			printf("Not a valid node\n");
+			draw_information_box("NOT A VALID NODE.");
 		}
 	}
 	printf("returning node: %d\n", node_id);
@@ -68,7 +69,8 @@ int get_valid_vertex(graph* graph, Point p){
 	printf("started valid vertex\n");
 	for(int i = 0; i<graph->num_vertices; i++) {
 		vertex v = *graph->vertices[i];
-		if (sqrt((pow((v.zo_x-p.x),2) + pow((v.zo_y-p.y),2))) <= RADIUS ){
+		Point vertex_p = get_vertex_xy(&v);
+		if (sqrt((pow((vertex_p.x-p.x),2) + pow((vertex_p.y-p.y),2))) <= RADIUS ){
 			return v.id;
 		}
 	}

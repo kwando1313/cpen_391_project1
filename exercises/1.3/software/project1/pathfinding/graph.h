@@ -88,7 +88,7 @@ int* a_star(graph* graph, int start, int goal, bool roads_only);
 void print_path_console(graph* graph, int start, int goal, bool roads_only);
 path_points* get_path_points(graph* graph, int start, int goal, bool roads_only);
 void destroy_path_points(path_points* path);
-void draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour);
+bool draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour);
 
 /* other */
 vertex* find_vertex_by_name(graph* graph, char* name);

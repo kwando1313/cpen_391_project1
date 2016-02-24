@@ -10,6 +10,7 @@
 int main(void) {
 	init_control();
 	load_from_sd();
+	//printf("I finished loading!");
 	s_listen();
 //	draw_graph_path(full_map_graph, 0, 36, false, RED);
 //	usleep(1000000);

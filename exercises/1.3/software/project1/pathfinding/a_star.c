@@ -223,6 +223,9 @@ void update_path_range(path_points* path, Point curr){
 
 path_points* get_path_points(graph* graph, int start, int goal, bool roads_only){
 	int* path_ids = a_star(graph, start, goal, roads_only);
+	if (path_ids == NULL){
+		return NULL;
+	}
 	assert(path_ids != NULL);
 	int curr = 0;
 
@@ -263,14 +266,20 @@ void print_astar_node(astar_node* node){
 	printf("v_id: %d, f_val %d, g_val %d, h_val %d\n", node->v_id, node->f_val, node->g_val, node->h_val);
 }
 
-void draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour){
+bool draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour){
 	//redraw over min/max
+	printf("Roads only is: %i", roads_only);
 	if (!points_equal(prev_min_corner, NULL_CORNER) && !points_equal(prev_max_corner, NULL_CORNER)){
 		draw_image_segment(prev_min_corner,  prev_max_corner);
 	}
 	path_points* points = get_path_points(graph, start, goal, roads_only);
-	prev_min_corner = points->min_corner;
-	prev_max_corner = points->max_corner;
-	draw_path(points->ordered_point_arr, points->actual_size, colour);
-	destroy_path_points(points);
+	if (points != NULL){
+		printf("Valid path found.");
+		prev_min_corner = points->min_corner;
+		prev_max_corner = points->max_corner;
+		draw_path(points->ordered_point_arr, points->actual_size, colour);
+		destroy_path_points(points);
+		return true;
+	}
+	return false;
 }
