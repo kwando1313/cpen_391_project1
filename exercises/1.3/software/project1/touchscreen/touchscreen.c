@@ -45,6 +45,13 @@ void init_touch(void){
 int ScreenTouched(void){
 	// return TRUE if any data received from 6850 connected to touchscreen
 	// or FALSE otherwise
+	button_value = (*push_buttons123);
+	if (button_value != old_button){
+		if (button_value == 5){
+			button_iteration = (button_iteration+1)% 4;
+		}
+		old_button = button_value;
+	}
 	return ((getChar_touch() & 0x81) == 0x81); // some value received //0x81 = 10000001 = pen down command
 }
 
@@ -63,13 +70,7 @@ int ScreenIdle(void){
 void WaitForTouch(){
 	while(!ScreenTouched()){
 
-		button_value = (*push_buttons123);
-		if (button_value != old_button){
-			if (button_value == 5){
-				button_iteration = (button_iteration+1)% 4;
-			}
-			old_button = button_value;
-		}
+
 
 	}
 }
