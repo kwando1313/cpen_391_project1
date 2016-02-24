@@ -201,7 +201,7 @@ void init_s_button(char key, int id){
 		ROAD_BUTT.bottom = RB;
 		ROAD_BUTT.left = RL;
 		ROAD_BUTT.right = RR;
-		ROAD_BUTT.p = do_nothing;
+		ROAD_BUTT.p = do_road;
 		ROAD_BUTT.prs_p = toggle;
 		ROAD_BUTT.text = "ROADS";
 	break;
@@ -333,7 +333,7 @@ void do_dir(){
 	int start_node = get_start_node();
 	draw_information_box("PLEASE SELECT DESTINATION");
 	int end_node = get_node(full_map_graph);
-	bool valid_path = draw_graph_path(full_map_graph, start_node, end_node, road_mode(), RED);
+	bool valid_path = draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
 	if (!valid_path){
 		draw_information_box("THERE IS NO ROAD BETWEEN THESE TWO LOCATIONS.");
 	}
@@ -482,6 +482,10 @@ void do_del(){
 	}
 }
 
+void do_road(){
+	road_only = !road_only;
+}
+
 /* On valid search, find the path to the selected entry from current location. Re-draw the map.
 	On invalid search, returns and keep listening for keyboard inputs */
 bool do_enter(){
@@ -500,7 +504,7 @@ bool do_enter(){
 		int end_node = find_vertex_by_name(full_map_graph, nl->name)->id;
 
 
-		bool valid_path = draw_graph_path(full_map_graph, start_node, end_node, road_mode(), RED);
+		bool valid_path = draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
 		if (!valid_path){
 			draw_information_box("THERE IS NO ROAD BETWEEN THESE TWO LOCATIONS.");
 		}
@@ -540,10 +544,6 @@ void flicker(Button b){
 	highlight(b);
 	usleep(FLICKER_DELAY);
 	unhighlight(b);
-}
-
-bool road_mode(){
-	return *ROAD_BUTT.pressed;
 }
 
 bool is_kb_butt(Button b){

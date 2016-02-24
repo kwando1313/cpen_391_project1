@@ -87,6 +87,8 @@ void toggle(Button b);
 void do_nothing();
 bool road_mode();
 
+bool road_only;
+
 //helper function
 int get_start_node();
 
