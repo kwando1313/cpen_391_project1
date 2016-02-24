@@ -505,7 +505,9 @@ void do_back(){
 	reset_query();
 	destroy_matches();
 
-	init_screen(); //TODO replace this
+	//TODO replace these
+	init_screen();
+	draw_full_image();
 	//map_screen();
 }
 
