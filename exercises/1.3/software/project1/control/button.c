@@ -493,7 +493,7 @@ bool do_enter(){
 		int end_node = find_vertex_by_name(full_map_graph, name)->id;
 		draw_graph_path(full_map_graph, start_node, end_node, road_mode(), BLUE);
 		//TODO  Now do something using the name of the selected search entry
-		do_back();
+		//do_back();
 	}
 	return retval;
 }
