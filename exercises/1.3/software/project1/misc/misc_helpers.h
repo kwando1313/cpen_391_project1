@@ -12,7 +12,7 @@
 #define PHOTO 3
 #define ABOUT 4
 
-#define RADIUS 6.0827
+#define RADIUS 10//6.0827
 
 typedef struct{int x, y; } Point;
 

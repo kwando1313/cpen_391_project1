@@ -333,7 +333,7 @@ void do_dir(){
 	int start_node = get_start_node();
 	draw_information_box("PLEASE SELECT DESTINATION");
 	int end_node = get_node(full_map_graph);
-	draw_graph_path(full_map_graph, start_node, end_node, ROAD_TOG, BLUE);
+	draw_graph_path(full_map_graph, start_node, end_node, road_mode(), BLUE);
 	draw_information_box("HAVE A FUN TRIP!");
 }
 
@@ -348,8 +348,7 @@ void do_zoom(){
 
 		do{
 			sel = GetPress();
-		//} while(sel.y > image_height[ZOOM_OUT] || sel.x > image_width[ZOOM_OUT]);
-		} while(sel.y > image_height[ZOOM_OUT] || sel.x > 500); //temporary, until we shift boundary to 600
+		} while(sel.y > image_height[ZOOM_OUT] || sel.x > image_width[ZOOM_OUT]);
 
 		//printf("sel pre convert %d, %d\n", sel.x, sel.y);
 		sel = convert_pnt_to_zoom_in(sel);
@@ -361,8 +360,7 @@ void do_zoom(){
 
 		if(sel.x < DISPLAY_WIDTH/2)
 			sel.x = DISPLAY_WIDTH/2;
-		// else if(sel.x > image_width[ZOOM_OUT] - (DISPLAY_WIDTH/2))
-		else if(sel.x > (500 - DISPLAY_WIDTH/2)) //temporary, until we shift boundary to 600
+		else if(sel.x > image_width[ZOOM_OUT] - (DISPLAY_WIDTH/2))
 			sel.x = image_width[ZOOM_OUT]  - (DISPLAY_WIDTH/2);
 
 		if(sel.y < DISPLAY_HEIGHT/2)
@@ -493,7 +491,7 @@ bool do_enter(){
 
 		int start_node = get_start_node();
 		int end_node = find_vertex_by_name(full_map_graph, name)->id;
-		draw_graph_path(full_map_graph, start_node, end_node, ROAD_TOG, BLUE);
+		draw_graph_path(full_map_graph, start_node, end_node, road_mode(), BLUE);
 		//TODO  Now do something using the name of the selected search entry
 		do_back();
 	}
@@ -528,6 +526,10 @@ void flicker(Button b){
 	highlight(b);
 	usleep(FLICKER_DELAY);
 	unhighlight(b);
+}
+
+bool road_mode(){
+	return *ROAD_BUTT.pressed;
 }
 
 bool is_kb_butt(Button b){

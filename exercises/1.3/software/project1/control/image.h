@@ -10,7 +10,7 @@
  * 	SHIFT			: how much picture shifts on each
  */
 #define DISPLAY_HEIGHT	480
-#define DISPLAY_WIDTH 	500
+#define DISPLAY_WIDTH 	600
 #define COLOURTABLESIZE 1024
 #define SHIFT 30
 
