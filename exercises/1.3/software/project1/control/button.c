@@ -330,26 +330,7 @@ void do_info(){
 void do_dir(){
 //	directions_screen();
 //	int start_node = get_node(graph);
-	int curr_lat, curr_long;
-	switch (button_iteration){
-		case 0:
-			get_current_coordinates(&curr_lat, &curr_long);
-			break;
-		case 1:
-			curr_lat = 2504654;
-			curr_long = 2656412;
-			break;
-		case 2:
-			curr_lat = 2565916;
-			curr_long = 2676995;
-			break;
-		case 3:
-			curr_lat = 2453370;
-			curr_long = 2645000;
-			break;
-	}
-
-	int start_node = find_vertex_by_coords(full_map_graph, curr_long, curr_lat)->id;
+	int start_node = get_start_node();
 	draw_information_box("PLEASE SELECT DESTINATION");
 	int end_node = get_node(full_map_graph);
 	draw_graph_path(full_map_graph, start_node, end_node, ROAD_TOG, BLUE);
@@ -508,26 +489,9 @@ bool do_enter(){
 			nl = nl->next;
 		}
 		char* name = nl->name;
-		int curr_lat, curr_long;
-		switch (button_iteration){
-			case 0:
-				get_current_coordinates(&curr_lat, &curr_long);
-				break;
-			case 1:
-				curr_lat = 2504654;
-				curr_long = 2656412;
-				break;
-			case 2:
-				curr_lat = 2565916;
-				curr_long = 2676995;
-				break;
-			case 3:
-				curr_lat = 2453370;
-				curr_long = 2645000;
-				break;
-		}
 
-		int start_node = find_vertex_by_coords(full_map_graph, curr_long, curr_lat)->id;
+
+		int start_node = get_start_node();
 		int end_node = find_vertex_by_name(full_map_graph, name)->id;
 		draw_graph_path(full_map_graph, start_node, end_node, ROAD_TOG, BLUE);
 		//TODO  Now do something using the name of the selected search entry
@@ -592,4 +556,27 @@ char* get_butt_text(Button b){
 }
 
 void do_nothing(){
+}
+
+int get_start_node(){
+	int curr_lat, curr_long;
+	switch (button_iteration){
+		case 0:
+			get_current_coordinates(&curr_lat, &curr_long);
+			break;
+		case 1:
+			curr_lat = 2504654;
+			curr_long = 2656412;
+			break;
+		case 2:
+			curr_lat = 2565916;
+			curr_long = 2676995;
+			break;
+		case 3:
+			curr_lat = 2453370;
+			curr_long = 2645000;
+			break;
+	}
+
+	return find_vertex_by_coords(full_map_graph, curr_long, curr_lat)->id;
 }

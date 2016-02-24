@@ -87,4 +87,7 @@ void flicker(Button b);
 void toggle(Button b);
 void do_nothing();
 
+//helper function
+int get_start_node();
+
 #endif /* BUTTON_H_ */
