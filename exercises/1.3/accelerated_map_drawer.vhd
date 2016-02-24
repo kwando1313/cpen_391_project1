@@ -9,26 +9,28 @@ port (
     reset_n: in std_logic;
 	 
     slv_addr: in std_logic_vector(15 downto 0);
-	 slv_start: in std_logic;
-	 slv_done: out std_logic;
-	 slv_data: in std_logic_vector(15 downto 0);
+	 slv_wrdata: in std_logic_vector(15 downto 0);
+	 slv_write: in std_logic;
+	 slv_rddata: out std_logic_vector(15 downto 0);
+	 slv_read: in std_logic;
 	 
+	 -- why is this 32 bits? qsys didn't like 15...
     master_addr: out std_logic_vector(31 downto 0);
+	 master_waitreq: in std_logic;
 	 
 	 master_rdata: in std_logic_vector(15 downto 0);
 	 master_read: out std_logic;
 	 
 	 master_wrdata: out std_logic_vector(15 downto 0);
-	 master_write: out std_logic;
-	 master_waitreq: in std_logic
+	 master_write: out std_logic
 );
 end amd;
 
 architecture rtl of amd is
 begin
-	slv_done <= '0';
 	master_addr <= (others => '0');
 	master_wrdata <= (others => '0');
 	master_read <= '0';
 	master_write <= '0';
+	slv_rddata <= (others => '0');
 end rtl;
