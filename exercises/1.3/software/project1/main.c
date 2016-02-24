@@ -7,15 +7,14 @@
 #include "search.h"
 #include "gps.h"
 
+#define amd_base (*(volatile int *)(0x8040000))
+
 int main(void) {
-	init_control();
-	load_from_sd();
-	s_listen();
-//	draw_graph_path(full_map_graph, 0, 36, false, RED);
-//	usleep(1000000);
-//	draw_graph_path(full_map_graph, 6, 39, false, BLUE);
-//	usleep(1000000);
-//	draw_graph_path(full_map_graph, 8, 62, false, GREEN);
+	int x = amd_base;
+	printf("%d\n", x);
+	amd_base = 32;
+	int y = amd_base;
+	printf("%d\n", y);
 
 	printf("\nDONE\n");
 	return 0;
