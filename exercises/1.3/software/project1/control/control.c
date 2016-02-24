@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "graph.h"
 #include "menu.h"
+#include "gps.h"
 #include "control.h"
 #include "graphics.h"
 #include "touchscreen.h"
@@ -16,11 +17,11 @@ extern int zoom_level;
 
 // Initialise and load up graphics on touchscreen
 void init_control(){
+	init_globals();
 	Init_GPS();
 	init_touch();
 	init_screen();
 	init_keyboard();
-	init_globals();
 }
 
 void init_globals(){
