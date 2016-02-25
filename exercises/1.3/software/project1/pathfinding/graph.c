@@ -169,7 +169,8 @@ bool edge_is_road(graph* graph, int v0_id, int v1_id){
 bool vertex_had_road_edge(graph* graph, int v_id){
 	adjacencyList* list = get_vertex(graph, v_id)->adjList;
 	for (int i = 0; i < list->num_neighbours; i++){
-		if (list->roads[i] == ROAD_COST){
+		printf("%i", list->roads[i]);
+		if (list->roads[i] == true){
 			return true;
 		}
 	}
@@ -216,13 +217,16 @@ void draw_node(int colour, vertex* v){
 	draw_filled_circle(get_vertex_xy(v, false), RADIUS, colour);
 }
 
+void do_draw_nodes(){
+	draw_nodes(YELLOW, full_map_graph);
+}
+
 void draw_nodes(int colour, graph* graph){
-	printf("%d", graph->num_vertices);
 	for (int i = 0; i < graph->num_vertices; i++){
 		vertex* v = get_vertex(graph, i);
 		printf("%s", v->name);
 		if (strlen(v->name) > 3){
-			draw_filled_circle(get_vertex_xy(v, false), RADIUS, colour);
+			draw_filled_circle(get_vertex_xy(v, false), 15, colour);
 		}
 	}
 }

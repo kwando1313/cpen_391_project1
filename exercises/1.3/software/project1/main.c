@@ -11,8 +11,20 @@ int main(void) {
 	init_control();
 	load_from_sd();
 	//printf("I finished loading!");
-	draw_nodes(full_map_graph, YELLOW);
-//	do_dir();
+	usleep(100000);
+	//do_draw_nodes();
+	if (vertex_had_road_edge(full_map_graph, 99)){
+		printf("HOW");
+	}
+//	load_and_draw_graph_path(full_map_graph, 55, 99, true, RED);
+//
+//	usleep(100000);
+//	load_and_draw_graph_path(full_map_graph, 55, 99, true, BLUE);
+//	usleep(100000);
+//	load_and_draw_graph_path(full_map_graph, 55, 99, true, GREEN);
+//	usleep(100000);
+//	load_and_draw_graph_path(full_map_graph, 55, 99, true, RED);
+	//do_dir();
 //	usleep(1000000);
 	//do_zoom();
 //	usleep(1000000);
