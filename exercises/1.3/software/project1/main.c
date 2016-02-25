@@ -6,7 +6,6 @@
 #include "load_node.h"
 #include "search.h"
 #include "gps.h"
-#include <unistd.h>
 
 int main(void) {
 	init_control();
