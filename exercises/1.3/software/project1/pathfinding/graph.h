@@ -45,6 +45,7 @@ typedef struct __adjacencyList{
 typedef struct __vertex {
 	int id;
 	char* name;
+	char* info;
 	//TODO: look over this
 	//obviously these aren't ints, but im worried about floats/double seeping into astar,
 	//and not being able to find the value we need.
@@ -73,7 +74,7 @@ graph* init_graph(int inital_num_vertices);
 void destroy_graph(graph* graph);
 //returns id of added vertex
 vertex* init_vertex(int latitude, int longitude, float altitude, char* name,
-		int zoomed_in_x, int zoomed_in_y, int zoomed_out_x, int zoomed_out_y);
+		int zoomed_in_x, int zoomed_in_y, int zoomed_out_x, int zoomed_out_y, char* info);
 int add_vertex(graph* graph, vertex* v);
 vertex* get_vertex(graph* graph, int id);
 void add_edge(graph* graph, int v0_id, int v1_id, bool road);

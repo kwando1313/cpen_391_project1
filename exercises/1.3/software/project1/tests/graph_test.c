@@ -6,15 +6,15 @@ int graph_test(void){
 	graph* g = init_graph(10);
 
 	for (int x = 0; x < 100; x++){
-		vertex* v = init_vertex(x, x, x, "TEST", x, x, x, x);
+		vertex* v = init_vertex(x, x, x, "TEST", x, x, x, x, "frack");
 		int id = add_vertex(g, v);
 		vertex* v2 = get_vertex(g, id);
 		if (v->id != v2->id){
 			printf("\nTest failed: Vertex ids do not match.");
 			return -1;
 		}
-	}
 
+}
 	for (int x = 0; x < 50; x++){
 		vertex* v1 = get_vertex(g, 2*x);
 		vertex* v2 = get_vertex(g, (2*x) + 1);
@@ -55,7 +55,7 @@ int graph_test(void){
 	graph* g2 = init_graph(100);
 
 	for (int x = 0; x < 100; x++){
-		vertex* v = init_vertex(x, x, x, "TEST", x, x, x, x);
+		vertex* v = init_vertex(x, x, x, "TEST", x, x, x, x, "hi");
 		int id = add_vertex(g2, v);
 		vertex* v2 = get_vertex(g2, id);
 		if (v->id != v2->id){
@@ -102,7 +102,7 @@ int graph_test(void){
 	printf("\nAll tests passed!");
 	return 0;
 }
-
+/*
 graph* create_test_graph(){
 	bool road = true;
 	graph* graph = init_graph(DEFAULT_GRAPH_SIZE);
@@ -170,4 +170,4 @@ graph* create_test_graph(){
 	add_edge(graph, v14id, v20id, road);
 
 	return graph;
-}
+}*/

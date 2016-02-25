@@ -243,8 +243,8 @@ void about_screen(){
 	draw_information_box("PATHFINDING MAP\n(CPEN 391 TEAM 22)\nALEX CHARLES\nANGELA CHO\nCALEB KWAN\nWILLIAM TANG\n\nABOUT:\n(1)SEARCH FOR AN AREA\nAND GET DIRECTIONS\n\n(2)INFO ON MAP POINTS\n\n(3)ZOOM IN/OUT AND\nTRANSLATE SCREEN\n\n(4)FIND ONLY PATHS FOR ROADS\n\n(5)GET DIRECTIONS BY\nTOUCHING MAP POINTS\n\n(6)ABOUT INFO FOR APP");
 }
 
-void info_screen(){
-	draw_information_box("BUILDING INFO");
+void info_screen(char* info){
+	draw_information_box(info);
 }
 
 void directions_screen(){
