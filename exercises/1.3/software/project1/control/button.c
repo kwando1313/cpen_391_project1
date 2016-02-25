@@ -14,6 +14,7 @@
 #include "graph.h"
 #include <assert.h>
 
+const static Point NULL_CORNER = {-1,-1};
 extern Point curr_image_pos;
 extern int zoom_level;
 extern int button_iteration;
@@ -347,6 +348,7 @@ void do_dir(){
 	}
 
 	draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
+
 	draw_information_box("HAVE A FUN TRIP!");
 	DIR_BUTT.prs_p(DIR_BUTT);
 }
@@ -361,7 +363,8 @@ void do_zoom(){
 		zoom_level = ZOOM_IN;
 
 		do{
-			sel = GetPress();
+			Point p = {200, 200};
+			sel = p;//GetPress();
 		} while(sel.y > image_height[ZOOM_OUT] || sel.x > image_width[ZOOM_OUT]);
 
 		sel = convert_pnt_to_zoom_in(sel);
@@ -385,6 +388,7 @@ void do_zoom(){
 	draw_full_image();
 	about_screen();
 	ZOOM_BUTT.prs_p(ZOOM_BUTT);
+	re_draw_path();
 }
 
 // Display app about
@@ -529,7 +533,7 @@ bool do_enter(){
 		}
 
 		do_back();
-		draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
+		load_and_draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
 		draw_information_box("HAVE A FUN TRIP!");
 	}
 	return retval;
@@ -613,6 +617,81 @@ int get_start_node(){
 }
 
 void re_draw_path(){
-	int start_node = get_start_node();
-	draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
+	if (points != NULL){
+		printf("Path is not NULL!");
+		draw_graph_path(RED);
+	}
+}
+
+bool draw_graph_path(int colour){
+	if (zoom_level == ZOOM_OUT){
+		if (!points_equal(prev_zoomed_out_min_corner, NULL_CORNER) && !points_equal(prev_zoomed_out_max_corner, NULL_CORNER)){
+			draw_image_segment(prev_zoomed_out_min_corner,  prev_zoomed_out_max_corner);
+		}
+	}
+	else{
+		//First check to see if when subtracted from, it's less than 0...
+		prev_zoomed_in_min_corner.x = (prev_zoomed_in_min_corner.x - curr_image_pos.x < 0) ? 0 : prev_zoomed_in_min_corner.x - curr_image_pos.x;
+		prev_zoomed_in_min_corner.y = (prev_zoomed_in_min_corner.y - curr_image_pos.y < 0) ? 0 : prev_zoomed_in_min_corner.y - curr_image_pos.y;
+
+		//Then check to see if it's greater than the DISPLAY WIDTH
+		prev_zoomed_in_min_corner.x = (prev_zoomed_in_min_corner.x > DISPLAY_WIDTH) ? DISPLAY_WIDTH : prev_zoomed_in_min_corner.x;
+		prev_zoomed_in_min_corner.y = (prev_zoomed_in_min_corner.y > DISPLAY_HEIGHT) ? DISPLAY_HEIGHT : prev_zoomed_in_min_corner.y;
+
+		//This is all to make sure we don't die a horrible death of sadness and line apocalypse (of negative displays).
+		prev_zoomed_in_max_corner.x = (prev_zoomed_in_max_corner.x - curr_image_pos.x < 0) ? 0 : prev_zoomed_in_max_corner.x - curr_image_pos.x;
+		prev_zoomed_in_max_corner.y = (prev_zoomed_in_max_corner.y - curr_image_pos.y < 0) ? 0 : prev_zoomed_in_max_corner.y - curr_image_pos.y;
+		prev_zoomed_in_max_corner.x = (prev_zoomed_in_max_corner.x > DISPLAY_WIDTH) ? DISPLAY_WIDTH : prev_zoomed_in_max_corner.x;
+		prev_zoomed_in_max_corner.y = (prev_zoomed_in_max_corner.y > DISPLAY_HEIGHT) ? DISPLAY_HEIGHT : prev_zoomed_in_max_corner.y;
+		if (!points_equal(prev_zoomed_in_min_corner, NULL_CORNER) && !points_equal(prev_zoomed_in_max_corner, NULL_CORNER)){
+			draw_image_segment(prev_zoomed_in_min_corner,  prev_zoomed_in_max_corner);
+		}
+		printf("Corners are now: %d, %d\n%d, %d", prev_zoomed_in_min_corner.x, prev_zoomed_in_min_corner.y, prev_zoomed_in_max_corner.x, prev_zoomed_in_max_corner.y);
+	}
+
+	if (points != NULL){
+		prev_zoomed_out_min_corner = points->zoomed_out_min_corner;
+		prev_zoomed_out_max_corner = points->zoomed_out_max_corner;
+
+		prev_zoomed_in_min_corner = points->zoomed_in_min_corner;
+		prev_zoomed_in_max_corner = points->zoomed_in_max_corner;
+		if (zoom_level == ZOOM_OUT)
+			draw_path(points->zoomed_out_ordered_point_arr, points->actual_size, colour);
+		else{
+			Point points_arr[points->actual_size];
+			for (int i = 0; i < points->actual_size; i++){
+
+				points_arr[i] = NULL_CORNER;
+				points_arr[i].x = points->zoomed_in_ordered_point_arr[i].x - curr_image_pos.x;
+				points_arr[i].y = points->zoomed_in_ordered_point_arr[i].y - curr_image_pos.y;
+
+				if (points_arr[i].x < 0 && points_arr[i].y < 0){
+					printf("Originally... %d is  %d, %d\n", i, points_arr[i].x, points_arr[i].y);
+					while (points_arr[i].x < 0 || points_arr[i].y < 0){
+						points_arr[i].x+=3;
+						points_arr[i].y+=1;
+					}
+					printf("Now point (%d): %d %d\n", i, points_arr[i].x, points_arr[i].y);
+				}
+
+				if (points_arr[i].x >= DISPLAY_WIDTH){
+					points_arr[i].x = DISPLAY_WIDTH - 1;
+				}
+				if (points_arr[i].y >= DISPLAY_HEIGHT){
+					points_arr[i].y = DISPLAY_HEIGHT - 1;
+				}
+				if (points_arr[i].x < 0){
+					points_arr[i].x = 0;
+				}
+				if (points_arr[i].y < 0){
+					points_arr[i].y = 0;
+				}
+			}
+			draw_path(points_arr, points->actual_size, colour);
+			VLine(600, 0, 480, BLACK);
+		}
+		//destroy_path_points(points);
+		return true;
+	}
+	return false;
 }

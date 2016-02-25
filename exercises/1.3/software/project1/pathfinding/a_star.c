@@ -15,11 +15,13 @@ int get_cost(graph* graph, int curr, int neighbour);
 astar_node* pop_smallest(bnode** root);
 int* reconstruct_path(hashmap* path_map, int start, int current_id);
 int append_to_array(int** arr, int i, int arr_size, int to_add);
-void append_to_path_points_array(path_points* path, int i, Point to_add);
-void update_path_range(path_points* path, Point curr);
+void append_to_path_points_array(path_points* path, int i, Point zoomed_in_point, Point zoomed_out_point);
+void update_path_range(path_points* path, Point curr, bool zoom_out);
 
 //debugging only
 void print_astar_node(astar_node* node);
+
+extern path_points* points;
 
 /*
  * Notes on datastructures chosen
@@ -198,26 +200,50 @@ void print_path_console(graph* graph, int start, int goal, bool roads_only){
 	free(path);
 }
 
-void update_path_range(path_points* path, Point curr){
-	if (points_equal(path->min_corner,NULL_CORNER)){
-		path->min_corner = curr;
-	}
+void update_path_range(path_points* path, Point curr, bool zoomed_in){
+	if (zoomed_in){
+		if (points_equal(path->zoomed_in_min_corner,NULL_CORNER)){
+			path->zoomed_in_min_corner = curr;
+		}
 
-	if (points_equal(path->max_corner,NULL_CORNER)){
-		path->max_corner.x = curr.x + 1;
-		path->max_corner.y = curr.y + 1;
-	}
+		if (points_equal(path->zoomed_in_max_corner,NULL_CORNER)){
+			path->zoomed_in_max_corner.x = curr.x + 1;
+			path->zoomed_in_max_corner.y = curr.y + 1;
+		}
 
-	if (path->min_corner.x > curr.x) {
-		path->min_corner.x = curr.x;
-	} else if (path->max_corner.x <= curr.x) {
-		path->max_corner.x = curr.x + 1; // max corner is up to but not including
-	}
+		if (path->zoomed_in_min_corner.x > curr.x) {
+			path->zoomed_in_min_corner.x = curr.x;
+		} else if (path->zoomed_in_max_corner.x <= curr.x) {
+			path->zoomed_in_max_corner.x = curr.x + 1; // max corner is up to but not including
+		}
 
-	if (path->min_corner.y > curr.y) {
-		path->min_corner.y = curr.y;
-	} else if (path->max_corner.y <= curr.y) {
-		path->max_corner.y = curr.y + 1;
+		if (path->zoomed_in_min_corner.y > curr.y) {
+			path->zoomed_in_min_corner.y = curr.y;
+		} else if (path->zoomed_in_max_corner.y <= curr.y) {
+			path->zoomed_in_max_corner.y = curr.y + 1;
+		}
+	}
+	else{
+		if (points_equal(path->zoomed_out_min_corner,NULL_CORNER)){
+			path->zoomed_out_min_corner = curr;
+		}
+
+		if (points_equal(path->zoomed_out_max_corner,NULL_CORNER)){
+			path->zoomed_out_max_corner.x = curr.x + 1;
+			path->zoomed_out_max_corner.y = curr.y + 1;
+		}
+
+		if (path->zoomed_out_min_corner.x > curr.x) {
+			path->zoomed_out_min_corner.x = curr.x;
+		} else if (path->zoomed_out_max_corner.x <= curr.x) {
+			path->zoomed_out_max_corner.x = curr.x + 1; // max corner is up to but not including
+		}
+
+		if (path->zoomed_out_min_corner.y > curr.y) {
+			path->zoomed_out_min_corner.y = curr.y;
+		} else if (path->zoomed_out_max_corner.y <= curr.y) {
+			path->zoomed_out_max_corner.y = curr.y + 1;
+		}
 	}
 }
 
@@ -227,17 +253,24 @@ path_points* get_path_points(graph* graph, int start, int goal, bool roads_only)
 	int curr = 0;
 
 	path_points* path = malloc(sizeof(path_points));
-	path->ordered_point_arr = malloc(DEFAULT_PATH_SIZE*sizeof(Point));
+	path->zoomed_in_ordered_point_arr = malloc(DEFAULT_PATH_SIZE*sizeof(Point));
+	path->zoomed_out_ordered_point_arr = malloc(DEFAULT_PATH_SIZE*sizeof(Point));
+
 	path->size = DEFAULT_PATH_SIZE;
 	path->actual_size = 0;
-	path->min_corner = NULL_CORNER;
-	path->max_corner = NULL_CORNER;
+	path->zoomed_in_min_corner = NULL_CORNER;
+	path->zoomed_in_max_corner = NULL_CORNER;
+	path->zoomed_out_min_corner = NULL_CORNER;
+	path->zoomed_out_max_corner = NULL_CORNER;
+
 
 	while(1) {
 		vertex* v = get_vertex(graph, path_ids[curr]);
-		Point to_add = get_vertex_xy(v);
-		update_path_range(path, to_add);
-		append_to_path_points_array(path, curr, to_add);
+		Point zoomed_in_point = get_vertex_xy(v, true);
+		Point zoomed_out_point = get_vertex_xy(v, false);
+		update_path_range(path, zoomed_in_point, true);
+		update_path_range(path, zoomed_out_point, false);
+		append_to_path_points_array(path, curr, zoomed_in_point, zoomed_out_point);
 
 		if (path_ids[curr] == start) {
 			break;
@@ -249,33 +282,27 @@ path_points* get_path_points(graph* graph, int start, int goal, bool roads_only)
 	return path;
 }
 
-void append_to_path_points_array(path_points* path, int i, Point to_add){
-	if (i == path->size) {
-		path->size *= 2;
-		Point* new_ordered_point_arr = realloc(path->ordered_point_arr, path->size*sizeof(Point));
-		path->ordered_point_arr = new_ordered_point_arr;
-	}
-	path->actual_size++;
-	path->ordered_point_arr[i] = to_add;
+void append_to_path_points_array(path_points* path, int i, Point zoomed_in_point, Point zoomed_out_point){
+
+		if (i == path->size) {
+			path->size *= 2;
+			Point* new_ordered_point_arr = realloc(path->zoomed_in_ordered_point_arr, path->size*sizeof(Point));
+			path->zoomed_in_ordered_point_arr = new_ordered_point_arr;
+			Point* new_zoomed_out_ordered_point_arr = realloc(path->zoomed_out_ordered_point_arr, path->size*sizeof(Point));
+			path->zoomed_out_ordered_point_arr = new_zoomed_out_ordered_point_arr;
+		}
+		path->actual_size++;
+		path->zoomed_in_ordered_point_arr[i] = zoomed_in_point;
+		path->zoomed_out_ordered_point_arr[i] = zoomed_out_point;
+
 }
 
 void print_astar_node(astar_node* node){
 	printf("v_id: %d, f_val %d, g_val %d, h_val %d\n", node->v_id, node->f_val, node->g_val, node->h_val);
 }
 
-bool draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour){
+bool load_and_draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour){
 	//redraw over min/max
-	if (!points_equal(prev_min_corner, NULL_CORNER) && !points_equal(prev_max_corner, NULL_CORNER)){
-		draw_image_segment(prev_min_corner,  prev_max_corner);
-	}
-	path_points* points = get_path_points(graph, start, goal, roads_only);
-	if (points != NULL){
-		printf("Valid path found\n");
-		prev_min_corner = points->min_corner;
-		prev_max_corner = points->max_corner;
-		draw_path(points->ordered_point_arr, points->actual_size, colour);
-		destroy_path_points(points);
-		return true;
-	}
-	return false;
+	points = get_path_points(graph, start, goal, roads_only);
+	return draw_graph_path(colour);
 }

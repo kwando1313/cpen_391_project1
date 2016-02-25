@@ -6,8 +6,6 @@
 #include "misc_helpers.h"
 #include "graph.h"
 
-extern int zoom_level;
-
 adjacencyList* init_adjList(void);
 void add_directed_edge(adjacencyList* adjList, int vertex_id, bool road);
 bool remove_directed_edge(adjacencyList* adjList, int vertex_id);
@@ -192,7 +190,8 @@ void destroy_graph(graph* graph){
 }
 
 void destroy_path_points(path_points* path){
-	free(path->ordered_point_arr);
+	free(path->zoomed_in_ordered_point_arr);
+	free(path->zoomed_out_ordered_point_arr);
 	free(path);
 }
 
@@ -205,8 +204,8 @@ void draw_graph(graph* graph, int v_colour, int edge_colour){
 		int num_edges = adjList->num_neighbours;
 		for (int j = 0; j<num_edges; j++) {
 			vertex* w = get_vertex(graph, adjList->neighbours[j]);
-			Point p_v = get_vertex_xy(v);
-			Point p_w = get_vertex_xy(w);
+			Point p_v = get_vertex_xy(v, false);
+			Point p_w = get_vertex_xy(w, false);
 			Line(p_v.x, p_v.y, p_w.x, p_w.y, edge_colour);
 		}
 	}
@@ -214,7 +213,21 @@ void draw_graph(graph* graph, int v_colour, int edge_colour){
 
 // Draws a filled-in circle with fixed a radius at a node
 void draw_node(int colour, vertex* v){
-	draw_filled_circle(get_vertex_xy(v), RADIUS, colour);
+	draw_filled_circle(get_vertex_xy(v, false), RADIUS, colour);
+}
+
+void do_draw_nodes(){
+	draw_nodes(YELLOW, full_map_graph);
+}
+
+void draw_nodes(int colour, graph* graph){
+	for (int i = 0; i < graph->num_vertices; i++){
+		vertex* v = get_vertex(graph, i);
+		printf("%s", v->name);
+		if (strlen(v->name) > 3){
+			draw_filled_circle(get_vertex_xy(v, false), 15, colour);
+		}
+	}
 }
 
 //TODO replace these with some hashmap thing
@@ -291,14 +304,14 @@ void add_name(graph* graph, char* name){
 	}
 }
 
-Point get_vertex_xy(vertex* v){
+Point get_vertex_xy(vertex* v, bool zoomed_in){
 	Point p;
-	if (zoom_level == ZOOM_OUT){
+	if (zoomed_in == true){
+		p.x = v->zi_x;
+		p.y = v->zi_y;
+	} else {
 		p.x = v->zo_x;
 		p.y = v->zo_y;
-	} else {
-		p.x = v->zi_x - curr_image_pos.x;
-		p.y = v->zi_y - curr_image_pos.y;
 	}
 	return p;
 }

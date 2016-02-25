@@ -89,9 +89,11 @@ bool road_mode();
 
 bool road_only;
 int end_node;
+path_points* points;
 
 //helper function
 int get_start_node();
+bool draw_graph_path(int colour);
 void re_draw_path();
 
 #endif /* BUTTON_H_ */

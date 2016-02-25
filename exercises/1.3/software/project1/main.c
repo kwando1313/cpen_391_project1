@@ -8,11 +8,9 @@
 #include "gps.h"
 
 int main(void) {
-	printf("\nSTART\n");
 	init_control();
 	load_from_sd();
 	s_listen();
-
 	printf("\nDONE\n");
 	return 0;
 }
