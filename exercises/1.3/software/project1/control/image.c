@@ -94,6 +94,13 @@ void clear_extra_map_space(int height, int width){
 	for (int y = height; y<DISPLAY_HEIGHT; y++){
 		HLine(0, y, DISPLAY_WIDTH, WHITE);
 	}
+
+	if (DISPLAY_HEIGHT - height > get_font_height(MEDIUM)){
+		Point topLeft = {0, height};
+		char* text = "UBC WAYFINDING";
+		draw_text_box(topLeft, width, DISPLAY_HEIGHT-height, 1,
+				BLACK, WHITE, BLACK, text, MEDIUM);
+	}
 }
 
 char get_colour(int x, int y){

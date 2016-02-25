@@ -363,8 +363,7 @@ void do_zoom(){
 		zoom_level = ZOOM_IN;
 
 		do{
-			Point p = {200, 200};
-			sel = p;//GetPress();
+			sel = GetPress();
 		} while(sel.y > image_height[ZOOM_OUT] || sel.x > image_width[ZOOM_OUT]);
 
 		sel = convert_pnt_to_zoom_in(sel);
