@@ -117,11 +117,11 @@ architecture bhvr of GraphicsController is
 	signal err_sub_dy, err_add_dx : std_Logic;
 
 	-- may want to change size of dx, dy
-	signal dx : signed(16 downto 0) := (others=>'0');
-	signal dy : signed(16 downto 0) := (others=>'0');
+	signal dx : signed(15 downto 0) := (others=>'0');
+	signal dy : signed(15 downto 0) := (others=>'0');
 	signal sx : integer := 1;
 	signal sy : integer := 1;
-	signal err : signed(16 downto 0) := (others=>'0');
+	signal err : signed(15 downto 0) := (others=>'0');
 	
 ---------------------------------------------------------
 	
@@ -551,18 +551,18 @@ Begin
 
 			-- done here because we want ffs
 			if currentState = DrawLineInit then
-				if Y2 > Y1 then
-					dy <= signed('0' & (unsigned(Y2) - unsigned(Y1)));
+				if signed(Y2) > signed(Y1) then
+					dy <= signed(Y2) - signed(Y1);
 					sy <= 1;
 				else
-					dy <= signed('0' & (unsigned(Y1) - unsigned(Y2)));
+					dy <= signed(Y1) - signed(Y2);
 					sy <= -1;
 				end if;
-				if X2 > X1 then
-					dx <= signed('0' & (unsigned(X2) - unsigned(X1)));
+				if signed(X2) > signed(X1) then
+					dx <= signed(X2) - signed(X1);
 					sx <= 1;
 				else
-					dx <= signed('0' & (unsigned(X1) - unsigned(X2)));
+					dx <= signed(X1) - signed(X2);
 					sx <= -1;
 				end if;
 				err <= (others => '0');
@@ -585,9 +585,9 @@ Begin
 	
 	process(CurrentState, CommandWritten_H, Command, X1, X2, Y1, Y2, Colour, OKToDraw_L, VSync_L,
 				BackGroundColour, AS_L, Sram_DataIn, CLK, Colour_Latch,
-				curr_x, curr_y, final_x, final_y, dx, dy, sx, sy, err)
+				curr_x, curr_y, max_x, max_y, final_x, final_y, dx, dy, sx, sy, err)
 
-			variable e2 : signed(33 downto 0) := (others=>'0');
+			variable e2 : signed(31 downto 0) := (others=>'0');
 	begin
 	
 	----------------------------------------------------------------------------------------------------------------------------------
