@@ -12,6 +12,7 @@
 #include "search.h"
 #include "gps.h"
 #include "graph.h"
+#include <assert.h>
 
 extern Point curr_image_pos;
 extern int zoom_level;
@@ -27,7 +28,8 @@ const char KEYS[] = {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '<',
 void init_kb_button(char key, int id){
 	keyboard[id].key = key;
 	keyboard[id].id = id;
-	keyboard[id].pressed = false;
+	keyboard[id].pressed = malloc(sizeof(bool));
+	*(keyboard[id].pressed) = false;
 	keyboard[id].prs_p = flicker;
 
 	// We can use the id to know where to draw
@@ -101,7 +103,8 @@ void init_kb_button(char key, int id){
 void init_s_button(char key, int id){
 	keyboard[id].key = key;
 	keyboard[id].id = id;
-	keyboard[id].pressed = false;
+	keyboard[id].pressed = malloc(sizeof(bool));
+	*(keyboard[id].pressed) = false;
 
 	switch (id){
 	case 30:
@@ -120,7 +123,7 @@ void init_s_button(char key, int id){
 		DIR_BUTT.left = DL;
 		DIR_BUTT.right = DR;
 		DIR_BUTT.p = do_dir;
-		DIR_BUTT.prs_p = flicker;
+		DIR_BUTT.prs_p = toggle;
 		DIR_BUTT.text = "DIRECTIONS";
 	break;
 
@@ -329,17 +332,25 @@ void do_info(){
 //// Ask for a start and end node and find the best directions
 void do_dir(){
 //	directions_screen();
-//	int start_node = get_node(graph);
+
 	int start_node = get_start_node();
-	if (road_only && !vertex_had_road_edge(full_map_graph)){
+	if (road_only && !vertex_had_road_edge(full_map_graph, start_node)){
 		draw_information_box("YOUR CURRENT LOCATION HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS ONLY BUTTON.");
-		do_back();
+		DIR_BUTT.prs_p(DIR_BUTT);
+		return;
 	}
 	draw_information_box("PLEASE SELECT DESTINATION");
+
 	end_node = get_node(full_map_graph);
+	if (road_only && !vertex_had_road_edge(full_map_graph, end_node)){
+		draw_information_box("YOUR SELECTED LOCATION HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS BUTTON.");
+		DIR_BUTT.prs_p(DIR_BUTT);
+		return;
+	}
+
 	draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
 	draw_information_box("HAVE A FUN TRIP!");
-
+	DIR_BUTT.prs_p(DIR_BUTT);
 }
 
 //Toggle between zoom in and zoom out
@@ -372,12 +383,11 @@ void do_zoom(){
 			sel.y = 0;
 		else if(sel.y > (image_height[ZOOM_IN] - DISPLAY_HEIGHT))
 			sel.y = image_height[ZOOM_IN] - DISPLAY_HEIGHT;
-
-
 	}
 	printf("sel final %d, %d\n", sel.x, sel.y);
 	curr_image_pos = sel;
 	draw_full_image();
+	ZOOM_BUTT.prs_p(ZOOM_BUTT);
 }
 
 // Display app about
@@ -428,23 +438,29 @@ void do_sel(char key){
 
 // Select the search match entry above the current selected
 void do_up(){
-	if(MN_COUNT < SEARCH_THRESHHOLD)
+	if(qs_length() < SEARCH_THRESHHOLD){
 		return;
-	if(sel > 1)
+	}
+	if(sel > 1){
 		sel--;
-	else
+	}
+	else{
 		sel = MN_COUNT;
+	}
 	match_screen(sel, MN_COUNT);
 }
 
 // Select the search match entry below the current selected
 void do_down(){
-	if(MN_COUNT < SEARCH_THRESHHOLD)
+	if(qs_length() < SEARCH_THRESHHOLD){
 		return;
-	if(sel < MN_COUNT)
+	}
+	if(sel < MN_COUNT){
 		sel++;
-	else
+	}
+	else{
 		sel = 1;
+	}
 	match_screen(sel, MN_COUNT);
 }
 
@@ -500,26 +516,25 @@ bool do_enter(){
 		for(int i = 1; i < sel; i++){
 			nl = nl->next;
 		}
-		//char* name;
-		//strcpy(name, nl->name);
-		do_back();
+		printf("%s\n", nl->name);
 
 		int start_node = get_start_node();
 		if (road_only && !vertex_had_road_edge(full_map_graph, start_node)){
-			draw_information_box("YOUR CURRENT LOCATION HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS ONLY BUTTON.");
+			draw_information_box("YOUR CURRENT LOCATION HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS BUTTON.");
 			do_back();
+			return retval;
 		}
+
 		end_node = find_vertex_by_name(full_map_graph, nl->name)->id;
 		if (road_only && !vertex_had_road_edge(full_map_graph, end_node)){
-			draw_information_box("YOUR SELECTED LOCATION HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS ONLY BUTTON.");
+			draw_information_box("YOUR SELECTED LOCATION HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS BUTTON.");
 			do_back();
+			return retval;
 		}
 
-
+		do_back();
 		draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
 		draw_information_box("HAVE A FUN TRIP!");
-
-		//TODO  Now do something using the name of the selected search entry
 	}
 	return retval;
 }
@@ -528,23 +543,22 @@ bool do_enter(){
 void do_back(){
 	reset_query();
 	destroy_matches();
-
-	//TODO replace these
-	init_screen();
 	draw_full_image();
-	//map_screen();
+	about_screen();
 }
 
 void toggle(Button b){
-	if(*b.pressed == false){
-		*b.pressed = true;
+	if(*(b.pressed) == false){
+		*(b.pressed) = true;
 		highlight(b);
 		usleep(TOGGLE_DELAY);
+		printf("%s ON\n" ,b.text);
 	}
 	else{
-		*b.pressed = false;
+		*(b.pressed) = false;
 		unhighlight(b);
 		usleep(TOGGLE_DELAY);
+		printf("%s OFF\n" ,b.text);
 	}
 }
 
@@ -581,16 +595,13 @@ char* get_butt_text(Button b){
 	return b.text;
 }
 
-void do_nothing(){
-}
-
 int get_start_node(){
 	int curr_lat, curr_long;
 	switch (button_iteration){
-		case 0:
+		case 1:
 			get_current_coordinates(&curr_lat, &curr_long);
 			break;
-		case 1:
+		case 0:
 			curr_lat = 2504654;
 			curr_long = 2656412;
 			break;

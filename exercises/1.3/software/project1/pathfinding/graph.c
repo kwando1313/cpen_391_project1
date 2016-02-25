@@ -221,7 +221,6 @@ void draw_node(int colour, vertex* v){
 vertex* find_vertex_by_name(graph* graph, char* name){
 	for (int i = 0; i<graph->num_vertices; i++) {
 		vertex* v = get_vertex(graph, i);
-		printf("%s - %s\n", name, v->name);
 		if (strcmp(name, v->name) == 0) {
 			return v;
 		}

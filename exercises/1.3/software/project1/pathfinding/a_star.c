@@ -265,13 +265,12 @@ void print_astar_node(astar_node* node){
 
 bool draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour){
 	//redraw over min/max
-	printf("Roads only is: %i", roads_only);
 	if (!points_equal(prev_min_corner, NULL_CORNER) && !points_equal(prev_max_corner, NULL_CORNER)){
 		draw_image_segment(prev_min_corner,  prev_max_corner);
 	}
 	path_points* points = get_path_points(graph, start, goal, roads_only);
 	if (points != NULL){
-		printf("Valid path found.");
+		printf("Valid path found\n");
 		prev_min_corner = points->min_corner;
 		prev_max_corner = points->max_corner;
 		draw_path(points->ordered_point_arr, points->actual_size, colour);

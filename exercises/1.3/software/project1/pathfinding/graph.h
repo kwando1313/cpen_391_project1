@@ -93,6 +93,7 @@ bool draw_graph_path(graph* graph, int start, int goal, bool roads_only, int col
 /* other */
 vertex* find_vertex_by_name(graph* graph, char* name);
 vertex* find_vertex_by_coords(graph* graph, int latitude, int longitude);
+bool vertex_had_road_edge(graph* graph, int v_id);
 
 void draw_graph(graph* graph, int v_colour, int edge_colour);
 void draw_node(int colour, vertex* v);

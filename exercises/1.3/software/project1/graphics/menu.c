@@ -218,7 +218,6 @@ void draw_arrows(){
 	draw_arrow(DPOINT, ARROW_SIZE, ARROW_SIZE, 1, BLACK, WHITE, DOWN, 0);
 }
 
-// TODO: Add loading up the map image in here
 void init_screen(){
 		clear_screen(WHITE);
 
@@ -241,7 +240,7 @@ void init_screen(){
 }
 
 void about_screen(){
-	draw_information_box("PATHFINDING MAP (CPEN 391 TEAM 22)\nALEX CHARLES\nANGELO CHO\nCALEB KWAN\nWILLIAM TANG\n\nWELCOME TO [INSER NAME HERE].\nBELOW THIS MENU YOU MAY FIND:\nSEARCH FOR DIRECTIONS\nGET DIRECTIONS BETWEEN TWO POINTS\nOTHER BS");
+	draw_information_box("PATHFINDING MAP\n(CPEN 391 TEAM 22)\nALEX CHARLES\nANGELA CHO\nCALEB KWAN\nWILLIAM TANG\n\nABOUT:\n(1)SEARCH FOR AN AREA\nAND GET DIRECTIONS\n\n(2)INFO ON MAP POINTS\n\n(3)ZOOM IN/OUT AND\nTRANSLATE SCREEN\n\n(4)FIND ONLY PATHS FOR ROADS\n\n(5)GET DIRECTIONS BY\nTOUCHING MAP POINTS\n\n(6)ABOUT INFO FOR APP");
 }
 
 void info_screen(){
@@ -299,12 +298,6 @@ void match_screen(int sel, int mn_count){
 		else if(i == (sel-1))
 			draw_menu(p, BOX_WIDTH, incr, 2 , WHITE, BLACK, WHITE, SMALL, t);
 	}
-}
-
-// redraw the map when we leave pop_screen
-void map_screen(){
-	// TODO:
-
 }
 
 void highlight(Button b){

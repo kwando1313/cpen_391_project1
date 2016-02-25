@@ -61,8 +61,8 @@ int get_node(graph* graph){
 			printf("Not a valid node\n");
 			draw_information_box("NOT A VALID NODE.");
 		}
-		if (road_only && !vertex_had_road_edge(node_id)){
-			draw_information_box("NOT A VALID NODE");
+		if (road_only && !vertex_had_road_edge(full_map_graph, node_id)){
+			draw_information_box("NOT A VALID NODE.");
 			node_id = -1;
 		}
 	}
@@ -95,6 +95,7 @@ void s_listen(){
 			butt = get_s_button(p_i);
 		}
 		while(butt == NULL);
+		printf("Button pressed: %c\n", butt->key);
 		butt->prs_p(*butt);
 		butt->p();
 	}
@@ -110,7 +111,7 @@ void kb_listen(){
 			butt = get_kb_button(p_i);
 		}
 		while(butt == NULL );
-
+		printf("Button pressed: %c\n", butt->key);
 		butt->prs_p(*butt);
 		if(butt->id != BACK_BUTT.id && butt->id != ENTER_BUTT.id && butt->id != DEL_BUTT.id && butt->id != ROAD_BUTT.id){
 			butt->kb_p(butt->key);
@@ -119,12 +120,14 @@ void kb_listen(){
 		// We are done with the keyboard upon BACK
 		else if(butt->id == BACK_BUTT.id){
 			butt->p();
+			POP_BUTT.prs_p(POP_BUTT);
 			break;
 		}
 
 		// We are done with the keyboard upon valid search input
 		else if(butt->id == ENTER_BUTT.id){
 			if(butt->ent_p(*butt)){
+				POP_BUTT.prs_p(POP_BUTT);
 				break;
 			}
 		}

@@ -85,7 +85,6 @@ void do_down();
 void do_road();
 void flicker(Button b);
 void toggle(Button b);
-void do_nothing();
 bool road_mode();
 
 bool road_only;
