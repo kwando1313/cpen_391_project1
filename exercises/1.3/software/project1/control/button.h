@@ -89,8 +89,10 @@ void do_nothing();
 bool road_mode();
 
 bool road_only;
+int end_node;
 
 //helper function
 int get_start_node();
+void re_draw_path();
 
 #endif /* BUTTON_H_ */

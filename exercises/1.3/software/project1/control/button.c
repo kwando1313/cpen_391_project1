@@ -336,7 +336,7 @@ void do_dir(){
 		do_back();
 	}
 	draw_information_box("PLEASE SELECT DESTINATION");
-	int end_node = get_node(full_map_graph);
+	end_node = get_node(full_map_graph);
 	draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
 	draw_information_box("HAVE A FUN TRIP!");
 
@@ -389,6 +389,7 @@ void do_about(void* nothing){
 void do_west(){
 	if (zoom_level == ZOOM_IN){
 		move_img (LEFT);
+		re_draw_path();
 	}
 }
 
@@ -396,6 +397,7 @@ void do_west(){
 void do_east(){
 	if (zoom_level == ZOOM_IN){
 		move_img (RIGHT);
+		re_draw_path();
 	}
 }
 
@@ -403,6 +405,7 @@ void do_east(){
 void do_north(){
 	if (zoom_level == ZOOM_IN){
 		move_img (UP);
+		re_draw_path();
 	}
 }
 
@@ -410,6 +413,7 @@ void do_north(){
 void do_south(){
 	if (zoom_level == ZOOM_IN){
 		move_img (DOWN);
+		re_draw_path();
 	}
 }
 
@@ -505,7 +509,7 @@ bool do_enter(){
 			draw_information_box("YOUR CURRENT LOCATION HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS ONLY BUTTON.");
 			do_back();
 		}
-		int end_node = find_vertex_by_name(full_map_graph, nl->name)->id;
+		end_node = find_vertex_by_name(full_map_graph, nl->name)->id;
 		if (road_only && !vertex_had_road_edge(full_map_graph, end_node)){
 			draw_information_box("YOUR SELECTED LOCATION HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS ONLY BUTTON.");
 			do_back();
@@ -601,4 +605,9 @@ int get_start_node(){
 	}
 
 	return find_vertex_by_coords(full_map_graph, curr_long, curr_lat)->id;
+}
+
+void re_draw_path(){
+	int start_node = get_start_node();
+	draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
 }

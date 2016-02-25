@@ -15,6 +15,7 @@ const static Point NULL_CORNER = {-1,-1};
 extern Point curr_image_pos, prev_min_corner, prev_max_corner;
 extern int zoom_level;
 extern bool road_only;
+extern int end_node;
 
 // Initialise and load up graphics on touchscreen
 void init_control(){
@@ -32,6 +33,7 @@ void init_globals(){
 	Point p = {0,0};
 	curr_image_pos = p;
 	road_only = false;
+	end_node = 0;
 }
 
 // Get the node from where we pressed
