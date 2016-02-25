@@ -12,10 +12,11 @@
 #include "button.h"
 
 const static Point NULL_CORNER = {-1,-1};
-extern Point curr_image_pos, prev_min_corner, prev_max_corner;
+extern Point curr_image_pos, prev_zoomed_in_min_corner, prev_zoomed_in_max_corner, prev_zoomed_out_min_corner, prev_zoomed_out_max_corner;
 extern int zoom_level;
 extern bool road_only;
 extern int end_node;
+extern path_points* points;
 
 // Initialise and load up graphics on touchscreen
 void init_control(){
@@ -27,13 +28,16 @@ void init_control(){
 }
 
 void init_globals(){
-	prev_min_corner = NULL_CORNER;
-	prev_max_corner = NULL_CORNER;
+	prev_zoomed_in_min_corner = NULL_CORNER;
+	prev_zoomed_in_max_corner = NULL_CORNER;
+	prev_zoomed_out_min_corner = NULL_CORNER;
+	prev_zoomed_out_max_corner = NULL_CORNER;
 	zoom_level = ZOOM_OUT;
 	Point p = {0,0};
 	curr_image_pos = p;
 	road_only = false;
 	end_node = 0;
+	points = NULL;
 }
 
 // Get the node from where we pressed
@@ -77,7 +81,15 @@ int get_valid_vertex(graph* graph, Point p){
 	printf("started valid vertex\n");
 	for(int i = 0; i<graph->num_vertices; i++) {
 		vertex v = *graph->vertices[i];
-		Point vertex_p = get_vertex_xy(&v);
+		Point vertex_p = NULL_CORNER;
+		if (zoom_level == ZOOM_OUT){
+			vertex_p = get_vertex_xy(&v, false);
+		}
+		else {
+			vertex_p = get_vertex_xy(&v, true);
+			vertex_p.x = vertex_p.x - curr_image_pos.x;
+			vertex_p.y = vertex_p.y - curr_image_pos.y;
+		}
 		if (sqrt((pow((vertex_p.x-p.x),2) + pow((vertex_p.y-p.y),2))) <= RADIUS ){
 			return v.id;
 		}

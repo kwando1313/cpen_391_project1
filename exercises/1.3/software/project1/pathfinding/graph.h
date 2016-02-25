@@ -18,9 +18,12 @@ typedef struct __name_list{
 } name_list;
 
 typedef struct __path_points{
-	Point* ordered_point_arr;
-	Point min_corner;
-	Point max_corner;
+	Point* zoomed_out_ordered_point_arr;
+	Point* zoomed_in_ordered_point_arr;
+	Point zoomed_in_min_corner;
+	Point zoomed_in_max_corner;
+	Point zoomed_out_max_corner;
+	Point zoomed_out_min_corner;
 	int size; //Better way to do this?
 	int actual_size; //Better way to do this?
 } path_points;
@@ -45,6 +48,7 @@ typedef struct __adjacencyList{
 typedef struct __vertex {
 	int id;
 	char* name;
+	char* info;
 	//TODO: look over this
 	//obviously these aren't ints, but im worried about floats/double seeping into astar,
 	//and not being able to find the value we need.
@@ -66,21 +70,21 @@ typedef struct __graph {
 
 graph* full_map_graph;
 //const static Point NULL_CORNER = {-1,-1};
-Point prev_min_corner, prev_max_corner;
+Point prev_zoomed_in_min_corner, prev_zoomed_in_max_corner, prev_zoomed_out_min_corner, prev_zoomed_out_max_corner;
 
 /* basics */
 graph* init_graph(int inital_num_vertices);
 void destroy_graph(graph* graph);
 //returns id of added vertex
 vertex* init_vertex(int latitude, int longitude, float altitude, char* name,
-		int zoomed_in_x, int zoomed_in_y, int zoomed_out_x, int zoomed_out_y);
+		int zoomed_in_x, int zoomed_in_y, int zoomed_out_x, int zoomed_out_y, char* info);
 int add_vertex(graph* graph, vertex* v);
 vertex* get_vertex(graph* graph, int id);
 void add_edge(graph* graph, int v0_id, int v1_id, bool road);
 bool remove_edge(graph* graph, int v0_id, int v1_id);
 bool vertex_has_edge(vertex* v, int v1_id);
 bool graph_has_edge(graph* graph, int v0_id, int v1_id);
-Point get_vertex_xy(vertex* v);
+Point get_vertex_xy(vertex* v, bool zoomed_in);
 bool edge_is_road(graph* graph, int v0_id, int v1_id);
 
 /* pathfinding */
@@ -88,7 +92,8 @@ int* a_star(graph* graph, int start, int goal, bool roads_only);
 void print_path_console(graph* graph, int start, int goal, bool roads_only);
 path_points* get_path_points(graph* graph, int start, int goal, bool roads_only);
 void destroy_path_points(path_points* path);
-bool draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour);
+bool load_and_draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour);
+
 
 /* other */
 vertex* find_vertex_by_name(graph* graph, char* name);
@@ -96,6 +101,8 @@ vertex* find_vertex_by_coords(graph* graph, int latitude, int longitude);
 
 void draw_graph(graph* graph, int v_colour, int edge_colour);
 void draw_node(int colour, vertex* v);
+
+void draw_nodes(int colour, graph* graph);
 
 void print_name_list(name_list* nl);
 name_list* get_names(graph* graph);
