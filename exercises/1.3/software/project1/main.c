@@ -8,10 +8,12 @@
 #include "gps.h"
 
 int main(void) {
-	init_control();
-	load_from_sd();
-	s_listen();
-
+//	init_control();
+//	load_from_sd();
+//	s_listen();
+	//test_graphics();
+	clear_screen(WHITE);
+	Line(10, 10, 800, 80, BLACK);
 	printf("\nDONE\n");
 	return 0;
 }

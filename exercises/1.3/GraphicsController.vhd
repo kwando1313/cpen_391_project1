@@ -60,7 +60,7 @@ architecture bhvr of GraphicsController is
 -- X1,Y1 and X2,Y2 can be used to represent coords, e.g. draw a pixel or draw a line from x1,y1 to x2,y2
 -- CPU writes values to these registers and the graphcis controller will do the rest
 
-	Signal 	X1, Y1, X2, Y2, Colour, BackGroundColour, Command 		: Std_Logic_Vector(15 downto 0);	
+	Signal 	X1, Y1, X2, Y2, Colour, BackGroundColour, Command, max_x_reg, max_y_reg	: Std_Logic_Vector(15 downto 0);	
 
 -- 16 bit register that can be read by NIOS. It holds the 8 bit pallette number of the pixel that we read (see reading pixels)
 	
@@ -73,7 +73,7 @@ architecture bhvr of GraphicsController is
 				Y2_Select_H,
 				Command_Select_H,
 				Colour_Select_H,
-				BackGroundColour_Select_H: Std_Logic; 	
+				BackGroundColour_Select_H, max_x_sel, max_y_sel: Std_Logic; 	
 	
 	Signal 	CommandWritten_H, ClearCommandWritten_H,							-- signals to control that a command has bee written to the graphcis by NIOS
 				Idle_H, SetBusy_H, ClearBusy_H	: Std_Logic;					-- signals to control status of the graphics chip				
@@ -109,8 +109,9 @@ architecture bhvr of GraphicsController is
 
 
 --------------- added signals ---------------------------
-	signal curr_x, curr_y :  unsigned(15 downto 0) := (others=>'0');
-	signal final_x, final_y:  unsigned(15 downto 0) := (others=>'0');
+	signal curr_x, curr_y :  signed(15 downto 0) := (others=>'0');
+	signal max_x, max_y:  signed(15 downto 0) := (others=>'0');
+	signal final_x, final_y:  signed(15 downto 0) := (others=>'0');
 	signal load_curr_x, load_curr_y, load_final_x, load_final_y  :  Std_Logic;
 	signal inc_curr_x, inc_curr_y, dec_curr_x, dec_curr_y : std_Logic;
 	signal err_sub_dy, err_add_dx : std_Logic;
@@ -185,6 +186,8 @@ Begin
 		Colour_Select_H 				<= '0';
 		BackGroundColour_Select_H 	<= '0';
 		Command_Select_H 				<= '0';
+		max_x_sel <= '0';
+		max_y_sel <= '0';
 	
 		-- if 16 bit Bridge address outputs addres in range hex 0000 - 00FF then Graphics chip will be be accessed
 		-- remember the bridge itself is activtated when NIOS reads/write to location hex 0400_xxxx
@@ -198,6 +201,8 @@ Begin
 			elsif	(AddressIn(7 downto 1) = B"0000_100")	then		Y2_Select_H <= '1';									-- Y2 reg is at address hex 8400_0008
 			elsif	(AddressIn(7 downto 1) = B"0000_111")	then		Colour_Select_H <= '1';								-- Colour reg is at address hex 8400_000E
 			elsif (AddressIn(7 downto 1) = B"0001_000") 	then		BackGroundColour_Select_H <= '1';				-- Background colour reg reg is at address hex 8400_0010
+			elsif (AddressIn(7 downto 1) = B"0000_101") 	then		max_x_sel <= '1';				-- 8400_000A
+			elsif (AddressIn(7 downto 1) = B"0000_110") 	then		max_y_sel <= '1';				-- 8400_000C
 			end if;
 		end if;
 	end process;
@@ -408,7 +413,35 @@ Begin
 			end if;
 		end if;
 	end process;		
-		
+
+	-- max for line
+	process(Clk)
+	Begin
+		if(rising_edge(Clk)) then
+			if(max_x_sel = '1') then				
+				if(UDS_L = '0') then
+					max_x_reg(15 downto 8) <= DataInFromCPU(15 downto 8);
+				end if;
+				if(LDS_L = '0') then
+					max_x_reg(7 downto 0) <= DataInFromCPU(7 downto 0);
+				end if;
+			end if;
+		end if;
+	end process;
+	
+	process(Clk)
+	Begin
+		if(rising_edge(Clk)) then
+			if(max_y_sel = '1') then				
+				if(UDS_L = '0') then
+					max_y_reg(15 downto 8) <= DataInFromCPU(15 downto 8);
+				end if;
+				if(LDS_L = '0') then
+					max_y_reg(7 downto 0) <= DataInFromCPU(7 downto 0);
+				end if;
+			end if;
+		end if;
+	end process;	
 ------------------------------------------------------------------------------------------------------------------------------
 -- Command Process
 --
@@ -488,16 +521,18 @@ Begin
 	
 			-- loads
 			if load_curr_x = '1' then
-				curr_x <= unsigned(X1);
+				curr_x <= signed(X1);
+				max_x <= signed(max_x_reg);
 			end if;
 			if load_curr_y = '1' then
-				curr_y <= unsigned(Y1);
+				curr_y <= signed(Y1);
+				max_y <= signed(max_y_reg);
 			end if;
 			if load_final_x = '1' then
-				final_x <= unsigned(X2);
+				final_x <= signed(X2);
 			end if;
 			if load_final_y = '1' then
-				final_y <= unsigned(Y2);
+				final_y <= signed(Y2);
 			end if;
 
 			-- incs/decs
@@ -886,8 +921,10 @@ Begin
 				end if;
 
 				Sig_AddressOut 	<= std_Logic_Vector(curr_y(8 downto 0) & curr_x(9 downto 1));
-				Sig_RW_Out			<= '0';
-
+				if (curr_x >= 0 and curr_y >= 0 and curr_x < max_x and curr_y < max_y) then
+					Sig_RW_Out <= '0';
+				end if;
+				
 				if(curr_x(0) = '0')	then
 					Sig_UDS_Out_L 	<= '0';
 				else
