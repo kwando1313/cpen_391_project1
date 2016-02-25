@@ -283,7 +283,6 @@ path_points* get_path_points(graph* graph, int start, int goal, bool roads_only)
 }
 
 void append_to_path_points_array(path_points* path, int i, Point zoomed_in_point, Point zoomed_out_point){
-
 		if (i == path->size) {
 			path->size *= 2;
 			Point* new_ordered_point_arr = realloc(path->zoomed_in_ordered_point_arr, path->size*sizeof(Point));

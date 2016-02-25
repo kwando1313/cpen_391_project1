@@ -596,6 +596,7 @@ char* get_butt_text(Button b){
 int get_start_node(){
 	int curr_lat, curr_long;
 	switch (button_iteration){
+		// as shitty as this looks, this is to make testing easier
 		case 1:
 			get_current_coordinates(&curr_lat, &curr_long);
 			break;
