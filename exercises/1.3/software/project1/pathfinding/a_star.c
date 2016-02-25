@@ -173,8 +173,8 @@ astar_node* pop_smallest(bnode** root){
 int get_distance_heuristic(graph* graph, int start, int goal){
 	vertex* v_c = get_vertex(graph, start);
 	vertex* v_n = get_vertex(graph, goal);
-	int ans = sub_and_sqre(v_c->latitude, v_n->latitude) + sub_and_sqre(v_c->longitude, v_n->longitude)
-			+ sub_and_sqre(v_c->altitude, v_n->altitude);
+	int ans = sub_and_sqre(v_c->latitude, v_n->latitude) + sub_and_sqre(v_c->longitude, v_n->longitude);
+		//	+ sub_and_sqre(v_c->altitude, v_n->altitude);
 
 	return sqrt(ans);
 }
