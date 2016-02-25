@@ -16,6 +16,8 @@ extern const unsigned int ColourPalletteData[256];
 #define XRES 800
 #define YRES 479
 
+#define XMAX_TOUCH 800
+#define YMAX_TOUCH 480
 // "COLOUR" is always a palette number(0-255), NOT a RGB value
 
 //TODO: colour switching to sneakily load pictures OR HW acceleration of shapes
@@ -42,6 +44,7 @@ void draw_filled_circle_border(Point centre, int radius, int colour, int borderC
 void draw_arc(Point centre, int radius, int colour, double angleStart, double angleEnd);
 
 void draw_path(Point points[], int num_points, int colour);
+void PathLine(int x1, int y1, int x2, int y2, int Colour);
 
 /**************************** Core Functionality *******************************/
 void ProgramPalette(int PaletteNumber, int RGB);
