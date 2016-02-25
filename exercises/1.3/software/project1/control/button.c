@@ -332,13 +332,13 @@ void do_info(){
 
 // Ask for a start and end node and find the best directions
 void do_dir(){
+	draw_information_box("PLEASE SELECT DESTINATION");
 	int start_node = get_start_node();
 	if (road_only && !vertex_had_road_edge(full_map_graph, start_node)){
 		draw_information_box("YOUR CURRENT LOCATION HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS BUTTON.");
 		DIR_BUTT.prs_p(DIR_BUTT);
 		return;
 	}
-	draw_information_box("PLEASE SELECT DESTINATION");
 
 	end_node = get_node(full_map_graph);
 	if (road_only && !vertex_had_road_edge(full_map_graph, end_node)){
@@ -363,8 +363,7 @@ void do_zoom(){
 		zoom_level = ZOOM_IN;
 
 		do{
-			Point p = {200, 200};
-			sel = p;//GetPress();
+			sel = GetPress();
 		} while(sel.y > image_height[ZOOM_OUT] || sel.x > image_width[ZOOM_OUT]);
 
 		sel = convert_pnt_to_zoom_in(sel);
