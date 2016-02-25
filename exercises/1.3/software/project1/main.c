@@ -10,7 +10,6 @@
 int main(void) {
 	init_control();
 	load_from_sd();
-	//printf("I finished loading!");
 	s_listen();
 
 	printf("\nDONE\n");

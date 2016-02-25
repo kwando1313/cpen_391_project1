@@ -113,7 +113,7 @@ void init_s_button(char key, int id){
 		INFO_BUTT.left = IL;
 		INFO_BUTT.right = IR;
 		INFO_BUTT.p = do_info;
-		INFO_BUTT.prs_p = flicker;
+		INFO_BUTT.prs_p = toggle;
 		INFO_BUTT.text = "INFO";
 	break;
 
@@ -323,16 +323,14 @@ Button* get_kb_button(Point p){
 
 // Display info of the next node touched
 void do_info(){
-	// TODO: Need to load up some info text for each node.
-	int node = get_node(full_map_graph);
-	vertex* v = get_vertex(full_map_graph, node);
-	info_screen (v -> info);
+	draw_information_box("SELECT A MAP POINT TO OBTAIN ITS INFORMATION.");
+	char* info = get_node_info(full_map_graph);
+	info_screen(info);
+	INFO_BUTT.prs_p(INFO_BUTT);
 }
 
-//// Ask for a start and end node and find the best directions
+// Ask for a start and end node and find the best directions
 void do_dir(){
-//	directions_screen();
-
 	int start_node = get_start_node();
 	if (road_only && !vertex_had_road_edge(full_map_graph, start_node)){
 		draw_information_box("YOUR CURRENT LOCATION HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS ONLY BUTTON.");
@@ -385,6 +383,7 @@ void do_zoom(){
 	printf("sel final %d, %d\n", sel.x, sel.y);
 	curr_image_pos = sel;
 	draw_full_image();
+	about_screen();
 	ZOOM_BUTT.prs_p(ZOOM_BUTT);
 }
 

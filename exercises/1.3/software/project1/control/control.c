@@ -57,24 +57,55 @@ int get_node(graph* graph){
 
 		node_id = get_valid_vertex(graph, p_f);
 		if (node_id == -1) {
-			printf("x: %d, y: %d", p_f.x, p_f.y);
-			printf("Not a valid node\n");
-			draw_information_box("NOT A VALID NODE.");
+			draw_information_box("NOT A VALID MAP POINT.");
 		}
 		if (road_only && !vertex_had_road_edge(full_map_graph, node_id)){
-			draw_information_box("NOT A VALID NODE.");
+			draw_information_box("THIS MAP POINT HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS ONLY BUTTON.");
 			node_id = -1;
 		}
 	}
-	printf("returning node: %d\n", node_id);
 	return node_id;
+}
+
+// Get a node ensuring it has info
+char* get_node_info(graph* graph){
+	int node_id = -1;
+	char* info;
+
+	while(node_id == -1){
+		int a,b,c,d;
+		Point p_i, p_f;
+		do{
+			p_i = GetPress();
+			a = p_i.x;
+			b = p_i.y;
+
+			p_f = GetRelease();
+			c = p_f.x;
+			d = p_f.y;
+
+		} while(sqrt(pow((c-a),2) + pow((d-b),2)) > RADIUS); //check for valid press & release
+
+		node_id = get_valid_vertex(graph, p_f);
+		if (node_id == -1) {
+			draw_information_box("NOT A VALID MAP POINT.");
+		}
+		else{
+			vertex* v = get_vertex(full_map_graph, node_id);
+			strcpy(info, v->info);
+
+			if(strlen(info) < 1  || info == '\0'){
+				node_id = -1;
+			}
+		}
+	}
+	return info;
 }
 
 /* Returns the node if we pressed a point sufficiently close to the node. Assumption: Each node has
    a finite metric in relation to every other node, i.e there is a maximum of one node sufficiently close.*/
 //TODO optimize this shit yo
 int get_valid_vertex(graph* graph, Point p){
-	printf("started valid vertex\n");
 	for(int i = 0; i<graph->num_vertices; i++) {
 		vertex v = *graph->vertices[i];
 		Point vertex_p = get_vertex_xy(&v);

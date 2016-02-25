@@ -247,10 +247,6 @@ void info_screen(char* info){
 	draw_information_box(info);
 }
 
-void directions_screen(){
-	draw_information_box("TOUCH A MAP POINT TO BE THE STARTING LOCATION,\n THEN TOUCH A MAP POINT TO BE THE DESTINATION LOCATION.");
-}
-
 void zoom_screen(){
 //	char* name = "PIC.BMP";
 //	Point point = {500, 0};

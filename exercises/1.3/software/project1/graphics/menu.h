@@ -88,7 +88,6 @@ void draw_arrows();
 
 void about_screen();
 void info_screen(char* info);
-void directions_screen();
 void zoom_screen();
 void init_screen();
 void pop_screen();
