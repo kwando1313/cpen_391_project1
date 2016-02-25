@@ -49,14 +49,14 @@ module nios_system_addr_router_002_default_decode
                DEFAULT_RD_CHANNEL = -1,
                DEFAULT_DESTID = 4 
    )
-  (output [80 - 76 : 0] default_destination_id,
+  (output [98 - 94 : 0] default_destination_id,
    output [19-1 : 0] default_wr_channel,
    output [19-1 : 0] default_rd_channel,
    output [19-1 : 0] default_src_channel
   );
 
   assign default_destination_id = 
-    DEFAULT_DESTID[80 - 76 : 0];
+    DEFAULT_DESTID[98 - 94 : 0];
 
   generate begin : default_decode
     if (DEFAULT_CHANNEL == -1) begin
@@ -95,7 +95,7 @@ module nios_system_addr_router_002
     // Command Sink (Input)
     // -------------------
     input                       sink_valid,
-    input  [91-1 : 0]    sink_data,
+    input  [109-1 : 0]    sink_data,
     input                       sink_startofpacket,
     input                       sink_endofpacket,
     output                      sink_ready,
@@ -104,7 +104,7 @@ module nios_system_addr_router_002
     // Command Source (Output)
     // -------------------
     output                          src_valid,
-    output reg [91-1    : 0] src_data,
+    output reg [109-1    : 0] src_data,
     output reg [19-1 : 0] src_channel,
     output                          src_startofpacket,
     output                          src_endofpacket,
@@ -114,18 +114,18 @@ module nios_system_addr_router_002
     // -------------------------------------------------------
     // Local parameters and variables
     // -------------------------------------------------------
-    localparam PKT_ADDR_H = 49;
-    localparam PKT_ADDR_L = 18;
-    localparam PKT_DEST_ID_H = 80;
-    localparam PKT_DEST_ID_L = 76;
-    localparam PKT_PROTECTION_H = 84;
-    localparam PKT_PROTECTION_L = 82;
-    localparam ST_DATA_W = 91;
+    localparam PKT_ADDR_H = 67;
+    localparam PKT_ADDR_L = 36;
+    localparam PKT_DEST_ID_H = 98;
+    localparam PKT_DEST_ID_L = 94;
+    localparam PKT_PROTECTION_H = 102;
+    localparam PKT_PROTECTION_L = 100;
+    localparam ST_DATA_W = 109;
     localparam ST_CHANNEL_W = 19;
     localparam DECODER_TYPE = 0;
 
-    localparam PKT_TRANS_WRITE = 52;
-    localparam PKT_TRANS_READ  = 53;
+    localparam PKT_TRANS_WRITE = 70;
+    localparam PKT_TRANS_READ  = 71;
 
     localparam PKT_ADDR_W = PKT_ADDR_H-PKT_ADDR_L + 1;
     localparam PKT_DEST_ID_W = PKT_DEST_ID_H-PKT_DEST_ID_L + 1;

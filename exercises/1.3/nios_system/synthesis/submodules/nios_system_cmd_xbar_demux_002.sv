@@ -28,7 +28,7 @@
 // ------------------------------------------
 // Generation parameters:
 //   output_name:         nios_system_cmd_xbar_demux_002
-//   ST_DATA_W:           91
+//   ST_DATA_W:           109
 //   ST_CHANNEL_W:        19
 //   NUM_OUTPUTS:         2
 //   VALID_WIDTH:         1
@@ -46,7 +46,7 @@ module nios_system_cmd_xbar_demux_002
     // Sink
     // -------------------
     input  [1-1      : 0]   sink_valid,
-    input  [91-1    : 0]   sink_data, // ST_DATA_W=91
+    input  [109-1    : 0]   sink_data, // ST_DATA_W=109
     input  [19-1 : 0]   sink_channel, // ST_CHANNEL_W=19
     input                         sink_startofpacket,
     input                         sink_endofpacket,
@@ -56,14 +56,14 @@ module nios_system_cmd_xbar_demux_002
     // Sources 
     // -------------------
     output reg                      src0_valid,
-    output reg [91-1    : 0] src0_data, // ST_DATA_W=91
+    output reg [109-1    : 0] src0_data, // ST_DATA_W=109
     output reg [19-1 : 0] src0_channel, // ST_CHANNEL_W=19
     output reg                      src0_startofpacket,
     output reg                      src0_endofpacket,
     input                           src0_ready,
 
     output reg                      src1_valid,
-    output reg [91-1    : 0] src1_data, // ST_DATA_W=91
+    output reg [109-1    : 0] src1_data, // ST_DATA_W=109
     output reg [19-1 : 0] src1_channel, // ST_CHANNEL_W=19
     output reg                      src1_startofpacket,
     output reg                      src1_endofpacket,

@@ -151,7 +151,7 @@ module nios_system_addr_router_001
     localparam PAD12 = log2ceil(64'h1110 - 64'h1100); 
     localparam PAD13 = log2ceil(64'h1120 - 64'h1110); 
     localparam PAD14 = log2ceil(64'h2000 - 64'h1800); 
-    localparam PAD15 = log2ceil(64'h60000 - 64'h40000); 
+    localparam PAD15 = log2ceil(64'h80010 - 64'h80000); 
     localparam PAD16 = log2ceil(64'h200800 - 64'h200400); 
     localparam PAD17 = log2ceil(64'h1800000 - 64'h1000000); 
     localparam PAD18 = log2ceil(64'h4010000 - 64'h4000000); 
@@ -293,8 +293,8 @@ module nios_system_addr_router_001
             src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 5;
     end
 
-    // ( 0x40000 .. 0x60000 )
-    if ( {address[RG:PAD15],{PAD15{1'b0}}} == 27'h40000   ) begin
+    // ( 0x80000 .. 0x80010 )
+    if ( {address[RG:PAD15],{PAD15{1'b0}}} == 27'h80000   ) begin
             src_channel = 19'b0001000000000000000;
             src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 1;
     end

@@ -102,7 +102,7 @@
       }
       datum baseAddress
       {
-         value = "262144";
+         value = "524288";
          type = "String";
       }
    }
@@ -244,7 +244,7 @@
          type = "int";
       }
    }
-   element timer_0.s1
+   element pio_0.s1
    {
       datum _lockedAddress
       {
@@ -253,7 +253,20 @@
       }
       datum baseAddress
       {
-         value = "4320";
+         value = "4176";
+         type = "String";
+      }
+   }
+   element pio_6.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "4272";
          type = "String";
       }
    }
@@ -270,7 +283,7 @@
          type = "String";
       }
    }
-   element pio_1.s1
+   element timer_0.s1
    {
       datum _lockedAddress
       {
@@ -279,46 +292,7 @@
       }
       datum baseAddress
       {
-         value = "4160";
-         type = "String";
-      }
-   }
-   element pio_7.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "4256";
-         type = "String";
-      }
-   }
-   element pio_3.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "4192";
-         type = "String";
-      }
-   }
-   element pio_2.s1
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "4144";
+         value = "4320";
          type = "String";
       }
    }
@@ -348,7 +322,7 @@
          type = "String";
       }
    }
-   element pio_6.s1
+   element pio_3.s1
    {
       datum _lockedAddress
       {
@@ -357,11 +331,11 @@
       }
       datum baseAddress
       {
-         value = "4272";
+         value = "4192";
          type = "String";
       }
    }
-   element pio_0.s1
+   element timer_1.s1
    {
       datum _lockedAddress
       {
@@ -370,7 +344,20 @@
       }
       datum baseAddress
       {
-         value = "4176";
+         value = "4288";
+         type = "String";
+      }
+   }
+   element pio_7.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "4256";
          type = "String";
       }
    }
@@ -387,7 +374,7 @@
          type = "String";
       }
    }
-   element timer_1.s1
+   element pio_2.s1
    {
       datum _lockedAddress
       {
@@ -396,7 +383,20 @@
       }
       datum baseAddress
       {
-         value = "4288";
+         value = "4144";
+         type = "String";
+      }
+   }
+   element pio_1.s1
+   {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
+      datum baseAddress
+      {
+         value = "4160";
          type = "String";
       }
    }
@@ -447,7 +447,7 @@
  <parameter name="projectName" value="NIOS_II_System.qpf" />
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="1" />
- <parameter name="timeStamp" value="1456304397284" />
+ <parameter name="timeStamp" value="1456361772463" />
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
@@ -633,8 +633,8 @@
   <parameter name="tightlyCoupledInstructionMaster1AddrWidth" value="1" />
   <parameter name="tightlyCoupledInstructionMaster2AddrWidth" value="1" />
   <parameter name="tightlyCoupledInstructionMaster3AddrWidth" value="1" />
-  <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x1000' /><slave name='character_lcd_0.avalon_lcd_slave' start='0x1008' end='0x100A' /><slave name='rs232_0.avalon_rs232_slave' start='0x1010' end='0x1018' /><slave name='pio_0.s1' start='0x1050' end='0x1060' /><slave name='pio_3.s1' start='0x1060' end='0x1070' /><slave name='pio_7.s1' start='0x10A0' end='0x10B0' /><slave name='pio_6.s1' start='0x10B0' end='0x10C0' /><slave name='timer_1.s1' start='0x10C0' end='0x10E0' /><slave name='timer_0.s1' start='0x10E0' end='0x1100' /><slave name='pio_5.s1' start='0x1100' end='0x1110' /><slave name='pio_4.s1' start='0x1110' end='0x1120' /><slave name='nios2_qsys_0.jtag_debug_module' start='0x1800' end='0x2000' /><slave name='amd_0.avalon_slave_0' start='0x40000' end='0x60000' /><slave name='Altera_UP_SD_Card_Avalon_Interface_0.avalon_sdcard_slave' start='0x200400' end='0x200800' /><slave name='new_sdram_controller_0.s1' start='0x1000000' end='0x1800000' /><slave name='to_external_bus_bridge_0.avalon_slave' start='0x4000000' end='0x4010000' /></address-map>]]></parameter>
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x1000' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x1000' end='0x1008' /><slave name='character_lcd_0.avalon_lcd_slave' start='0x1008' end='0x100A' /><slave name='rs232_0.avalon_rs232_slave' start='0x1010' end='0x1018' /><slave name='pio_2.s1' start='0x1030' end='0x1040' /><slave name='pio_1.s1' start='0x1040' end='0x1050' /><slave name='pio_0.s1' start='0x1050' end='0x1060' /><slave name='pio_3.s1' start='0x1060' end='0x1070' /><slave name='pio_7.s1' start='0x10A0' end='0x10B0' /><slave name='pio_6.s1' start='0x10B0' end='0x10C0' /><slave name='timer_1.s1' start='0x10C0' end='0x10E0' /><slave name='timer_0.s1' start='0x10E0' end='0x1100' /><slave name='pio_5.s1' start='0x1100' end='0x1110' /><slave name='pio_4.s1' start='0x1110' end='0x1120' /><slave name='nios2_qsys_0.jtag_debug_module' start='0x1800' end='0x2000' /><slave name='amd_0.avalon_slave_0' start='0x40000' end='0x60000' /><slave name='Altera_UP_SD_Card_Avalon_Interface_0.avalon_sdcard_slave' start='0x200400' end='0x200800' /><slave name='new_sdram_controller_0.s1' start='0x1000000' end='0x1800000' /><slave name='to_external_bus_bridge_0.avalon_slave' start='0x4000000' end='0x4010000' /></address-map>]]></parameter>
+  <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x1000' /><slave name='character_lcd_0.avalon_lcd_slave' start='0x1008' end='0x100A' /><slave name='rs232_0.avalon_rs232_slave' start='0x1010' end='0x1018' /><slave name='pio_0.s1' start='0x1050' end='0x1060' /><slave name='pio_3.s1' start='0x1060' end='0x1070' /><slave name='pio_7.s1' start='0x10A0' end='0x10B0' /><slave name='pio_6.s1' start='0x10B0' end='0x10C0' /><slave name='timer_1.s1' start='0x10C0' end='0x10E0' /><slave name='timer_0.s1' start='0x10E0' end='0x1100' /><slave name='pio_5.s1' start='0x1100' end='0x1110' /><slave name='pio_4.s1' start='0x1110' end='0x1120' /><slave name='nios2_qsys_0.jtag_debug_module' start='0x1800' end='0x2000' /><slave name='amd_0.avalon_slave_0' start='0x80000' end='0x80010' /><slave name='Altera_UP_SD_Card_Avalon_Interface_0.avalon_sdcard_slave' start='0x200400' end='0x200800' /><slave name='new_sdram_controller_0.s1' start='0x1000000' end='0x1800000' /><slave name='to_external_bus_bridge_0.avalon_slave' start='0x4000000' end='0x4010000' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x1000' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x1000' end='0x1008' /><slave name='character_lcd_0.avalon_lcd_slave' start='0x1008' end='0x100A' /><slave name='rs232_0.avalon_rs232_slave' start='0x1010' end='0x1018' /><slave name='pio_2.s1' start='0x1030' end='0x1040' /><slave name='pio_1.s1' start='0x1040' end='0x1050' /><slave name='pio_0.s1' start='0x1050' end='0x1060' /><slave name='pio_3.s1' start='0x1060' end='0x1070' /><slave name='pio_7.s1' start='0x10A0' end='0x10B0' /><slave name='pio_6.s1' start='0x10B0' end='0x10C0' /><slave name='timer_1.s1' start='0x10C0' end='0x10E0' /><slave name='timer_0.s1' start='0x10E0' end='0x1100' /><slave name='pio_5.s1' start='0x1100' end='0x1110' /><slave name='pio_4.s1' start='0x1110' end='0x1120' /><slave name='nios2_qsys_0.jtag_debug_module' start='0x1800' end='0x2000' /><slave name='amd_0.avalon_slave_0' start='0x80000' end='0x80010' /><slave name='Altera_UP_SD_Card_Avalon_Interface_0.avalon_sdcard_slave' start='0x200400' end='0x200800' /><slave name='new_sdram_controller_0.s1' start='0x1000000' end='0x1800000' /><slave name='to_external_bus_bridge_0.avalon_slave' start='0x4000000' end='0x4010000' /></address-map>]]></parameter>
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="deviceFamilyName" value="Cyclone II" />
   <parameter name="internalIrqMaskSystemInfo" value="31" />
@@ -1511,17 +1511,12 @@
    end="Altera_UP_SD_Card_Avalon_Interface_0.clock_sink" />
  <connection kind="reset" version="13.0" start="clk_0.clk_reset" end="amd_0.reset" />
  <connection
-   kind="clock"
-   version="13.0"
-   start="up_clocks_0.sys_clk"
-   end="amd_0.clock" />
- <connection
    kind="avalon"
    version="13.0"
    start="nios2_qsys_0.data_master"
    end="amd_0.avalon_slave_0">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00040000" />
+  <parameter name="baseAddress" value="0x00080000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -1530,9 +1525,14 @@
    start="nios2_qsys_0.instruction_master"
    end="amd_0.avalon_slave_0">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x00040000" />
+  <parameter name="baseAddress" value="0x00080000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
+ <connection
+   kind="clock"
+   version="13.0"
+   start="up_clocks_0.sys_clk"
+   end="amd_0.clock" />
  <connection
    kind="avalon"
    version="13.0"
