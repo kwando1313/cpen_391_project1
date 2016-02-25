@@ -347,7 +347,7 @@ void do_dir(){
 		return;
 	}
 
-	draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
+	load_and_draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
 
 	draw_information_box("HAVE A FUN TRIP!");
 	DIR_BUTT.prs_p(DIR_BUTT);
