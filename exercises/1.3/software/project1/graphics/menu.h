@@ -87,7 +87,7 @@ void draw_arrow(Point topLeft, int width, int height, int borderWidth,
 void draw_arrows();
 
 void about_screen();
-void info_screen();
+void info_screen(char* info);
 void directions_screen();
 void zoom_screen();
 void init_screen();

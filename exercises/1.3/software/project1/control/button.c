@@ -321,9 +321,9 @@ Button* get_kb_button(Point p){
 // Display info of the next node touched
 void do_info(){
 	// TODO: Need to load up some info text for each node.
-	info_screen();
-	//int node = get_node();
-	return;
+	int node = get_node(full_map_graph);
+	vertex* v = get_vertex(full_map_graph, node);
+	info_screen (v -> info);
 }
 
 //// Ask for a start and end node and find the best directions
@@ -350,9 +350,7 @@ void do_zoom(){
 			sel = GetPress();
 		} while(sel.y > image_height[ZOOM_OUT] || sel.x > image_width[ZOOM_OUT]);
 
-		//printf("sel pre convert %d, %d\n", sel.x, sel.y);
 		sel = convert_pnt_to_zoom_in(sel);
-		printf("sel post convert %d, %d\n", sel.x, sel.y);
 
 		//we pass draw_image in the top left corner, sel should be the centre of the image
 		sel.x -= DISPLAY_WIDTH/2;

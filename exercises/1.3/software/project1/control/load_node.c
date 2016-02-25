@@ -15,7 +15,9 @@ void handle_nodes(short file, graph* graph){
 	short data = 0;
 
 	char arr[8][30];
+
 	char* text;
+	char* info = malloc (sizeof(char)* 200);
 	while(data >= 0){
 		data = alt_up_sd_card_read(file);
 		c = (char)data;
@@ -29,8 +31,9 @@ void handle_nodes(short file, graph* graph){
 			y++;
 		}
 		else if (c == ';'){
-			strcpy(arr[y], text);
-			vertex* v = init_vertex(atoi(arr[7]), atoi(arr[6]), atof(arr[5]), arr[0], atoi(arr[3]), atoi(arr[4]), atoi(arr[1]), atoi(arr[2]));
+			memset(&info[0], 0, 200);
+			strcpy(info, text);
+			vertex* v = init_vertex(atoi(arr[7]), atoi(arr[6]), atof(arr[5]), arr[0], atoi(arr[3]), atoi(arr[4]), atoi(arr[1]), atoi(arr[2]), info);
 			add_vertex(graph, v);
 			memset(&text[0], 0, sizeof(text));
 			y=0;
@@ -39,6 +42,7 @@ void handle_nodes(short file, graph* graph){
 			text = strncat(text, &c, 1);
 		}
 	}
+	free(info);
 }
 
 void handle_edges(short file, graph* graph){

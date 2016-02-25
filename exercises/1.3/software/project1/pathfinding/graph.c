@@ -24,7 +24,7 @@ graph* init_graph(int inital_max_vertices){
 }
 
 vertex* init_vertex(int latitude, int longitude, float altitude, char* name,
-		int zoomed_in_x, int zoomed_in_y, int zoomed_out_x, int zoomed_out_y){
+		int zoomed_in_x, int zoomed_in_y, int zoomed_out_x, int zoomed_out_y, char* info){
 	vertex* new_vertex = malloc(sizeof(vertex));
 	new_vertex->id = -1;
 	new_vertex->adjList = init_adjList();
@@ -32,14 +32,14 @@ vertex* init_vertex(int latitude, int longitude, float altitude, char* name,
 	new_vertex->latitude = latitude;
 	new_vertex->longitude = longitude;
 	new_vertex->altitude = altitude;
-	new_vertex->name = malloc(strlen(name));
-	strcpy(new_vertex->name, name);
 
 	new_vertex->name = strdup(name);
+	new_vertex->info = strdup(info);
 	new_vertex->zo_x = zoomed_out_x;
 	new_vertex->zo_y = zoomed_out_y;
 	new_vertex->zi_x = zoomed_in_x;
 	new_vertex->zi_y = zoomed_in_y;
+
 	return new_vertex;
 }
 

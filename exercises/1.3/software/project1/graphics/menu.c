@@ -244,8 +244,8 @@ void about_screen(){
 	draw_information_box("PATHFINDING MAP (CPEN 391 TEAM 22)\nALEX CHARLES\nANGELO CHO\nCALEB KWAN\nWILLIAM TANG\n\nWELCOME TO [INSER NAME HERE].\nBELOW THIS MENU YOU MAY FIND:\nSEARCH FOR DIRECTIONS\nGET DIRECTIONS BETWEEN TWO POINTS\nOTHER BS");
 }
 
-void info_screen(){
-	draw_information_box("BUILDING INFO");
+void info_screen(char* info){
+	draw_information_box(info);
 }
 
 void directions_screen(){
