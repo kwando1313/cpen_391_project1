@@ -139,17 +139,17 @@ void draw_full_image(void){
  * 	This code is written to not go past the edge of the image.
  */
 void move_img (Direction direction){
-	if (direction == UP){
+	if (direction == DOWN){
 		if (curr_image_pos.y > image_height[zoom_level] - DISPLAY_HEIGHT - SHIFT)
 			curr_image_pos.y = image_height[zoom_level] - DISPLAY_HEIGHT;
 		else curr_image_pos.y += SHIFT;
-		printf ("UP\n");
+		printf ("DOWN\n");
 	}
-	else if (direction == DOWN){
+	else if (direction == UP){
 		if (curr_image_pos.y < SHIFT)
 			curr_image_pos.y = 0;
 		else curr_image_pos.y -= SHIFT;
-		printf ("DOWN\n");
+		printf ("UP\n");
 
 	}
 	else if (direction == RIGHT){
