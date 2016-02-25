@@ -48,10 +48,12 @@ int get_node(graph* graph){
 			p_i = GetPress();
 			a = p_i.x;
 			b = p_i.y;
+			printf("Pressed Coordinates: (%i, %i)\n", a, b);
 
 			p_f = GetRelease();
 			c = p_f.x;
 			d = p_f.y;
+			printf("Released Coordinates: (%i, %i)\n", c, d);
 
 		} while(sqrt(pow((c-a),2) + pow((d-b),2)) > RADIUS); //check for valid press & release
 
@@ -79,10 +81,12 @@ char* get_node_info(graph* graph){
 			p_i = GetPress();
 			a = p_i.x;
 			b = p_i.y;
+			printf("Pressed Coordinates: (%i, %i)\n", a, b);
 
 			p_f = GetRelease();
 			c = p_f.x;
 			d = p_f.y;
+			printf("Released Coordinates: (%i, %i)\n", c, d);
 
 		} while(sqrt(pow((c-a),2) + pow((d-b),2)) > RADIUS); //check for valid press & release
 
@@ -96,6 +100,7 @@ char* get_node_info(graph* graph){
 
 			if(strlen(info) < 1  || info == '\0'){
 				node_id = -1;
+				draw_information_box("NO INFORMATION AVAILABLE FOR THIS MAP POINT.");
 			}
 		}
 	}

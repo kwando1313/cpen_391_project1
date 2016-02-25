@@ -171,7 +171,7 @@ bool edge_is_road(graph* graph, int v0_id, int v1_id){
 bool vertex_had_road_edge(graph* graph, int v_id){
 	adjacencyList* list = get_vertex(graph, v_id)->adjList;
 	for (int i = 0; i < list->num_neighbours; i++){
-		if (list->roads[i] == ROAD_COST){
+		if (list->roads[i] == true){
 			return true;
 		}
 	}
