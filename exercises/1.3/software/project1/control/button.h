@@ -90,7 +90,7 @@ bool road_mode();
 
 bool road_only;
 int end_node;
-path_points* points;
+path_points* current_astar_points;
 
 //helper function
 int get_start_node();

@@ -21,7 +21,7 @@ void update_path_range(path_points* path, Point curr, bool zoom_out);
 //debugging only
 void print_astar_node(astar_node* node);
 
-extern path_points* points;
+extern path_points* current_astar_points;
 
 /*
  * Notes on datastructures chosen
@@ -303,6 +303,6 @@ void print_astar_node(astar_node* node){
 
 bool load_and_draw_graph_path(graph* graph, int start, int goal, bool roads_only, int colour){
 	//redraw over min/max
-	points = get_path_points(graph, start, goal, roads_only);
+	current_astar_points = get_path_points(graph, start, goal, roads_only);
 	return draw_graph_path(colour);
 }

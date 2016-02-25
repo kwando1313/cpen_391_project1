@@ -16,7 +16,7 @@ extern Point curr_image_pos, prev_zoomed_in_min_corner, prev_zoomed_in_max_corne
 extern int zoom_level;
 extern bool road_only;
 extern int end_node;
-extern path_points* points;
+extern path_points* current_astar_points;
 
 // Initialise and load up graphics on touchscreen
 void init_control(){
@@ -37,7 +37,7 @@ void init_globals(){
 	curr_image_pos = p;
 	road_only = false;
 	end_node = 0;
-	points = NULL;
+	current_astar_points = NULL;
 }
 
 // Get the node from where we pressed

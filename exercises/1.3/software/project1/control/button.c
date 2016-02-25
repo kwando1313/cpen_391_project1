@@ -614,7 +614,7 @@ int get_start_node(){
 }
 
 void re_draw_path(){
-	if (points != NULL){
+	if (current_astar_points != NULL){
 		printf("Path is not NULL!");
 		draw_graph_path(RED);
 	}
@@ -628,64 +628,46 @@ bool draw_graph_path(int colour){
 	}
 	else{
 		//First check to see if when subtracted from, it's less than 0...
-		prev_zoomed_in_min_corner.x = (prev_zoomed_in_min_corner.x - curr_image_pos.x < 0) ? 0 : prev_zoomed_in_min_corner.x - curr_image_pos.x;
-		prev_zoomed_in_min_corner.y = (prev_zoomed_in_min_corner.y - curr_image_pos.y < 0) ? 0 : prev_zoomed_in_min_corner.y - curr_image_pos.y;
+		prev_zoomed_in_min_corner.x = max(0, prev_zoomed_in_min_corner.x - curr_image_pos.x);
+		prev_zoomed_in_min_corner.y = max(0, prev_zoomed_in_min_corner.y - curr_image_pos.y);
 
 		//Then check to see if it's greater than the DISPLAY WIDTH
-		prev_zoomed_in_min_corner.x = (prev_zoomed_in_min_corner.x > DISPLAY_WIDTH) ? DISPLAY_WIDTH : prev_zoomed_in_min_corner.x;
-		prev_zoomed_in_min_corner.y = (prev_zoomed_in_min_corner.y > DISPLAY_HEIGHT) ? DISPLAY_HEIGHT : prev_zoomed_in_min_corner.y;
+		prev_zoomed_in_min_corner.x = min(prev_zoomed_in_min_corner.x, DISPLAY_WIDTH);
+		prev_zoomed_in_min_corner.y = min(prev_zoomed_in_min_corner.y, DISPLAY_HEIGHT);
 
-		//This is all to make sure we don't die a horrible death of sadness and line apocalypse (of negative displays).
-		prev_zoomed_in_max_corner.x = (prev_zoomed_in_max_corner.x - curr_image_pos.x < 0) ? 0 : prev_zoomed_in_max_corner.x - curr_image_pos.x;
-		prev_zoomed_in_max_corner.y = (prev_zoomed_in_max_corner.y - curr_image_pos.y < 0) ? 0 : prev_zoomed_in_max_corner.y - curr_image_pos.y;
-		prev_zoomed_in_max_corner.x = (prev_zoomed_in_max_corner.x > DISPLAY_WIDTH) ? DISPLAY_WIDTH : prev_zoomed_in_max_corner.x;
-		prev_zoomed_in_max_corner.y = (prev_zoomed_in_max_corner.y > DISPLAY_HEIGHT) ? DISPLAY_HEIGHT : prev_zoomed_in_max_corner.y;
+		//First check to see if when subtracted from, it's less than 0...
+		prev_zoomed_in_max_corner.x = max(0, prev_zoomed_in_max_corner.x - curr_image_pos.x);
+		prev_zoomed_in_max_corner.y = max(0, prev_zoomed_in_max_corner.y - curr_image_pos.y);
+
+		//Then check to see if it's greater than the DISPLAY WIDTH
+		prev_zoomed_in_max_corner.x = min(prev_zoomed_in_max_corner.x, DISPLAY_WIDTH);
+		prev_zoomed_in_max_corner.y = min(prev_zoomed_in_max_corner.y, DISPLAY_HEIGHT);
+
 		if (!points_equal(prev_zoomed_in_min_corner, NULL_CORNER) && !points_equal(prev_zoomed_in_max_corner, NULL_CORNER)){
 			draw_image_segment(prev_zoomed_in_min_corner,  prev_zoomed_in_max_corner);
 		}
 		printf("Corners are now: %d, %d\n%d, %d", prev_zoomed_in_min_corner.x, prev_zoomed_in_min_corner.y, prev_zoomed_in_max_corner.x, prev_zoomed_in_max_corner.y);
 	}
 
-	if (points != NULL){
-		prev_zoomed_out_min_corner = points->zoomed_out_min_corner;
-		prev_zoomed_out_max_corner = points->zoomed_out_max_corner;
+	if (current_astar_points != NULL){
+		prev_zoomed_out_min_corner = current_astar_points->zoomed_out_min_corner;
+		prev_zoomed_out_max_corner = current_astar_points->zoomed_out_max_corner;
 
-		prev_zoomed_in_min_corner = points->zoomed_in_min_corner;
-		prev_zoomed_in_max_corner = points->zoomed_in_max_corner;
+		prev_zoomed_in_min_corner = current_astar_points->zoomed_in_min_corner;
+		prev_zoomed_in_max_corner = current_astar_points->zoomed_in_max_corner;
 		if (zoom_level == ZOOM_OUT)
-			draw_path(points->zoomed_out_ordered_point_arr, points->actual_size, colour);
+			draw_path(current_astar_points->zoomed_out_ordered_point_arr, current_astar_points->actual_size, colour);
 		else{
-			Point points_arr[points->actual_size];
-			for (int i = 0; i < points->actual_size; i++){
+			Point points_arr[current_astar_points->actual_size];
+			int size = current_astar_points->actual_size;
+			for (int i = 0; i < current_astar_points->actual_size; i++){
 
 				points_arr[i] = NULL_CORNER;
-				points_arr[i].x = points->zoomed_in_ordered_point_arr[i].x - curr_image_pos.x;
-				points_arr[i].y = points->zoomed_in_ordered_point_arr[i].y - curr_image_pos.y;
+				points_arr[i].x = current_astar_points->zoomed_in_ordered_point_arr[i].x - curr_image_pos.x;
+				points_arr[i].y = current_astar_points->zoomed_in_ordered_point_arr[i].y - curr_image_pos.y;
 
-				if (points_arr[i].x < 0 && points_arr[i].y < 0){
-					printf("Originally... %d is  %d, %d\n", i, points_arr[i].x, points_arr[i].y);
-					while (points_arr[i].x < 0 || points_arr[i].y < 0){
-						points_arr[i].x+=3;
-						points_arr[i].y+=1;
-					}
-					printf("Now point (%d): %d %d\n", i, points_arr[i].x, points_arr[i].y);
-				}
-
-				if (points_arr[i].x >= DISPLAY_WIDTH){
-					points_arr[i].x = DISPLAY_WIDTH - 1;
-				}
-				if (points_arr[i].y >= DISPLAY_HEIGHT){
-					points_arr[i].y = DISPLAY_HEIGHT - 1;
-				}
-				if (points_arr[i].x < 0){
-					points_arr[i].x = 0;
-				}
-				if (points_arr[i].y < 0){
-					points_arr[i].y = 0;
-				}
 			}
-			draw_path(points_arr, points->actual_size, colour);
-			VLine(600, 0, 480, BLACK);
+			draw_path(points_arr, current_astar_points->actual_size, colour);
 		}
 		//destroy_path_points(points);
 		return true;

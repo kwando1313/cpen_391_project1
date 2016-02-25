@@ -1,6 +1,7 @@
 #include "misc_helpers.h"
 #include "graphics.h"
 #include "hashmap.h"
+#include "image.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -14,6 +15,8 @@
 #define GraphicsY1Reg   			(*(volatile unsigned short int *)(0x84000004))
 #define GraphicsX2Reg   			(*(volatile unsigned short int *)(0x84000006))
 #define GraphicsY2Reg   			(*(volatile unsigned short int *)(0x84000008))
+#define GraphicsMaxXReg            	(*(volatile unsigned short int *)(0x8400000A))
+#define GraphicsMaxYReg             (*(volatile unsigned short int *)(0x8400000C))
 #define GraphicsColourReg   		(*(volatile unsigned short int *)(0x8400000E))
 #define GraphicsBackGroundColourReg (*(volatile unsigned short int *)(0x84000010))
 
@@ -117,6 +120,27 @@ void Line(int x1, int y1, int x2, int y2, int Colour){
 	GraphicsY1Reg = y1;
 	GraphicsX2Reg = x2;
 	GraphicsY2Reg = y2;
+	GraphicsMaxXReg = XMAX_TOUCH;
+	GraphicsMaxYReg = YMAX_TOUCH;
+	GraphicsColourReg = Colour;
+	GraphicsCommandReg = DrawLine;
+}
+
+// Use this for drawing path lines - makes sure it doesn't write beyond our map
+void PathLine(int x1, int y1, int x2, int y2, int Colour){
+	if (x1 == x2 && y1 == y2) {
+		WriteAPixel(x1, y1, Colour);
+		return;
+	}
+
+	WAIT_FOR_GRAPHICS;
+
+	GraphicsX1Reg = x1;
+	GraphicsY1Reg = y1;
+	GraphicsX2Reg = x2;
+	GraphicsY2Reg = y2;
+	GraphicsMaxXReg = DISPLAY_WIDTH;
+	GraphicsMaxYReg = DISPLAY_HEIGHT;
 	GraphicsColourReg = Colour;
 	GraphicsCommandReg = DrawLine;
 }
@@ -196,7 +220,7 @@ void draw_shape(Point points[], int num_points, int colour){
 
 void draw_path(Point points[], int num_points, int colour){
 	for(int i = 1; i<num_points; i++){
-		Line(points[i-1].x, points[i-1].y, points[i].x, points[i].y, colour);
+		PathLine(points[i-1].x, points[i-1].y, points[i].x, points[i].y, colour);
 	}
 }
 
