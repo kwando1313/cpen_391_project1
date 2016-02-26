@@ -347,7 +347,7 @@ void do_dir(){
 		return;
 	}
 
-	load_and_draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
+	load_and_draw_graph_path(full_map_graph, start_node, end_node, road_only, PURPLEPIZZAZZ);
 
 	draw_information_box("HAVE A FUN TRIP!");
 	DIR_BUTT.prs_p(DIR_BUTT);
@@ -532,7 +532,7 @@ bool do_enter(){
 		}
 
 		do_back();
-		load_and_draw_graph_path(full_map_graph, start_node, end_node, road_only, RED);
+		load_and_draw_graph_path(full_map_graph, start_node, end_node, road_only, PURPLEPIZZAZZ);
 		draw_information_box("HAVE A FUN TRIP!");
 	}
 	return retval;
@@ -619,7 +619,7 @@ int get_start_node(){
 void re_draw_path(){
 	if (points != NULL){
 		printf("Path is not NULL!");
-		draw_graph_path(RED);
+		draw_graph_path(PURPLEPIZZAZZ);
 	}
 }
 

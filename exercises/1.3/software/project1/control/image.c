@@ -99,7 +99,7 @@ void clear_extra_map_space(int height, int width){
 		Point topLeft = {0, height};
 		char* text = "UBC WAYFINDING";
 		draw_text_box(topLeft, width, DISPLAY_HEIGHT-height, 1,
-				BLACK, WHITE, BLACK, text, MEDIUM);
+				BLACK, FOUNTAINBLUE2, WHITE, text, MEDIUM);
 	}
 }
 
