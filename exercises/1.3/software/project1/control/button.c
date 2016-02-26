@@ -326,6 +326,12 @@ Button* get_kb_button(Point p){
 void do_info(){
 	draw_information_box("SELECT A MAP POINT TO OBTAIN ITS INFORMATION.");
 	char* info = get_node_info(full_map_graph);
+	if (info == NULL) {
+		about_screen();
+		INFO_BUTT.prs_p(INFO_BUTT);
+		return;
+	}
+	free(info);
 	info_screen(info);
 	INFO_BUTT.prs_p(INFO_BUTT);
 }
@@ -341,6 +347,11 @@ void do_dir(){
 	draw_information_box("PLEASE SELECT DESTINATION");
 
 	end_node = get_node(full_map_graph);
+	if (end_node == -1){
+		DIR_BUTT.prs_p(DIR_BUTT);
+		about_screen();
+		return;
+	}
 	if (road_only && !vertex_had_road_edge(full_map_graph, end_node)){
 		draw_information_box("YOUR SELECTED LOCATION HAS NO ROAD ACCESS. PLEASE TURN OFF THE ROADS BUTTON.");
 		DIR_BUTT.prs_p(DIR_BUTT);

@@ -61,6 +61,10 @@ int get_node(graph* graph){
 
 		} while(sqrt(pow((c-a),2) + pow((d-b),2)) > RADIUS); //check for valid press & release
 
+		if(falls_inside(p_f, DIR_BUTT)) {
+			return -1;
+		}
+
 		node_id = get_valid_vertex(graph, p_f);
 		if (node_id == -1) {
 			draw_information_box("NOT A VALID MAP POINT.");
@@ -76,7 +80,7 @@ int get_node(graph* graph){
 // Get a node ensuring it has info
 char* get_node_info(graph* graph){
 	int node_id = -1;
-	char* info;
+	char* info = malloc(sizeof(char)*500);
 
 	while(node_id == -1){
 		int a,b,c,d;
@@ -96,6 +100,9 @@ char* get_node_info(graph* graph){
 
 		node_id = get_valid_vertex(graph, p_f);
 		if (node_id == -1) {
+			if(falls_inside(p_f, INFO_BUTT)) {
+				return NULL;
+			}
 			draw_information_box("NOT A VALID MAP POINT.");
 		}
 		else{
